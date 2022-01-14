@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS devspark_db;
+
+CREATE DATABASE devspark_db;
