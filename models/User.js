@@ -17,14 +17,11 @@ User.init(
     {
         // Table column definitions
         id: {
-            type: DataTypes.INTEGER,
+            type: sequelize.UUID,
+            defaultValue: sequelize.UUIDV4,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
-        },
-        uuid: {
-            type: uuidv4(),
-            unique: true
         },
         username: {
             type: DataTypes.STRING,
