@@ -1,6 +1,8 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
+
 
 // Create User model to extend Model also authenticate password
 class User extends Model {
@@ -19,6 +21,10 @@ User.init(
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
+        },
+        uuid: {
+            type: uuidv4(),
+            unique: true
         },
         username: {
             type: DataTypes.STRING,
@@ -45,13 +51,10 @@ User.init(
             
         },
        
-        // bday: {
-        //     type: DataTypes.DATEONLY(),
-        //     allowNull: false,
-        //     set (valueToBeSet) {
-        //         this.setDataValue('date', bdayHandler)
-        //     }
-        // },
+        bday: {
+            type: DataTypes.STRING,
+            
+        },
         techskills: {
             type: DataTypes.STRING,
             
@@ -59,6 +62,11 @@ User.init(
         github: {
             type: DataTypes.STRING,
             
+        }
+        ,
+        resetLink: {
+            type: DataTypes.STRING,
+            defaultValue: ''
         }
 
     },
@@ -78,7 +86,7 @@ User.init(
 
         sequelize,
         // Dont auto create created_at/ updated_at timestamps
-        timestamps: false,
+        timestamps: true,
         freezeTableName: true,
         modelName: 'user'
 

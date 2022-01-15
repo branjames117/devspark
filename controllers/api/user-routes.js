@@ -1,6 +1,17 @@
 const router = require('express').Router();
 const { User } = require('../../models');
+// const jwt = require('jsonwebtoken');
+// const transporter = nodemailer.createTransport(transport[, defaults])
 
+// nodemailer.createTransport({
+//     host: "smtp.example.com",
+//     port: 587,
+//     secure: false, // upgrade later with STARTTLS
+//     auth: {
+//       user: "username",
+//       pass: "password",
+//     },
+//   });
 
 
 // POST create a user 
@@ -59,7 +70,7 @@ router.post('/login', (req,res) => {
     });
 });
 
-// Logout route
+// POST Logout route
 
 router.post('/logout', (req,res) => {
     if(req.session.loggedIn){
@@ -69,4 +80,38 @@ router.post('/logout', (req,res) => {
     } else {
         res.status(404).end();
     }
-})
+});
+
+// // PUT forgot password route
+// router.put('/forgot-password', (req,res) => {
+//     // get user email 
+//     const email = req.body.email;
+
+//     User.findOne({email}, (err, user) => {
+//         if(err || !user){
+//             res.status(404).json({ message: 'No user exists with that email' });
+//             return;
+//         }
+
+//         const token = jwt.sign({_id: user.id}, process.env.RESET_PASSWORD_KEY, {expiresIn: '10m'});
+//         const data = {
+
+//             from: 'noreply@hello.com',
+//             to: email,
+//             subject: 'Account Password Reset Link',
+//             html:`
+//                 <h2>Please click on the given link to reset your account password</h2>
+//                 <p>${user.id}/password-reset${token}</p>
+//             `
+//         };
+
+//         return user.updateOne({resetLink: token}, (err, success) {
+//             if(err){
+//                 return res.status(400).json({ error: 'Reset password link error' });
+//             } else {
+
+//             }
+//         })
+//     })
+    
+// })
