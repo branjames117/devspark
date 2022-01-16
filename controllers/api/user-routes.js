@@ -13,10 +13,23 @@ const { User } = require('../../models');
 //     },
 //   });
 
+router.get('/', (req,res) => {
+    User.findAll({
+        attributes: {
+            exclude: ['password']
+        }
+    })
+    .then(dbUserData => res.json(dbUserData))
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    })
+})
+
 
 // POST create a user 
 router.post('/', (req,res) => {
-    // Expects { username, email, password, bio, images, bday, techskills, github profile }
+    // Expects { username, email, password }
     User.create({
         username: req.username,
         email: req.body.email,
@@ -30,6 +43,7 @@ router.post('/', (req,res) => {
             req.session.loggedIn = true;
 
             res.json(dbUserData);
+            console.log(dbUserData);
         })
     })
     .catch(err => {
@@ -115,3 +129,5 @@ router.post('/logout', (req,res) => {
 //     })
     
 // })
+
+module.exports = router;

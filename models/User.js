@@ -17,11 +17,11 @@ User.init(
     {
         // Table column definitions
         id: {
-            type: sequelize.UUID,
+            type: DataTypes.UUID,
             defaultValue: sequelize.UUIDV4,
             allowNull: false,
             primaryKey: true,
-            autoIncrement: true
+            
         },
         username: {
             type: DataTypes.STRING,
@@ -43,28 +43,28 @@ User.init(
                 len: [4]
             }
         },
-        bio: {
-            type: DataTypes.STRING,
+        // bio: {
+        //     type: DataTypes.STRING,
             
-        },
+        // },
        
-        bday: {
-            type: DataTypes.STRING,
+        // bday: {
+        //     type: DataTypes.STRING,
             
-        },
-        techskills: {
-            type: DataTypes.STRING,
+        // },
+        // techskills: {
+        //     type: DataTypes.STRING,
             
-        },
-        github: {
-            type: DataTypes.STRING,
+        // },
+        // github: {
+        //     type: DataTypes.STRING,
             
-        }
-        ,
-        resetLink: {
-            type: DataTypes.STRING,
-            defaultValue: ''
-        }
+        // }
+        // ,
+        // resetLink: {
+        //     type: DataTypes.STRING,
+        //     defaultValue: ''
+        // }
 
     },
     {

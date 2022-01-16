@@ -1,1 +1,35 @@
-null;
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevSpark</title>
+</head>
+
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>
+        <a href="/">DevSpark</a>
+      </h1>
+      <nav>
+        {{#if loggedIn}}
+
+          <button id='logout' class='btn-no-style'>Logout</button>
+        {{else}}
+
+          <a href='/login'>Login</a>
+          {{/if}}
+      </nav>
+    </header>
+    <main>
+      {{{ body }}}
+    </main>
+    <footer>
+      Thanks for visiting!
+    </footer>
+  </div>
+</body>
+
+</html>
