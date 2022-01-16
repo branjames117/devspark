@@ -29,19 +29,19 @@
 
     <div class='wrapper'>
 
-      {{!-- <header>
-        {{!-- <h1>
+      <header>
+        <h1>
           <a href='/'>devspark</a>
         </h1>
         <nav>
           {{#if loggedIn}}
-            <a href='/dash'>dashboard</a>
+            <a href='/chat'>chat</a>
             <button id='logout' class='btn-no-style'>logout</button>
           {{else}}
             <a href='/login'>login</a>
           {{/if}}
         </nav>
-      </header> --}}
+      </header>
 
       <main>
         {{{body}}}
@@ -54,7 +54,7 @@
     </div>
 
     {{#if loggedIn}}
-      {{! <script src='/js/logout.js'></script> }}
+      <script src='/js/logout.js'></script>
     {{/if}}
 
   </body>
