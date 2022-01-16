@@ -33,6 +33,10 @@ Message.init(
         key: 'id',
       },
     },
+    room: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },

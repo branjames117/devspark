@@ -1,0 +1,29 @@
+<script src='/socket.io/socket.io.js'></script>
+<script>
+  var socket = io();
+  
+  // join a room using the senderID and the recipientID with an x between them
+  socket.emit('joinroom', { room: {{ senderId }} + 'x' + {{ recipientId }} });
+
+  function sendMessage() {
+    var msg = document.getElementById('message').value;
+    if(msg) { 
+      socket.emit('msg', { body: msg, sender_id: {{ senderId }}, recipient_id: {{ recipientId }} });
+    } 
+  }
+  
+  socket.on('newmsg', function(data) {
+    document.getElementById('message-container').innerHTML +='<div><b>' + data.sender_id + '</b> ' + data.body + '</div>'
+  })
+
+  socket.on('populateHistory', (history) => {
+    document.getElementById('message-container').innerHTML = '';
+    history.forEach((message) => {
+          document.getElementById('message-container').innerHTML +='<div><b>' + message.sender_id + '</b> ' + message.body + '</div>'
+    })
+  });
+</script>
+<div id='error-container'></div>
+<input type='text' id='message' />
+<button type='button' name='button' onclick='sendMessage()'>Send</button>
+<div id='message-container'></div>
