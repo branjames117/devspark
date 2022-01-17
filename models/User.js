@@ -12,6 +12,7 @@ class User extends Model {
     }
 }
 
+
 // define User table and configurations
 User.init(
     {
@@ -42,30 +43,8 @@ User.init(
                 // set min length of password
                 len: [4]
             }
-        },
-        // bio: {
-        //     type: DataTypes.STRING,
-            
-        // },
-       
-        // bday: {
-        //     type: DataTypes.STRING,
-            
-        // },
-        // techskills: {
-        //     type: DataTypes.STRING,
-            
-        // },
-        // github: {
-        //     type: DataTypes.STRING,
-            
-        // }
-        // ,
-        // resetLink: {
-        //     type: DataTypes.STRING,
-        //     defaultValue: ''
-        // }
-
+        }
+    
     },
     {
         hooks: {

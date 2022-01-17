@@ -1,17 +1,15 @@
 const router = require('express').Router();
 const { User } = require('../../models');
-// const jwt = require('jsonwebtoken');
-// const transporter = nodemailer.createTransport(transport[, defaults])
+const jwt = require('jsonwebtoken');
 
-// nodemailer.createTransport({
-//     host: "smtp.example.com",
-//     port: 587,
-//     secure: false, // upgrade later with STARTTLS
-//     auth: {
-//       user: "username",
-//       pass: "password",
-//     },
-//   });
+// hard code user
+let user = {
+    id: '1',
+    email: 'user@gmail.com',
+    password: '1234567'
+}
+
+const JWT_SECRET = 'some super secret secret'
 
 router.get('/', (req,res) => {
     User.findAll({
@@ -27,107 +25,79 @@ router.get('/', (req,res) => {
 })
 
 
-// POST create a user 
-router.post('/', (req,res) => {
-    // Expects { username, email, password }
-    User.create({
-        username: req.username,
-        email: req.body.email,
-        password: req.body.password,
-        
-    })
-    .then(dbUserData => {
-        req.session.save(() => {
-            req.session.user_id = dbUserData.id,
-            req.session.username = dbUserData.username,
-            req.session.loggedIn = true;
-
-            res.json(dbUserData);
-            console.log(dbUserData);
-        })
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json(err)
-    });
-});
-
-// POST login route
-router.post('/login', (req,res) => {
-    // Expects email and password
-    User.findOne({
-        where: {
-            email: req.body.email
-        }
-    })
-    .then(dbUserData => {
-        if(!dbUserData){
-            res.status(400).json({ message: 'No User found with that email'});
-            return;
-        }
-
-        // validate password
-        const validPassword = dbUserData.checkPassword(req.body.password);
-        if(!validPassword){
-            res.status(400).json({ message: 'Incorrect Password' });
-            return;
-        }
-
-        req.session.save(() => {
-            // declare session variables
-            req.session.user_id = dbUserData.id,
-            req.session.username = dbUserData.username,
-            req.session.loggedIn = true;
-
-            res.json({ user: dbUserData, message: 'You are now logged in' });
-        })
-    });
-});
-
-// POST Logout route
-
-router.post('/logout', (req,res) => {
-    if(req.session.loggedIn){
-        req.session.destroy(() => {
-            res.status(204).end();
-        });
-    } else {
-        res.status(404).end();
-    }
-});
-
-// // PUT forgot password route
-// router.put('/forgot-password', (req,res) => {
-//     // get user email 
-//     const email = req.body.email;
-
-//     User.findOne({email}, (err, user) => {
-//         if(err || !user){
-//             res.status(404).json({ message: 'No user exists with that email' });
-//             return;
-//         }
-
-//         const token = jwt.sign({_id: user.id}, process.env.RESET_PASSWORD_KEY, {expiresIn: '10m'});
-//         const data = {
-
-//             from: 'noreply@hello.com',
-//             to: email,
-//             subject: 'Account Password Reset Link',
-//             html:`
-//                 <h2>Please click on the given link to reset your account password</h2>
-//                 <p>${user.id}/password-reset${token}</p>
-//             `
-//         };
-
-//         return user.updateOne({resetLink: token}, (err, success) {
-//             if(err){
-//                 return res.status(400).json({ error: 'Reset password link error' });
-//             } else {
-
-//             }
-//         })
-//     })
+// GET forgot password route
+router.get('/forgot-password', (req,res) => {
+    // get user email 
+    res.render('forgot-password')
     
-// })
+})
+
+router.post('/forgot-password', (req,res) => {
+    const { email } = req.body;
+    
+    
+    // make sure user exists in database
+    if(email !== user.email){
+        res.send(' User does not exist ');
+        return;
+    }
+   
+    // user exists, create one time link
+    const secret = JWT_SECRET + user.password
+    const payload = {
+        email: user.email,
+        id: user.id
+    }
+    const token = jwt.sign(payload, secret, {expiresIn: '15m'});
+    const link = `http://localhost:3001/api/users/reset-password/${user.id}/${token}`
+    console.log(link);
+    res.send("Password reset link has been sent to your email")
+    // send email to client with reset id
+})
+
+router.get('/reset-password/:id/:token', (req,res) => {
+    const {id, token } = req.params
+    
+    // check if user exists in database
+    if(id !== user.id){
+        res.send('Invalid ID');
+        return;
+    }
+    // valid id
+    const secret = JWT_SECRET + user.password
+    try {
+        const payload = jwt.verify(token, secret)
+        res.render('reset-password', {email: user.email})
+    } catch(error) {
+        console.log(error.message)
+        res.send(error.message)
+    }
+})
+
+router.post('/reset-password/:id/:token', (req,res) => {
+    
+    const { id, token } = req.params;
+    const { password, password2} = req.body;
+    if(id !== user.id) {
+        res.send("Invalid user id")
+        return;
+    }
+
+    const secret = JWT_SECRET + user.password
+    try {
+        const payload = jwt.verify(token, secret)
+        // validate password and password2 should match
+        
+        // find user with the payload email and id / update with new password
+        // always hash password before saving 
+        user.password = password
+        res.send(user)
+
+
+    } catch(error){
+        console.log(error.message)
+        res.send(err.message)
+    }
+})
 
 module.exports = router;
