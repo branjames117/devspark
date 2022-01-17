@@ -1,0 +1,59 @@
+<script src='/socket.io/socket.io.js'></script>
+
+<script>
+  var socket = io();
+  
+  // join a room using the senderID and the recipientID with an x between them
+  socket.emit('joinroom', { room: {{ senderId }} + 'x' + {{ recipientId }} });
+
+  function sendMessage() {
+    var msg = document.getElementById('message').value;
+    if(msg.trim()) { 
+      socket.emit('msg', { body: msg, sender_id: {{ senderId }}, recipient_id: {{ recipientId }} });
+      document.getElementById('message').setSelectionRange(0,0);
+      document.getElementById('message').value = '';
+      document.getElementById('message').focus();
+    }
+  }
+  
+  socket.on('newmsg', function(data) {
+    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.sender_id}</b> (${data.createdAt.slice(11,19)})<br /> ${data.body} </div>`;
+    
+    window.scrollTo(0,document.body.scrollHeight);
+  })
+
+  // when we receive the populateHistory event, clear the container, then fill it with the messages from the db
+  socket.on('populateHistory', (history) => {
+    document.getElementById('message-container').innerHTML = '';
+    history.forEach((message) => {
+      document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.sender_id}</b> (${message.createdAt.slice(11,19)})<br /> ${message.body} </div>`;
+    })
+    window.scrollTo(0,document.body.scrollHeight);
+  });
+</script>
+
+<div id='message-container'></div>
+
+<div id="chat-textbox-container">
+  <div id='error-container'></div>
+  <form id="textbox-and-btn">
+    <textarea id='message'></textarea>
+    <button type='submit' name='button' id="chat-submit-btn">>>></button>
+  </form>
+</div>
+
+
+<script>
+
+    document.getElementById('textbox-and-btn').addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendMessage();
+    })
+
+    document.getElementById('message').addEventListener('keyup', (e) => {
+      console.log(e);
+      if (e.key === 'Enter' && !e.shiftKey) {
+        document.getElementById('chat-submit-btn').click(); 
+      }
+    });
+</script>
