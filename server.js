@@ -45,7 +45,6 @@ const io = require('socket.io')(http);
 
 // when a user (new socket) connects to the server
 io.on('connection', (socket) => {
-  console.log(`SocketID ${socket.id} connected to server`);
   // listen for joinroom requests, meaning a user is initiating a chat with another user
   socket.on('joinroom', (data) => {
     // get IDs of both users, format room name based on which userID is lowest, so that two users will always join the same private room when trying to contact one another
@@ -90,10 +89,9 @@ io.on('connection', (socket) => {
         socket.on('msg', function (data) {
           // add room name to data object
           data.room = room;
-          console.log(data);
+          data.createdAt = new Date();
           Message.create(data).then((dbData) => {
             io.to(room).emit('newmsg', data);
-            console.log(data);
           });
         });
       });

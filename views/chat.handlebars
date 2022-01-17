@@ -1,4 +1,5 @@
 <script src='/socket.io/socket.io.js'></script>
+
 <script>
   var socket = io();
   
@@ -9,21 +10,41 @@
     var msg = document.getElementById('message').value;
     if(msg) { 
       socket.emit('msg', { body: msg, sender_id: {{ senderId }}, recipient_id: {{ recipientId }} });
-    } 
+      document.getElementById('message').value = '';
+    }
   }
   
   socket.on('newmsg', function(data) {
-    document.getElementById('message-container').innerHTML +='<div><b>' + data.sender_id + '</b> ' + data.body + '</div>'
+    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.sender_id}</b> (${data.createdAt.slice(11,19)})<br /> ${data.body} </div>`;
+    
+    window.scrollTo(0,document.body.scrollHeight);
   })
 
+  // when we receive the populateHistory event, clear the container, then fill it with the messages from the db
   socket.on('populateHistory', (history) => {
     document.getElementById('message-container').innerHTML = '';
     history.forEach((message) => {
-          document.getElementById('message-container').innerHTML +='<div><b>' + message.sender_id + '</b> ' + message.body + '</div>'
+      document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.sender_id}</b> (${message.createdAt.slice(11,19)})<br /> ${message.body} </div>`;
     })
+    window.scrollTo(0,document.body.scrollHeight);
   });
 </script>
-<div id='error-container'></div>
-<input type='text' id='message' />
-<button type='button' name='button' onclick='sendMessage()'>Send</button>
+
 <div id='message-container'></div>
+
+<div id="chat-textbox-container">
+  <div id='error-container'></div>
+  <div id="textbox-and-btn">
+    <input type='text' id='message' />
+    <button type='button' name='button' id="chat-submit-btn" onclick='sendMessage()'>>>></button>
+  </div>
+</div>
+
+
+<script>
+    document.getElementById('message').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+</script>

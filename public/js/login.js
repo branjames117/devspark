@@ -33,7 +33,7 @@ async function loginFormHandler(event) {
     });
 
     if (response.ok) {
-      document.location.replace('/chat/2');
+      document.location.replace('/chat/');
     } else {
       errMessageEl.textContent =
         'Something went wrong. Are you sure the username and password are correct?';

@@ -1,8 +1,35 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
+const { Op } = require('sequelize');
+const { Message } = require('../models');
 
 router.get('/', (req, res) => {
-  res.render('chats', { loggedIn: req.session.loggedIn });
+  const userId = req.session.user_id;
+
+  Message.findAll({
+    where: {
+      [Op.or]: [{ sender_id: userId }, { recipient_id: userId }],
+    },
+    order: [['id', 'DESC']],
+  }).then((data) => {
+    const activeChats = [];
+    const plainData = [];
+    data.forEach((data) => {
+      plainData.push(data.get({ plain: true }));
+    });
+
+    // convert the messages into a plain array
+    plainData.forEach((data) => {
+      if (activeChats.indexOf(data.recipient_id) === -1) {
+        activeChats.push(data.recipient_id);
+      }
+    });
+
+    res.render('chats', {
+      loggedIn: req.session.loggedIn,
+      activeChats: activeChats.filter((id) => id !== userId),
+    });
+  });
 });
 
 // display chatroom sandbox
