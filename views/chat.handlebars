@@ -8,9 +8,11 @@
 
   function sendMessage() {
     var msg = document.getElementById('message').value;
-    if(msg) { 
+    if(msg.trim()) { 
       socket.emit('msg', { body: msg, sender_id: {{ senderId }}, recipient_id: {{ recipientId }} });
+      document.getElementById('message').setSelectionRange(0,0);
       document.getElementById('message').value = '';
+      document.getElementById('message').focus();
     }
   }
   
@@ -34,17 +36,24 @@
 
 <div id="chat-textbox-container">
   <div id='error-container'></div>
-  <div id="textbox-and-btn">
-    <input type='text' id='message' />
-    <button type='button' name='button' id="chat-submit-btn" onclick='sendMessage()'>>>></button>
-  </div>
+  <form id="textbox-and-btn">
+    <textarea id='message'></textarea>
+    <button type='submit' name='button' id="chat-submit-btn">>>></button>
+  </form>
 </div>
 
 
 <script>
-    document.getElementById('message').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage();
+
+    document.getElementById('textbox-and-btn').addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendMessage();
+    })
+
+    document.getElementById('message').addEventListener('keyup', (e) => {
+      console.log(e);
+      if (e.key === 'Enter' && !e.shiftKey) {
+        document.getElementById('chat-submit-btn').click(); 
       }
     });
 </script>

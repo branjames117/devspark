@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
+const io = require('socket.io')(http);
 const { User, Message } = require('./models');
 
 // set up session with sequelize
@@ -15,14 +16,18 @@ const routes = require('./controllers');
 const helpers = require('./utils/helpers');
 
 // tell app to use session middleware
-app.use(
-  session({
-    secret: process.env.SECRET,
-    cookie: {},
-    resave: false,
-    store: new SequelizeStore({ db: sequelize }),
-  })
-);
+const sessionMiddleware = session({
+  secret: process.env.SECRET,
+  cookie: {},
+  resave: false,
+  store: new SequelizeStore({ db: sequelize }),
+});
+
+io.use((socket, next) => {
+  sessionMiddleware(socket.request, socket.request.res || {}, next);
+});
+
+app.use(sessionMiddleware);
 
 // tell app to use handlebars for its view engine
 const hbs = exphbs.create({ helpers });
@@ -33,15 +38,10 @@ app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const path = require('path');
-const res = require('express/lib/response');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // tell app to use our custom routes
 app.use(routes);
-
-// socket.io
-// to do - separate this logic to a separate file
-const io = require('socket.io')(http);
 
 // when a user (new socket) connects to the server
 io.on('connection', (socket) => {
@@ -49,6 +49,14 @@ io.on('connection', (socket) => {
   socket.on('joinroom', (data) => {
     // get IDs of both users, format room name based on which userID is lowest, so that two users will always join the same private room when trying to contact one another
     const [user1, user2] = data.room.split('x');
+
+    // check if user1 (senderId) matches the session ID, otherwise user might be trying to spoof another userID
+    if (socket.request.session.user_id != user1) {
+      console.log(
+        `UserID ${socket.request.session.user_id} is pretending to be ${user1}!`
+      );
+      return;
+    }
 
     // if user1 === user2 something went wrong
     if (user1 === user2) {
@@ -58,7 +66,7 @@ io.on('connection', (socket) => {
 
     const room = user1 < user2 ? `${user1}x${user2}` : `${user2}x${user1}`;
 
-    // we know user1 exists because it comes from session data
+    // we know user1 exists because it comes from request session data
     // now check that user2 exists before proceeding
     User.findByPk(user2).then((data) => {
       if (!data) {
@@ -88,6 +96,14 @@ io.on('connection', (socket) => {
         // start listening for messages
         socket.on('msg', function (data) {
           // add room name to data object
+          // check if user1 (senderId) matches the session ID, otherwise user might be trying to spoof another userID
+          if (socket.request.session.user_id != data.sender_id) {
+            console.log(
+              `UserID ${socket.request.session.user_id} is pretending to be ${data.sender_id}!`
+            );
+            return;
+          }
+
           data.room = room;
           data.createdAt = new Date();
           Message.create(data).then((dbData) => {

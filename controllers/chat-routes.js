@@ -23,6 +23,9 @@ router.get('/', (req, res) => {
       if (activeChats.indexOf(data.recipient_id) === -1) {
         activeChats.push(data.recipient_id);
       }
+      if (activeChats.indexOf(data.sender_id) === -1) {
+        activeChats.push(data.sender_id);
+      }
     });
 
     res.render('chats', {
