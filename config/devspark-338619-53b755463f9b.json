@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "devspark-338619",
+  "private_key_id": "53b755463f9be41d3a232159fdb6145950de9bb2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCgZeFAWMoNWlRH\nEY6bjt2TkHHbm+YdkqUhTPQ2ZE4bOQqqpIzimAj9ai6kRoFolqKvFEYjpbR6alcp\nrn52pJBZpIms8iGrZHcUgSzUGmeDJeE/HoP9R2nB1vOcQROe1tzs/S596aTvkpcb\nwQXfFEIVe/jRZtJgXN86FGz1o/tbQXTz0tCbcxyQF83AuQ8zhO8wGTtvW/9Z855+\nNPjwZqLNRYQb+npulYfv0IRflc1nuHYXQy3whLgg7cr5ywVGsRC2vYosyvKX6vee\nMqGt98inRWAhDmugC6jK7Y0uJlRtzZ/C4V1m/VrGqxhEP1i+SVHmxjxsc8KZM3iA\nE3a6Z0pFAgMBAAECggEAGrqaN01fL6t1A49+8BhLf1WLoQ474i4M+4gl4tHYnDu8\ntc63CuRNYeF/GpwEi6fH6MdxoBYd2w/RLPPURN7L4/cB2a1TLrW5YamHDWTFtCVX\nVwaK9eWfz5ALnOcmpwpk2s9JdJe/XGGqxxK68OpLeuYOWDg7aEMsZd1/13gMoS+l\nzC1VmjJ5Gx5oDdZ8l5qtlVO4Yzz75frdPa2bxwZ1bjPSu/tGPxUiBloCJXFMWMBQ\nyfK9ncR+n5G8Q28mnp5hT1+3YnPowTZZsqIhnBgnJ5ebPQ9+LY/g99aAQVWGeYMa\nMbOw3zk0LW1tBOhUKcu+gOR1fGE+kvBRvYzEsyPfbwKBgQDVRVd3Og/tv5L1Ix7q\nO39jL1L3SxS8yRBZFFaqgfUnRJpK2/5ikITMNQ4jcxcdjipVxP73nI19wG9a4zjs\nU0qYiAD0hKsTiRN1rwq7ye3BS4RTSEju4pqoym3Dncp3KKn0SHlU9pP3X0u4i5fm\nJMMOdA5SnVjtMVKQiDOLrz7+nwKBgQDAiLA6kB1fiq5RCV6wTF/kDdbncESzqBSC\n0cXc1qW6ouuf5MPVhZdY0V/5eicACBPJx6QpUHVweAMcwZ+gGojY0Zwm9zfjqEZF\nXh/TJgbFv/oB3WJC0hNih6m5eshsO/DidIOD9kSjtNh6TJaPlMunF2btsTVmneJx\n8oKtRIjgmwKBgCcg6cM+K9364AOJxgpDkEOqUxZ79/oLCazORnhSD6B8vbIuWqXK\nzhKJSWbHnt4VTz8dPYpAdtUzkTqjpbX2MiF6EnLKRHj5FVDqJJX/nldwe36sLHVn\nreh5+1mAgb0LAOOIyHoGI2+nVEUvl1bqN79XG6mcpMwf2H4b/xkJtg0RAoGAEyVE\niP5NvXN39Bz/an6dxnrN1QPoAQmEyKF9kIFTx6Rt09+WzcPUEgP4DEHmYO1sslME\n8wrKMt3sSU7DxdL9qrnlUkahKyVPn5RFi+SrJbz6ancOT2C+hrzA1u3rwj+Pq6U0\ncsnpd3IDWN4G1s5QFhSQqrBFhCfNHdGkxwAasGMCgYAoRAlx0LNZyqjXiyGHYizd\ni9vRZFCI5xbEgoduaBIM9YEbTcW+IVe4F2mZgsLTY0aoHwBf7O/NLoVLsn+SwsOZ\nlve/fo33H+0B1/DP6r8ZXfKfkr2OqpAVZCc0UHQo4c7MqmfRxmpxJ+BYjCvUrNFM\nlrD2DW20MQ3Ck+WXmfSi1A==\n-----END PRIVATE KEY-----\n",
+  "client_email": "devspark-storage@devspark-338619.iam.gserviceaccount.com",
+  "client_id": "100560579839505970807",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/devspark-storage%40devspark-338619.iam.gserviceaccount.com"
+}

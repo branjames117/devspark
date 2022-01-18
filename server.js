@@ -1,4 +1,6 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const multer = require('multer');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const path = require('path');
@@ -10,7 +12,15 @@ const helpers = require('./utils/helpers');
 // initialize app
 const app = express();
 
+
 // tell app to use session middleware
+const multerMid = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+})
+
 app.use(
   session({
     secret: process.env.SECRET,
@@ -29,9 +39,13 @@ app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 // boilerplate app middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.static(path.join(__dirname, 'public')));
+app.disable('x-powered-by')
+app.use(multerMid.single('file'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
 
 // tell app to use our custom routes
 app.use("/", routes);
