@@ -2,7 +2,7 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const path = require('path');
-const routes = require('./controllers');
+const routes = require('./controllers/index');
 const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const helpers = require('./utils/helpers');
@@ -34,7 +34,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // tell app to use our custom routes
-app.use(routes);
+app.use("/", routes);
+console.log(routes.stack);
+routes.stack.forEach(l => console.log(l.route));
 
 // sync sequelize with db before telling server to listen
 sequelize.sync({ force: false }).then(() => {

@@ -1,11 +1,12 @@
-const router = require('express').Router();
+const routes = require('express').Router();
 
 const apiRoutes = require('./api');
 
-router.use('/api', apiRoutes);
+routes.use('/api', apiRoutes);
 
-router.use((req, res) =>{
-    res.status(404).end();
-});
+// routes.use((req, res) =>{
+//     console.log('hello');
+//     res.status(404).end();
+// });
 
-module.exports = router;
+module.exports = routes;

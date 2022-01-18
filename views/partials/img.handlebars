@@ -1,4 +1,4 @@
-<form method="POST" action="/image-upload" enctype="multipart/form-data">
-  <input type="file" name="img" />
-  <input type="submit" />
+<form method="post" action="/upload" enctype="multipart/form-data">
+  <input type="file" name="img" onChange={this.uploadHandler} />
+  <input type="submit" value="Submit" />
 </form>

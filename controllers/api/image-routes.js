@@ -1,57 +1,58 @@
 const app = require('express')
-const router = app.Router();
-
+// app.use(express.static(__dirname + '/public'));
+const routes = app.Router();
+const path = require('path');
 const multer = require('multer');
 const upload = multer({dest: __dirname + '/uploads/images'});
+const helpers = require('../../utils/helpers');
 
-// const formidable = require('formidable');
-// const options = {
-//     filter: function ({name, originalFilename, mimetype}) {
-//       // keep only images
-//       return mimetype && mimetype.includes("image");
-//     }
-//   };
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'uploads/');
+    },
 
-
-router.get('/image', (req, res) => {
-    res.render('img');
-  });
-  
-//   router.post('/upload', (req, res) => {
-//     new formidable.IncomingForm(options).parse(req)
-//     .on('field', (name, field) => {
-//         console.log('Field', name, field)
-//       })
-//       .on('fileBegin', (name, file)=>{
-//           file.path = __dirname + '/uploads' + file.name
-//       })
-//       .on('file', (name, file) => {
-//         console.log('Uploaded file', name, file)
-//       })
-//       .on('aborted', () => {
-//         console.error('Request aborted by the user')
-//       })
-//       .on('error', (err) => {
-//         console.error('Error', err)
-//         throw err
-//       })
-//       .on('end', () => {
-//         res.end()
-//       })
-// })
-
-router.post('/upload', upload.single('photo'), (req, res) => {
-    if(req.file) {
-        res.json(req.file);
+    // By default, multer removes file extensions so let's add them back
+    filename: function(req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
-    else throw 'error';
+});
+
+
+routes.get("/", (req, res) => {
+res.sendFile(path.join(__dirname, "./uploads/images"));
+});
+  
+
+routes.post('/',(req, res) => {
+    let upload = multer({ storage: storage, fileFilter: helpers.imageFilter }).single('profile_pic');
+
+    upload(req, res, function(err) {
+        // req.file contains information of uploaded file
+        // req.body contains information of text fields, if there were any
+
+        if (req.fileValidationError) {
+            return res.send(req.fileValidationError);
+        }
+        else if (!req.file) {
+            return res.send('Please select an image to upload');
+        }
+        else if (err instanceof multer.MulterError) {
+            return res.send(err);
+        }
+        else if (err) {
+            return res.send(err);
+        }
+
+        // Display uploaded image for user validation
+        res.send(`You have uploaded this image: <hr/><img src="${req.file.path}" width="500"><hr /><a href="./">Upload another image</a>`);
+    });
 });
 // app.post('/path', upload.single('avatar'), function (req, res, next) {
 //     // req.file is the `avatar` file
 //     // req.body will hold the text fields, if there were any
 //   })
 
-module.exports = router;
+module.exports = routes;
 
 
 // Error: bad content-type header, no content-type
