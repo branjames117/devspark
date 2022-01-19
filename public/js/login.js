@@ -4,6 +4,7 @@ async function loginFormHandler(event) {
   const email = document.querySelector('#email-login').value.trim();
   const password = document.querySelector('#password-login').value.trim();
 
+  // client validation
   if (!email) {
     document.querySelector('#email-login').style.borderColor = 'red';
     errMessageEl.textContent = 'Email field must not be blank.';
@@ -22,7 +23,9 @@ async function loginFormHandler(event) {
     return;
   }
 
+  // last client validation check
   if (email && password) {
+    // post request to /api/users to create a user
     const response = await fetch('/api/users/login', {
       method: 'post',
       body: JSON.stringify({

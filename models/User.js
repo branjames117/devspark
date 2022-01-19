@@ -40,6 +40,11 @@ User.init(
         isUrl: true,
       },
     },
+    // this is a string that looks like 0;5;15;6; and will ultimately be split into an array of user IDs that are blocked
+    blocked_users: {
+      type: DataTypes.TEXT,
+      defaultValue: '0;',
+    },
   },
   {
     hooks: {
@@ -54,6 +59,7 @@ User.init(
           updatedUserData.password,
           10
         );
+        updatedUserData.blocked_users += updatedUserData.blocked_users;
         return updatedUserData;
       },
     },

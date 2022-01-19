@@ -5,6 +5,7 @@ async function signupFormHandler(e) {
   const password = document.querySelector('#password-signup').value.trim();
   const confirm = document.querySelector('#confirm-signup').value.trim();
 
+  // user validation
   if (!email) {
     document.querySelector('#email-signup').style.borderColor = 'red';
     errMessageEl.textContent = 'Email field must not be blank.';

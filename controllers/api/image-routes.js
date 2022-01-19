@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const { cloudinary, upload } = require('../../config/connection');
-const withAuth = require('../../utils/withAuth');
+const withAuth = require('../../utils/auth');
 
-// GET /api/images/upload
+// temporary GET /api/images/upload
 router.get('/upload', (req, res) => {
   res.render('image');
 });

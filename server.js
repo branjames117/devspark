@@ -1,7 +1,6 @@
 // configure express app with http server so we can use socket.io
 const express = require('express');
 const app = express();
-const multer = require('multer');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const { User, Message } = require('./models');

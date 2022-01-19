@@ -2,8 +2,9 @@ const router = require('express').Router();
 const withAuth = require('../../utils/auth');
 
 const { User, Message } = require('../../models');
+const { Sequelize } = require('sequelize');
 
-// GET /api/users
+// temporary GET /api/users
 router.get('/', (req, res) => {
   // get all users and return everything but their passwords
   User.findAll({ attributes: { exclude: ['password'] } })
@@ -14,16 +15,50 @@ router.get('/', (req, res) => {
     });
 });
 
-// GET /api/users/1
+// temporary GET /api/users/block (for testing block user feature)
+router.get('/block', withAuth, (req, res) => {
+  res.render('block-user');
+});
+
+// PUT /api/users/block
+router.post('/block', withAuth, (req, res) => {
+  const id = req.session.user_id;
+  const idToBlock = req.body.blockedID;
+
+  User.update(
+    {
+      // use Sequelize to concat the current blocked_users list with the new blocked userID, adding also a ';' to the end of the string, important for splitting the string into an array later, since MySQL does not support Array datatypes
+      blocked_users: Sequelize.fn(
+        'CONCAT',
+        Sequelize.col('blocked_users'),
+        idToBlock,
+        ';'
+      ),
+    },
+    {
+      where: {
+        id,
+      },
+    }
+  ).then((dbUserData) => {
+    if (!dbUserData) {
+      res.status(404).json({ message: 'No user found with this id' });
+      return;
+    }
+    res.json(dbUserData);
+  });
+});
+
+// temporary GET /api/users/1
 router.get('/:id', (req, res) => {
   const id = req.params.id;
 
-  // get user by id
   User.findOne({
+    // display everything except the user's hashed password
     attributes: { exclude: ['password'] },
     where: { id },
     include: [
-      // include user's posts,
+      // include user's messages
       {
         model: Message,
         attributes: ['id', 'body', 'sender_id', 'recipient_id', 'created_at'],
@@ -45,7 +80,11 @@ router.get('/:id', (req, res) => {
 
 // POST /api/users
 router.post('/', (req, res) => {
-  // create new user
+  // verify that required fields were submitted
+  if (!req.body.username || !req.body.password) {
+    res.status(500).json({ message: 'Need username and password!' });
+  }
+
   // req.body must be object with username and password
   User.create(req.body)
     .then((dbUserData) => {
@@ -139,7 +178,7 @@ router.delete('/:id', withAuth, (req, res) => {
   const id = req.params.id;
   const sessionId = res.session.user_id;
 
-  // check if id in param matches session id so auth'd users can't just delete whomever they want
+  // check if id in param matches session id so auth'd users can only delete themselves via this route
   const validDelete = id == sessionId;
 
   if (validDelete) {

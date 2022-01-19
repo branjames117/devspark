@@ -2,11 +2,12 @@ const router = require('express').Router();
 const { sequelize } = require('../config/connection');
 const { User, Message } = require('../models');
 
+// GET / (root route)
 router.get('/', (req, res) => {
   res.render('home', { loggedIn: req.session.loggedIn });
 });
 
-// display login prompt (Login Page)
+// GET /login
 router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
     res.redirect('/');
@@ -16,7 +17,7 @@ router.get('/login', (req, res) => {
   res.render('login');
 });
 
-// display login prompt (Login Page)
+// GET /signup
 router.get('/signup', (req, res) => {
   if (req.session.loggedIn) {
     res.redirect('/');
