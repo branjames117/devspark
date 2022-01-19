@@ -1,23 +1,29 @@
 const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../config/connection');
+const bcrypt = require('bcrypt');
 
-class Message extends Model {}
+class Image extends Model {}
 
-Message.init(
+Image.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
+      allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
     },
-    body: {
+    image_name: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        len: [1],
-      },
     },
-    sender_id: {
+    cloud_image: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    image_id: {
+      type: DataTypes.STRING,
+    },
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -25,27 +31,13 @@ Message.init(
         key: 'id',
       },
     },
-    recipient_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'user',
-        key: 'id',
-      },
-    },
-    room: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
   },
   {
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'message',
+    modelName: 'image',
   }
 );
 
-module.exports = Message;
+module.exports = Image;
