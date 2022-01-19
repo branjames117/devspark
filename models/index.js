@@ -14,12 +14,4 @@ Message.belongsTo(User, {
   foreignKey: 'sender_id',
 });
 
-User.hasOne(Image, {
-  foreignKey: 'user_id',
-});
-
-Image.belongsTo(User, {
-  foreignKey: 'user_id',
-});
-
 module.exports = { User, Message };

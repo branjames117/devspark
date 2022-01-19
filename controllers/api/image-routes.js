@@ -1,19 +1,39 @@
 const router = require('express').Router();
 const { cloudinary, upload } = require('../../config/connection');
-//const { upload, uploads } = require('../../config/connection');
-//const fs = require('fs');
+const withAuth = require('../../utils/auth');
+const User = require('../../models/User');
 
-router.get('/upload', (req, res) => {
+// /api/images/upload
+router.get('/upload', withAuth, (req, res) => {
   res.render('image');
 });
 
-router.post('/upload', upload.single('image'), async (req, res) => {
+router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path);
-    res.json(result);
-  } catch (err) {
+    // const result = await cloudinary.uploader.upload(req.file.path);
+    const result= {url: "http://res.cloudinary.com/devspark/image/upload/v1642556816/am390ru0diihz9jznnon.png"}
+    User.update( 
+      { 
+        profile_image: result.url, 
+        where: { 
+          id: req.session.user_id 
+          } 
+      })
+
+  .then(data => {
+      if(!data){
+        res.status(404).json({message: 'We could not update your Profile Picture, please try again or use a smaller image'})
+        return;
+      } else{
+        res.redirect('/api/users/');
+      }
+    }
+    )
+  } 
+  catch (err) {
     console.log(err);
   }
 });
-
+// req.session.user_id
 module.exports = router;
+// User.update( { profile_image: result.url }, where: { id: req.session.user_id } }).then(data => { // we're done now, the db is updated, but here we can check to make sure the data was updated, etc...

@@ -32,6 +32,13 @@ User.init(
       validate: {
         len: [8],
       },
+    profile_image: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate:{
+      isUrl: true
+      },
+    }
     },
   },
   {
