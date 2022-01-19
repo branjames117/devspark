@@ -7,7 +7,7 @@
 
 .nav {
   background-color: #000000;
-  opacity: 0.5;
+  opacity: 0.2;
   filter: alpha(opacity=50);
   overflow: hidden;
 }
@@ -23,8 +23,22 @@ a {
   letter-spacing: 0.5px;
 }
 
-.log-button {
+.log {
     float: right;
+    text-align: center;
+}
+
+.btn {
+    background-image: linear-gradient(to right, #fd287c, #ff7654);
+    border-radius: 50px;
+    box-shadow:#2b2d2f;
+    width: 120px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
 }
 
 .hero-image {
@@ -40,6 +54,7 @@ a {
   /* position:fixed; */
   padding-top:160px ;
   color: white;
+  font-size: xx-large;
 }
 
 .container {
