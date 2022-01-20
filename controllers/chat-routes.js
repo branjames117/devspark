@@ -33,10 +33,27 @@ router.get('/', withAuth, (req, res) => {
       }
     });
 
-    res.render('chats', {
-      loggedIn: req.session.loggedIn,
-      // filter out the user's own ID from the list of active chats, otherwise user will see themselves as an active chat
-      activeChats: activeChats.filter((id) => id !== userId),
+    // to do: look up the user by id then filter out blocked users from the list of active chats
+
+    User.findByPk(userId).then((dbUserData) => {
+      // convert string of recipient's blocked user IDs to array of integers, which is some tomfoolery we have to do since Sequelize/MySQL doesn't support array datatypes
+      const blockedUsersIntArray = dbUserData.dataValues.blocked_users
+        .split(';')
+        .map((id) => parseInt(id));
+
+      // go through list of user's blocked users and only add to their active chats the users who are not blocked
+      const newActiveChats = [];
+      activeChats.forEach((activeChat) => {
+        if (blockedUsersIntArray.indexOf(activeChat) === -1) {
+          newActiveChats.push(activeChat);
+        }
+      });
+
+      res.render('chats', {
+        loggedIn: req.session.loggedIn,
+        // filter out the user's own ID from the list of active chats, otherwise user will see themselves as an active chat
+        activeChats: newActiveChats.filter((id) => id !== userId),
+      });
     });
   });
 });
