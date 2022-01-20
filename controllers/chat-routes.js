@@ -48,10 +48,13 @@ router.get('/:id', withAuth, (req, res) => {
   const recipientId = req.params.id;
 
   // find recipient
+  console.log('seeking');
   User.findByPk(recipientId).then((dbUserData) => {
     // if recipient ID does not exist, send user back to chats
     if (!dbUserData) {
+      console.log('redirecting');
       res.render('chats');
+      return;
     }
 
     // convert string of recipient's blocked user IDs to array of integers, which is some tomfoolery we have to do since Sequelize/MySQL doesn't support array datatypes

@@ -45,7 +45,7 @@ router.post('/block', withAuth, (req, res) => {
       res.status(404).json({ message: 'No user found with this id' });
       return;
     }
-    res.json(dbUserData);
+    res.redirect('/chat');
   });
 });
 
@@ -81,7 +81,7 @@ router.get('/:id', (req, res) => {
 // POST /api/users
 router.post('/', (req, res) => {
   // verify that required fields were submitted
-  if (!req.body.username || !req.body.password) {
+  if (!req.body.email || !req.body.password) {
     res.status(500).json({ message: 'Need username and password!' });
   }
 

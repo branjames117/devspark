@@ -81,8 +81,8 @@ io.on('connection', (socket) => {
 
     // we know user1 exists because it comes from request session data
     // now check that user2 exists before proceeding
-    User.findByPk(user2).then((data) => {
-      if (!data) {
+    User.findByPk(user2).then((dbUserData) => {
+      if (!dbUserData) {
         console.log(`UserID ${user2} does not exist`);
         return;
       }
@@ -117,21 +117,28 @@ io.on('connection', (socket) => {
             return;
           }
 
-          data.room = room;
-          data.createdAt = new Date();
-          Message.create(data).then((dbData) => {
-            io.to(room).emit('newmsg', data);
-          });
+          // convert string of recipient's blocked user IDs to array of integers, which is some tomfoolery we have to do since Sequelize/MySQL doesn't support array datatypes
+          const blockedUsersIntArray = dbUserData.dataValues.blocked_users
+            .split(';')
+            .map((id) => parseInt(id));
+
+          // check if senderID is in recipientID's list of blocked users
+          if (
+            blockedUsersIntArray.indexOf(socket.request.session.user_id) === -1
+          ) {
+            // user is not blocked, proceed with message
+            data.room = room;
+            data.createdAt = new Date();
+            Message.create(data).then((dbData) => {
+              io.to(room).emit('newmsg', data);
+            });
+          } else {
+            // user is blocked, exit function
+            return;
+          }
         });
       });
     });
-
-    // find out which user ID is the lowest, then generate a string like "lowerIDxhigherID" e.g. 5x16 or 100x556; this will be the unique "room name" socket.io will use for emitting messages to the two clients, and this data will also be stored in each message for faster querying
-    // when user joins a preexisting room, all messages in that room will be marked as read
-    // when a user receives a message from a user that has never messaged them before, the user will receive a notification (an invite) to join the unique room ("So and so messaged you")
-    // when a user receives a new message, the notification will also be "So and so messaged you"
-    // from the /chat route, the user will have access to all their existing chatrooms
-    // socket.join(uniqueRoomNameBasedOnUserIDs);
   });
 });
 

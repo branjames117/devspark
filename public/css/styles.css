@@ -10,12 +10,16 @@ body {
   width: 100%;
 }
 
-#active-chats-container a {
+#active-chats-container div {
+  display: flex;
+  margin: 20px;
+}
+
+#active-chats-container div a {
   border: 1px solid black;
   display: block;
-  margin: 20px;
-  padding: 4px 20px;
   text-decoration: none;
+  width: 200px;
 }
 
 /* Chat styles */

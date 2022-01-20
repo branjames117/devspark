@@ -17,6 +17,11 @@
 
   activeChats.forEach(activeChat => {
     console.log(activeChat);
-    document.getElementById('active-chats-container').innerHTML += `<a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>`;
+    document.getElementById('active-chats-container').innerHTML += `<div><a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>
+    
+    <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+  <input type="hidden" name="blockedID" id="blocked-id" value=${activeChat} />
+  <button type="submit">Block User</button>
+</form></div>`;
   });
 </script>

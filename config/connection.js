@@ -1,13 +1,13 @@
-// configure Sequelize, Multer, and Cloudinary connections
 require('dotenv').config();
 const Sequelize = require('sequelize');
 const cloudinary = require('cloudinary');
 const multer = require('multer');
 
-// set up sequelize connection based on whether or not JawsDB is hooked up
+// in this file we configure our Sequelize, multer, and Cloudinary connections
+
 let sequelize;
 
-// use JAWSDB if deployed to Heroku, otherwise use local MySQL database
+// set up sequelize connection based on whether or not JawsDB is hooked up
 if (process.env.JAWSDB_URL) {
   sequelize = new Sequelize(process.env.JAWSDB_URL);
 } else {
@@ -23,7 +23,7 @@ if (process.env.JAWSDB_URL) {
   );
 }
 
-// configure multer
+// set up multer
 const upload = multer({
   storage: multer.diskStorage({}),
   fileFilter: (req, file, cb) => {
@@ -35,7 +35,7 @@ const upload = multer({
   },
 });
 
-// configure cloudinary API
+// configure cloudinary API connection
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
