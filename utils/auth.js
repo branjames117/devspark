@@ -1,10 +1,10 @@
-null;
-
+// express middleware to check if user is authenticated before allowing progress to authlocked route
 const withAuth = (req, res, next) => {
-    if(!req.session.loggedIn){
-        res.redirect('/login');
-        res.json({ message: 'You must login first' });
-    } else {
-        next();
-    }
-}
+  if (!req.session.user_id) {
+    res.redirect('/login');
+  } else {
+    next();
+  }
+};
+
+module.exports = withAuth;

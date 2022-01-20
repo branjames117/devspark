@@ -1,0 +1,22 @@
+<script src='/socket.io/socket.io.js'></script>
+<script>
+  var socket = io();
+</script>
+
+<div id="active-chats-container">
+</div>
+
+<script>
+
+  const activeChats = [{{activeChats}}];
+  console.log(activeChats)
+
+  function redirect(activeChat) {
+    window.location.replace(window.location + '/' + activeChat);
+  }
+
+  activeChats.forEach(activeChat => {
+    console.log(activeChat);
+    document.getElementById('active-chats-container').innerHTML += `<a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>`;
+  });
+</script>

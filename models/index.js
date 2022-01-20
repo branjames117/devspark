@@ -1,8 +1,16 @@
+const User = require('./User');
 const Message = require('./Message');
-const User = require('./User')
 
+User.hasMany(Message, {
+  foreignKey: 'sender',
+});
 
+User.hasMany(Message, {
+  foreignKey: 'recipient',
+});
 
+Message.belongsTo(User, {
+  foreignKey: 'sender_id',
+});
 
-
-module.exports = { Message, User };
+module.exports = { User, Message };

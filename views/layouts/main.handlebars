@@ -1,35 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevSpark</title>
-</head>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>devSpark - develop a connection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='/css/styles.css' />
+    {{!-- <link
+      rel='apple-touch-icon'
+      sizes='180x180'
+      href='/img/apple-touch-icon.png'
+    />
+    <link
+      rel='icon'
+      type='image/png'
+      sizes='32x32'
+      href='/img/favicon-32x32.png'
+    />
+    <link
+      rel='icon'
+      type='image/png'
+      sizes='16x16'
+      href='/img/favicon-16x16.png'
+    />
+    <link rel='manifest' href='/site.webmanifest' /> }} --}}
+  </head>
 
-<body>
-  <div class="wrapper">
-    <header>
-      <h1>
-        <a href="/">DevSpark</a>
-      </h1>
-      <nav>
-        {{#if loggedIn}}
+  <body>
 
-          <button id='logout' class='btn-no-style'>Logout</button>
-        {{else}}
+    <div class='wrapper'>
 
-          <a href='/login'>Login</a>
+      <header>
+        <h1>
+          <a href='/'>devspark</a>
+        </h1>
+        <nav>
+          {{#if loggedIn}}
+            <a href='/chat'>chat</a>
+            <button id='logout' class='btn-no-style'>logout</button>
+          {{else}}
+            <a href='/login'>login</a>
           {{/if}}
-      </nav>
-    </header>
-    <main>
-      {{{ body }}}
-    </main>
-    <footer>
-      Thanks for visiting!
-    </footer>
-  </div>
-</body>
+        </nav>
+      </header>
+
+      <main>
+        {{{body}}}
+      </main>
+
+      {{! <footer>
+        placeholder
+      </footer> }}
+
+    </div>
+
+    {{#if loggedIn}}
+      <script src='/js/logout.js'></script>
+    {{/if}}
+
+  </body>
 
 </html>

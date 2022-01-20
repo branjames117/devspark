@@ -1,0 +1,17 @@
+
+<div>
+    <h1>Reset password for {{ email }} </h1>
+
+    <form action='/api/users/reset/ {{token }}' class='reset-password' method='POST'>
+        <div>
+            <label for='password'>Password</label>
+            <input type='password' name='password' id='password' placeholder="New Password">
+            <br>
+            <label for='confirm'>Confirm Password</label>
+            <input type='password' name='confirm' placeholder='Confirm Password'>
+            <br>
+            <input type='submit' value='reset password'>
+        </div>
+        
+    </form>
+</div>
