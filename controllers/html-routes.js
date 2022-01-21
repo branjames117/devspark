@@ -10,6 +10,7 @@ router.get('/', async (req, res) => {
     }
   })
   console.log(user.dataValues)
+  console.log(req.session)
   res.render('home', { loggedIn: req.session.loggedIn, session: req.session, user: user.dataValues });
 });
 
