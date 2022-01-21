@@ -46,6 +46,4 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-// configure multer, the middleware for handling multipart/form-data
-
 module.exports = { sequelize, cloudinary, upload };

@@ -1,22 +1,45 @@
-<script src='/socket.io/socket.io.js'></script>
-<script>
-  var socket = io();
-</script>
-
+<h3>Active Conversations</h3>
 <div id="active-chats-container">
+</div>
+
+<h3>Blocked Conversations</h3>
+<div id="blocked-chats-container">
 </div>
 
 <script>
 
   const activeChats = [{{activeChats}}];
-  console.log(activeChats)
+  const blockedActiveChats = [{{blockedActiveChats}}];
 
   function redirect(activeChat) {
     window.location.replace(window.location + '/' + activeChat);
   }
 
   activeChats.forEach(activeChat => {
-    console.log(activeChat);
-    document.getElementById('active-chats-container').innerHTML += `<a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>`;
+    document.getElementById('active-chats-container').innerHTML += `<div>
+      <a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>
+      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+        <input type="hidden" name="blockedID" id="blocked-id" value=${activeChat} />
+        <button type="submit">Block User</button>
+      </form>
+      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+        <input type="hidden" name="deletedID" id="deleted-id" value=${activeChat} />
+        <button type="submit">Delete Conversation</button>
+      </form>
+    </div>`;
+  });
+
+  blockedActiveChats.forEach(activeChat => {
+    document.getElementById('blocked-chats-container').innerHTML += `<div>
+      <a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>
+      <form id='unblock-user-form' name='unblock-user-form' action='/api/users/unblock' method='post'>
+        <input type="hidden" name="unblockedID" id="unblocked-id" value=${activeChat} />
+        <button type="submit">Unblock User</button>
+      </form>
+      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+        <input type="hidden" name="deletedID" id="deleted-id" value=${activeChat} />
+        <button type="submit">Delete Conversation</button>
+      </form>
+    </div>`;
   });
 </script>

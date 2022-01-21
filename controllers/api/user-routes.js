@@ -1,13 +1,14 @@
 const router = require('express').Router();
 const withAuth = require('../../utils/auth');
-const { randomBytes } = require('crypto');
+const { Sequelize } = require('sequelize');
 const { User, Message } = require('../../models');
+const { randomBytes } = require('crypto');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
 
-// GET /api/users
+// temporary GET /api/users
 router.get('/', (req, res) => {
   User.findAll({
     attributes: {
@@ -19,6 +20,78 @@ router.get('/', (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
+});
+
+// POST /api/users/block
+router.post('/block', withAuth, (req, res) => {
+  const id = req.session.user_id;
+  const idToBlock = req.body.blockedID;
+
+  User.update(
+    {
+      // use Sequelize to concat the current blocked_users list with the new blocked userID, adding also a ';' to the end of the string, important for splitting the string into an array later, since MySQL does not support Array datatypes
+      blocked_users: Sequelize.fn(
+        'CONCAT',
+        Sequelize.col('blocked_users'),
+        idToBlock,
+        ';'
+      ),
+    },
+    {
+      where: {
+        id,
+      },
+    }
+  ).then((dbUserData) => {
+    if (!dbUserData) {
+      res.status(404).json({ message: 'No user found with this id' });
+      return;
+    }
+    res.redirect('/chat');
+  });
+});
+
+// POST /api/users/unblock
+router.post('/unblock', withAuth, (req, res) => {
+  const id = req.session.user_id;
+  const idToUnblock = req.body.unblockedID;
+
+  // need to get user's current block list
+  User.findByPk(id).then((dbUserData) => {
+    const blockedUsers = dbUserData.dataValues.blocked_users.split(';');
+
+    // filter out the user to be unblocked
+    const updatedBlockedUsers = blockedUsers.filter(
+      (user) => user != idToUnblock
+    );
+
+    // convert the array to a string with ';' between each id
+    const updatedBlockedStr =
+      updatedBlockedUsers.flat().toString().replaceAll(',', ';') + ';';
+
+    // now update the user
+    User.update({ blocked_users: updatedBlockedStr }, { where: { id } }).then(
+      (dbUserData) => {
+        if (!dbUserData) {
+          res.status(404).json({ message: 'No user found with this id' });
+          return;
+        }
+        res.redirect('/chat');
+      }
+    );
+  });
+});
+
+// PUT /api/users/delete-conversation
+router.post('/delete-conversation', withAuth, (req, res) => {
+  const user1 = req.session.user_id;
+  const user2 = req.body.deletedID;
+
+  const room = user1 < user2 ? `${user1}x${user2}` : `${user2}x${user1}`;
+
+  Message.destroy({ where: { room } }).then((dbMessageData) => {
+    res.redirect('/chat');
+  });
 });
 
 // GET /api/users/forgot
@@ -145,19 +218,26 @@ router.post('/reset/:token', (req, res) => {
   }
 });
 
-// GET /api/users/1
+// temporary GET /api/users/1
 router.get('/:id', (req, res) => {
   const id = req.params.id;
 
-  // get user by id
   User.findOne({
+    // display everything except the user's hashed password
     attributes: { exclude: ['password'] },
     where: { id },
     include: [
-      // include user's posts,
+      // include user's messages
       {
         model: Message,
-        attributes: ['id', 'body', 'sender_id', 'recipient_id', 'created_at'],
+        attributes: [
+          'id',
+          'body',
+          'sender_id',
+          'recipient_id',
+          'read',
+          'created_at',
+        ],
       },
     ],
   })
@@ -176,7 +256,11 @@ router.get('/:id', (req, res) => {
 
 // POST /api/users
 router.post('/', (req, res) => {
-  // create new user
+  // verify that required fields were submitted
+  if (!req.body.email || !req.body.password) {
+    res.status(500).json({ message: 'Need username and password!' });
+  }
+
   // req.body must be object with username and password
   User.create(req.body)
     .then((dbUserData) => {
@@ -270,7 +354,7 @@ router.delete('/:id', withAuth, (req, res) => {
   const id = req.params.id;
   const sessionId = res.session.user_id;
 
-  // check if id in param matches session id so auth'd users can't just delete whomever they want
+  // check if id in param matches session id so auth'd users can only delete themselves via this route
   const validDelete = id == sessionId;
 
   if (validDelete) {

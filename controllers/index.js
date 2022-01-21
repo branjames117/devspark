@@ -8,6 +8,7 @@ router.use('/', htmlRoutes);
 router.use('/chat', chatRoutes);
 router.use('/api', apiRoutes);
 
+// end of the line middleware for non-existing routes
 router.use((req, res) => {
   res.status(404).end();
 });
