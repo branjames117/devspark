@@ -2,8 +2,15 @@ const router = require('express').Router();
 const { sequelize } = require('../config/connection');
 const { User, Message } = require('../models');
 
-router.get('/', (req, res) => {
-  res.render('home', { loggedIn: req.session.loggedIn });
+router.get('/', async (req, res) => {
+  console.log(req.session)
+  const user= await User.findOne({
+    where: {
+      id: req.session.user_id
+    }
+  })
+  console.log(user)
+  res.render('home', { loggedIn: req.session.loggedIn, session: user.dataValues });
 });
 
 // display login prompt (Login Page)

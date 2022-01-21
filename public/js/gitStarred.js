@@ -1,15 +1,18 @@
 // function to asynchronously find all users github repos with issues and display on homepage
-async function githubIssues(user){
+async function githubStarred(){
     // user will be userID for github
-    const user = document.querySelector("#githubusername").value;
-    const apiUrl = "https://api.github.com/users/" + user +"/starred";
+    const user = document.querySelector("#githubusername").textContent.trim();
+    const repoContainerEl = document.querySelector("#repoContainerEl");
+    console.log(user)
+    const apiUrl = `https://api.github.com/users/${user}/starred?`;
     // grab users public github repo data
     fetch(apiUrl).then(function(response){
         if(response.ok){
             response.json().then(function(data){
                 // function to show repos w/ issues, not declared as of yet
                 // perhaps us handlebars.js to display repos?
-                displayRepos =() =>{
+                console.log(data)
+                displayRepos =(repos) =>{
                     for (let i = 0; i < repos.length; i++) {
                         const repoName = repos[i].name;
 
@@ -35,6 +38,7 @@ async function githubIssues(user){
                         repoContainerEl.appendChild(repoEl);
                     }
                 };
+                displayRepos(data)
             })
         }else{
             console.log("Github User not found");
@@ -44,3 +48,4 @@ async function githubIssues(user){
         console.log("Github is Unavailable at this time")
     })
 }
+githubStarred()
