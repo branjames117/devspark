@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// PUT /api/users/block
+// POST /api/users/block
 router.post('/block', withAuth, (req, res) => {
   const id = req.session.user_id;
   const idToBlock = req.body.blockedID;
@@ -41,6 +41,36 @@ router.post('/block', withAuth, (req, res) => {
       return;
     }
     res.redirect('/chat');
+  });
+});
+
+// POST /api/users/unblock
+router.post('/unblock', withAuth, (req, res) => {
+  const id = req.session.user_id;
+  const idToUnblock = req.body.unblockedID;
+
+  // need to get user's current block list
+  User.findByPk(id).then((dbUserData) => {
+    // const blockedUsers = dbUserData.dataValues.blocked_users.split(';');
+    const blockedUsers = ['1', '2', '3', '4'];
+
+    // filter out the user to be unblocked
+    const updatedBlockedUsers = blockedUsers.filter((user) => user != 2);
+
+    // convert the array to a string with ';' between each id
+    const updatedBlockedStr =
+      updatedBlockedUsers.flat().toString().replaceAll(',', ';') + ';';
+
+    // now update the user
+    User.update({ blocked_users: updatedBlockedStr }, { where: { id } }).then(
+      (dbUserData) => {
+        if (!dbUserData) {
+          res.status(404).json({ message: 'No user found with this id' });
+          return;
+        }
+        res.redirect('/chat');
+      }
+    );
   });
 });
 
