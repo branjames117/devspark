@@ -26,7 +26,7 @@ router.get('/:id', (req, res) => {
       // include user's posts,
       {
         model: Message,
-        attributes: ['id', 'body', 'sender_id', 'recipient_id', 'created_at'],
+        attributes: ['id', 'body', 'sender_id','github', 'recipient_id', 'created_at'],
       },
     ],
   })

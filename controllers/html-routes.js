@@ -9,8 +9,8 @@ router.get('/', async (req, res) => {
       id: req.session.user_id
     }
   })
-  console.log(user)
-  res.render('home', { loggedIn: req.session.loggedIn, session: user.dataValues });
+  console.log(user.dataValues)
+  res.render('home', { loggedIn: req.session.loggedIn, session: req.session, user: user.dataValues });
 });
 
 // display login prompt (Login Page)
