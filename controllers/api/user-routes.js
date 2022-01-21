@@ -2,7 +2,8 @@ const router = require('express').Router();
 const withAuth = require('../../utils/auth');
 const { randomBytes } = require('crypto');
 const { User, Message } = require('../../models');
-const async = require('async');
+const async = require('async')
+const waterfall = require('async/waterfall');
 const nodemailer = require('nodemailer')
 require('dotenv').config()
 const { google } = require('googleapis')
@@ -48,38 +49,38 @@ async function tokenizeUser(userId) {
 
 const createTransporter = async () => {
     const oauth2Client = new OAuth2(
-      process.env.CLIENT_ID,
-      process.env.CLIENT_SECRET,
-      "https://developers.google.com/oauthplayground"
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET,
+        "https://developers.google.com/oauthplayground"
     );
-  
+
     oauth2Client.setCredentials({
-      refresh_token: process.env.REFRESH_TOKEN
+        refresh_token: process.env.REFRESH_TOKEN
     });
-  
+
     const accessToken = await new Promise((resolve, reject) => {
-      oauth2Client.getAccessToken((err, token) => {
-        if (err) {
-          reject();
-        }
-        resolve(token);
-      });
+        oauth2Client.getAccessToken((err, token) => {
+            if (err) {
+                reject();
+            }
+            resolve(token);
+        });
     });
-  
+
     const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAuth2",
-        user: 'devspark003@gmail.com',
-        accessToken,
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        refreshToken: process.env.REFRESH_TOKEN
-      }
+        service: "gmail",
+        auth: {
+            type: "OAuth2",
+            user: 'devspark003@gmail.com',
+            accessToken,
+            clientId: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            refreshToken: process.env.REFRESH_TOKEN
+        }
     });
-  
+
     return transporter;
-  };
+};
 router.post('/forgot', async function (req, res) {
     console.log(req.body.email, 'Email captured');
 
@@ -94,11 +95,11 @@ router.post('/forgot', async function (req, res) {
         let user = await tokenizeUser(userDb.id)
 
         var mailOptions = {
-            to: 'funkeycolors@gmail.com',
+            to: req.body.email,
             from: 'devspark003@gmail.com',
             subject: 'DevSpark Password Reset',
             text: 'For clients with plaintext support only',
-            html:  `
+            html: `
             <p>You are receiving this link because you have requested the reset of your password for your account ${user.email}.
             'Please click on the following link, or paste this into your browser to complete this process:</p>
             <a href="http://localhost:3001/api/users/reset/${user.resetPasswordToken}">Reset link</a>
@@ -109,103 +110,64 @@ router.post('/forgot', async function (req, res) {
             let emailTransporter = await createTransporter()
             await emailTransporter.sendMail(emailOptions)
         }
-        
+
         sendEmail(mailOptions).then(() => console.log('sent email'))
-        res.status(200).json({status: 'success', message: 'message sent'})
+        res.status(200).json({ status: 'success', message: 'message sent' })
     }
-    
+
 });
 
 router.get('/reset/:token', function (req, res) {
-    User.findOne({ resetPasswordToken: req.params.token  }, function (err, user) {
+    console.log('========')
+    console.log(req.params.token);
+    User.findOne({ where: { resetPasswordToken: req.params.token } }).then(function (user) {
         if (!user) {
-            req.flash('error', 'Password reset token is invalid or has expired.');
+
+            res.flash('error', 'Password reset token is invalid or has expired.');
             return res.redirect('/api/users/forgot');
         }
+
         res.render('reset', { token: req.params.token });
     });
 });
 
-router.post('/reset/:token', function (req, res) {
-    async.waterfall([
-        function (done) {
-            User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
-                if (!user) {
-                    req.flash('error', 'Password reset token is invalid or has expired');
-                    return res.redirect('back')
-                }
-                if (req.body.password === req.body.confirm) {
-                    user.setPassword(req.body.password, function (err) {
-                        user.resetPasswordToken = undefined;
-                        user.resetPasswordExpires = undefined;
+router.post('/reset/:token', (req, res) => {
+    console.log('You made it here');
+    if (req.body.password !== req.body.confirm) {
+        console.log('Passwords do not match')
+        // res.flash('error', 'Password reset token is invalid or has expired');
+        return res.redirect('back')
 
-                        user.save(function (err) {
-                            req.logIn(user, function (err) {
-                                done(err, user);
-                            });
-                        });
-                    })
-                } else {
-                    req.flash('error', 'Passwords do not match');
-                    return res.redirect('back');
-                }
-            })
-        },
-        function (user, done) {
-            var smtpTransport = nodemailer.createTransport({
-                service: 'Gmail',
-                auth: {
-                    user: 'devspark003@gmail.com',
-                    pass: process.env.GMAILPW
-                }
-            });
-            var mailOptions = {
-                to: user.email,
-                from: 'devspark003@gmail.com',
-                subject: 'Your password has been changed',
-                text: 'This email is confirming your account at' + user.email + 'password has been changed.\n'
+    } else {
+        console.log(req.body.password, req.body.confirm)
+        User.update({
+            resetPasswordToken: undefined,
+            resetPasswordExp: undefined,
+            password: req.body.password
+          }, {
+            where: { resetPasswordToken: req.params.token },
+            returning: true,
+            plain: true
+          })
+          .then(result => console.log(result)).catch(err => console.log(err));
 
-            };
-            smtpTransport.sendMail(mailOptions, function (err) {
-                req.flash('success', 'Success! Your password has been changed.');
-                done(err);
-            });
-        }
+        // var mailOptions = {
+        //     to: user.email,
+        //     from: 'devspark003@gmail.com',
+        //     subject: 'Your password has been changed',
+        //     html: 'This email is confirming your account at' + user.email + 'password has been changed.\n'
 
-    ], function (err) {
-        res.redirect('/')
-    });
+        // };
+        // const sendConfirmEmail = async (emailOptions) => {
+        //     let emailTransporter = await createTransporter()
+        //     await emailTransporter.sendConfirmMail(emailOptions)
+        // }
+        // sendConfirmEmail(mailOptions).then(() => console.log('sent email'))
+        // res.status(200).json({status: 'success', message: 'message sent'})
+
+    }
+
 });
-
-
-
-// router.post('/reset-password/:id/:token', (req,res) => {
-
-//     const { id, token } = req.params;
-//     const { password, password2} = req.body;
-//     if(id !== user.id) {
-//         res.send("Invalid user id")
-//         return;
-//     }
-
-//     const secret = JWT_SECRET + user.password
-//     try {
-//         const payload = jwt.verify(token, secret)
-//         // validate password and password2 should match
-
-//         // find user with the payload email and id / update with new password
-//         // always hash password before saving 
-//         user.password = password
-//         res.send(user)
-
-
-//     } catch(error){
-//         console.log(error.message)
-//         res.send(err.message)
-//     }
-// })
-
-
 
 // GET /api/users/1
 router.get('/:id', (req, res) => {
