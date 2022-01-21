@@ -1,7 +1,7 @@
 <div id="containter">
     {{if starred repo}}
     <div>
-        <a href={"https://github.com/users/" + user +"/"+repo.name+"issues"}>
+        <a href={"https://github.com/users/" + user + "/" + repo.name}>
         <span>
             {{user}}/{{user.repo.name}}
         </span></a>
@@ -14,4 +14,4 @@
 </div>
 <script src="../public/js/gitIssues.js"></script>
 {{!-- Example of expected link:
-https://github.com/Cody-Junier/git-it-done/issues/ --}}
+https://api.github.com/users/cody-junier/starred? --}}
