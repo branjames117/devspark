@@ -169,7 +169,7 @@ io.on('connection', (socket) => {
 const PORT = process.env.PORT || 3001;
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   http.listen(PORT, () => {
     if (process.env.PORT) {
       console.log('Server is listening.');
