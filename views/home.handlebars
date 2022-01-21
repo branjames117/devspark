@@ -1,0 +1,17 @@
+<div id="containter">
+    {{if starred repo}}
+    <div>
+        <a href={"https://github.com/users/" + user +"/"+repo.name+"issues"}>
+        <span>
+            {{user}}/{{user.repo.name}}
+        </span></a>
+    </div>
+    {{/if}}
+    {{else}}
+    <div>
+        <p> This User has NO Starred Repos</p>
+    </div>
+</div>
+<script src="../public/js/gitIssues.js"></script>
+{{!-- Example of expected link:
+https://github.com/Cody-Junier/git-it-done/issues/ --}}
