@@ -1,8 +1,3 @@
-<script src='/socket.io/socket.io.js'></script>
-<script>
-  var socket = io();
-</script>
-
 <div id="active-chats-container">
 </div>
 
@@ -17,11 +12,16 @@
 
   activeChats.forEach(activeChat => {
     console.log(activeChat);
-    document.getElementById('active-chats-container').innerHTML += `<div><a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>
-    
-    <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
-  <input type="hidden" name="blockedID" id="blocked-id" value=${activeChat} />
-  <button type="submit">Block User</button>
-</form></div>`;
+    document.getElementById('active-chats-container').innerHTML += `<div>
+      <a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>
+      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+        <input type="hidden" name="blockedID" id="blocked-id" value=${activeChat} />
+        <button type="submit">Block User</button>
+      </form>
+      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+        <input type="hidden" name="deletedID" id="deleted-id" value=${activeChat} />
+        <button type="submit">Delete Conversation</button>
+      </form>
+    </div>`;
   });
 </script>

@@ -15,11 +15,6 @@ router.get('/', (req, res) => {
     });
 });
 
-// temporary GET /api/users/block (for testing block user feature)
-router.get('/block', withAuth, (req, res) => {
-  res.render('block-user');
-});
-
 // PUT /api/users/block
 router.post('/block', withAuth, (req, res) => {
   const id = req.session.user_id;
@@ -45,6 +40,18 @@ router.post('/block', withAuth, (req, res) => {
       res.status(404).json({ message: 'No user found with this id' });
       return;
     }
+    res.redirect('/chat');
+  });
+});
+
+// PUT /api/users/delete-conversation
+router.post('/delete-conversation', withAuth, (req, res) => {
+  const user1 = req.session.user_id;
+  const user2 = req.body.deletedID;
+
+  const room = user1 < user2 ? `${user1}x${user2}` : `${user2}x${user1}`;
+
+  Message.destroy({ where: { room } }).then((dbMessageData) => {
     res.redirect('/chat');
   });
 });

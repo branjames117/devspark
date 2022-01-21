@@ -1,8 +1,6 @@
 <script src='/socket.io/socket.io.js'></script>
 
-<script>
-  var socket = io();
-  
+<script>  
   // join a room using the senderID and the recipientID with an x between them
   socket.emit('joinroom', { room: {{ senderId }} + 'x' + {{ recipientId }} });
 
