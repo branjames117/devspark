@@ -1,6 +1,5 @@
 const User = require('./User');
 const Message = require('./Message');
-const Image = require('./Image');
 
 User.hasMany(Message, {
   foreignKey: 'sender',

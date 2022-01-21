@@ -6,6 +6,9 @@ class User extends Model {
   // add check password method to user model
   // compares entered password with password stored in instance
   checkPassword(loginPw) {
+    console.log(loginPw);
+    console.log(this.password);
+    console.log(bcrypt.compareSync(loginPw, this.password));
     return bcrypt.compareSync(loginPw, this.password);
   }
 }
@@ -24,29 +27,30 @@ User.init(
       allowNull: false,
       validate: {
         isEmail: true,
-      }
+      },
     },
     profile_image: {
       type: DataTypes.STRING,
       allowNull: true,
-      validate:{
-      isUrl: true
-      }
+      validate: {
+        isUrl: true,
+      },
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         len: [8],
-      }
+      },
     },
     resetPasswordToken: {
-        type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     resetPasswordExpires: {
-        type: DataTypes.DATE
-      },
-    }
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
     hooks: {
@@ -57,6 +61,7 @@ User.init(
       },
       // before updating user in db, hash the password
       async beforeUpdate(updatedUserData) {
+        console.log('hashing password');
         updatedUserData.password = await bcrypt.hash(
           updatedUserData.password,
           10
