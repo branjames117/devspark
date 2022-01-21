@@ -1,13 +1,19 @@
 const router = require('express').Router();
 const withAuth = require('../../utils/auth');
-
 const { User, Message } = require('../../models');
 const { Sequelize } = require('sequelize');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+const { google } = require('googleapis');
+const OAuth2 = google.auth.OAuth2;
 
 // temporary GET /api/users
 router.get('/', (req, res) => {
-  // get all users and return everything but their passwords
-  User.findAll({ attributes: { exclude: ['password'] } })
+  User.findAll({
+    attributes: {
+      exclude: ['password'],
+    },
+  })
     .then((dbUserData) => res.json(dbUserData))
     .catch((err) => {
       console.log(err);
@@ -85,6 +91,130 @@ router.post('/delete-conversation', withAuth, (req, res) => {
   Message.destroy({ where: { room } }).then((dbMessageData) => {
     res.redirect('/chat');
   });
+});
+
+// GET /api/users/forgot
+router.get('/forgot', (req, res) => {
+  // get user email
+  res.render('forgot-password');
+});
+
+// create the transporter for our gmail-based forgot-password message
+const createTransporter = async () => {
+  const oauth2Client = new OAuth2(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    'https://developers.google.com/oauthplayground'
+  );
+
+  oauth2Client.setCredentials({
+    refresh_token: process.env.REFRESH_TOKEN,
+  });
+
+  const accessToken = await new Promise((resolve, reject) => {
+    oauth2Client.getAccessToken((err, token) => {
+      if (err) {
+        reject();
+      }
+      resolve(token);
+    });
+  });
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: 'devspark003@gmail.com',
+      accessToken,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
+    },
+  });
+
+  return transporter;
+};
+
+// POST /api/users/forgot
+router.post('/forgot', async function (req, res) {
+  // generate a token
+  const token = randomBytes(20).toString('hex');
+
+  // update the requested email address with the token
+  User.update(
+    {
+      resetPasswordToken: token,
+      resetPasswordExpires: Date.now() + 3600000,
+    },
+    { where: { email: req.body.email } }
+  ).then((userFound) => {
+    // then, if we found the user to update, send the email with the token
+    if (userFound) {
+      var mailOptions = {
+        to: req.body.email,
+        from: 'devspark003@gmail.com',
+        subject: 'DevSpark Password Reset',
+        text: 'For clients with plaintext support only',
+        html: `
+            <p>You are receiving this link because you have requested the reset of your password for your account ${req.body.email}.
+            'Please click on the following link, or paste this into your browser to complete this process:</p>
+            <a href="http://localhost:3001/api/users/reset/${token}">Reset link</a>
+            <p>If you did not request a password reset. Please ignore this email.</p>`,
+      };
+
+      const sendEmail = async (emailOptions) => {
+        let emailTransporter = await createTransporter();
+        await emailTransporter.sendMail(emailOptions);
+      };
+
+      sendEmail(mailOptions).then(() => {
+        res.status(200).json({ status: 'success', message: 'message sent' });
+      });
+    }
+  });
+});
+
+router.get('/reset/:token', function (req, res) {
+  User.findOne({ where: { resetPasswordToken: req.params.token } }).then(
+    function (user) {
+      if (!user) {
+        return res.redirect('/api/users/forgot');
+      }
+
+      res.render('reset', { token: req.params.token });
+    }
+  );
+});
+
+router.post('/reset/:token', (req, res) => {
+  if (req.body.password !== req.body.confirm) {
+    // res.flash('error', 'Password reset token is invalid or has expired');
+    return res.redirect('back');
+  } else {
+    User.findOne({ where: { resetPasswordToken: req.params.token } }).then(
+      (dbUserData) => {
+        if (dbUserData) {
+          User.update(
+            {
+              resetPasswordToken: null,
+              resetPasswordExpires: null,
+              password: req.body.password,
+            },
+            {
+              where: { resetPasswordToken: req.params.token },
+              individualHooks: true,
+            }
+          ).then((rowsUpdated) => {
+            if (rowsUpdated) {
+              res.render('login');
+            } else {
+              console.log('Something went wrong.');
+            }
+          });
+        }
+      }
+    );
+  }
 });
 
 // temporary GET /api/users/1
