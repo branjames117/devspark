@@ -26,6 +26,13 @@ User.init(
         isEmail: true,
       },
     },
+    profile_image: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isUrl: true,
+      },
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -33,12 +40,11 @@ User.init(
         len: [8],
       },
     },
-    profile_image: {
+    resetPasswordToken: {
       type: DataTypes.STRING,
-      allowNull: true,
-      validate: {
-        isUrl: true,
-      },
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
     },
   },
   {
