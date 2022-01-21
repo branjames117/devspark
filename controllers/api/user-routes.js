@@ -10,9 +10,9 @@ const OAuth2 = google.auth.OAuth2;
 // GET /api/users
 router.get('/', (req, res) => {
   User.findAll({
-    // attributes: {
-    //   exclude: ['password'],
-    // },
+    attributes: {
+      exclude: ['password'],
+    },
   })
     .then((dbUserData) => res.json(dbUserData))
     .catch((err) => {
@@ -65,8 +65,6 @@ const createTransporter = async () => {
 
 // POST /api/users/forgot
 router.post('/forgot', async function (req, res) {
-  console.log(req.body.email, 'Email captured');
-
   // generate a token
   const token = randomBytes(20).toString('hex');
 
@@ -80,7 +78,6 @@ router.post('/forgot', async function (req, res) {
   ).then((userFound) => {
     // then, if we found the user to update, send the email with the token
     if (userFound) {
-      console.log(userFound);
       var mailOptions = {
         to: req.body.email,
         from: 'devspark003@gmail.com',
@@ -99,17 +96,13 @@ router.post('/forgot', async function (req, res) {
       };
 
       sendEmail(mailOptions).then(() => {
-        console.log('sent email');
+        res.status(200).json({ status: 'success', message: 'message sent' });
       });
-
-      res.status(200).json({ status: 'success', message: 'message sent' });
     }
   });
 });
 
 router.get('/reset/:token', function (req, res) {
-  console.log('========');
-  console.log(req.params.token);
   User.findOne({ where: { resetPasswordToken: req.params.token } }).then(
     function (user) {
       if (!user) {
@@ -122,19 +115,13 @@ router.get('/reset/:token', function (req, res) {
 });
 
 router.post('/reset/:token', (req, res) => {
-  console.log('You made it here');
   if (req.body.password !== req.body.confirm) {
-    console.log('Passwords do not match');
     // res.flash('error', 'Password reset token is invalid or has expired');
     return res.redirect('back');
   } else {
-    console.log(req.params.token);
-    console.log(req.body.password, req.body.confirm);
     User.findOne({ where: { resetPasswordToken: req.params.token } }).then(
       (dbUserData) => {
         if (dbUserData) {
-          console.log('============');
-          console.log('Updating password to ', req.body.password);
           User.update(
             {
               resetPasswordToken: null,
@@ -147,7 +134,6 @@ router.post('/reset/:token', (req, res) => {
             }
           ).then((rowsUpdated) => {
             if (rowsUpdated) {
-              console.log(rowsUpdated);
               res.render('login');
             } else {
               console.log('Something went wrong.');
