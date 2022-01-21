@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const withAuth = require('../../utils/auth');
-const { User, Message } = require('../../models');
 const { Sequelize } = require('sequelize');
+const { User, Message } = require('../../models');
+const { randomBytes } = require('crypto');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const { google } = require('googleapis');
