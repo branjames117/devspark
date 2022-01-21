@@ -1,12 +1,13 @@
 const User = require('./User');
 const Message = require('./Message');
+const Image = require('./Image');
 
 User.hasMany(Message, {
   foreignKey: 'sender',
 });
 
 User.hasMany(Message, {
-  foreignKey: 'recipient',
+  foreignKey: 'recipient_id',
 });
 
 Message.belongsTo(User, {

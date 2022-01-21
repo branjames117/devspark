@@ -1,13 +1,14 @@
 // configure express app with http server so we can use socket.io
 const express = require('express');
 const app = express();
+const multer = require('multer');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const { User, Message } = require('./models');
 
 // set up session with sequelize
 const session = require('express-session');
-const sequelize = require('./config/connection');
+const { sequelize } = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 // handlebars, session, sequelize, sequelize session, helpers and routes
@@ -20,6 +21,7 @@ const sessionMiddleware = session({
   secret: process.env.SECRET,
   cookie: {},
   resave: false,
+  saveUninitialized: true,
   store: new SequelizeStore({ db: sequelize }),
 });
 
@@ -39,6 +41,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static('uploads'));
+
+// cors handling
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'POST, PUT, GET, DELETE');
+    return res.status(200).json({});
+  }
+  next();
+});
 
 
 // tell app to use our custom routes
