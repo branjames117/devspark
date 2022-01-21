@@ -1,10 +1,7 @@
 const router = require('express').Router();
 const { cloudinary, upload } = require('../../config/connection');
-const withAuth = require('../../utils/withAuth');
-
 const withAuth = require('../../utils/auth');
 const User = require('../../models/User');
-const session = require('express-session');
 
 // /api/images/upload
 router.get('/upload', withAuth, (req, res) => {
@@ -29,12 +26,10 @@ router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
   )
     .then((data) => {
       if (!data) {
-        res
-          .status(404)
-          .json({
-            message:
-              'We could not update your Profile Picture, please try again or use a smaller image',
-          });
+        res.status(404).json({
+          message:
+            'We could not update your Profile Picture, please try again or use a smaller image',
+        });
         return;
       } else {
         res.redirect('/api/users/' + req.session.user_id);
