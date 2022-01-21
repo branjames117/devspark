@@ -6,16 +6,19 @@ body {
 
 /* Active Chats styles */
 
-#active-chats-container {
+#active-chats-container,
+#blocked-chats-container {
   width: 100%;
 }
 
-#active-chats-container div {
+#active-chats-container div,
+#blocked-chats-container div {
   display: flex;
   margin: 20px;
 }
 
-#active-chats-container div a {
+#active-chats-container div a,
+#blocked-chats-container div a {
   border: 1px solid black;
   display: block;
   text-decoration: none;

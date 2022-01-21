@@ -43,16 +43,22 @@ router.get('/', withAuth, (req, res) => {
 
       // go through list of user's blocked users and only add to their active chats the users who are not blocked
       const newActiveChats = [];
+      const blockedActiveChats = [];
       activeChats.forEach((activeChat) => {
         if (blockedUsersIntArray.indexOf(activeChat) === -1) {
           newActiveChats.push(activeChat);
+        } else {
+          blockedActiveChats.push(activeChat);
         }
       });
+
+      console.log(blockedActiveChats);
 
       res.render('chats', {
         loggedIn: req.session.loggedIn,
         // filter out the user's own ID from the list of active chats, otherwise user will see themselves as an active chat
         activeChats: newActiveChats.filter((id) => id !== userId),
+        blockedActiveChats: blockedActiveChats,
       });
     });
   });

@@ -56,6 +56,9 @@ app.use((req, res, next) => {
 // tell app to use our custom routes
 app.use(routes);
 
+// track who is online and in what room
+const users = {};
+
 // when a user (new socket) connects to the server
 io.on('connection', (socket) => {
   // listen for joinroom requests, meaning a user is initiating a chat with another user
@@ -79,6 +82,16 @@ io.on('connection', (socket) => {
 
     const room = user1 < user2 ? `${user1}x${user2}` : `${user2}x${user1}`;
 
+    users[socket.request.session.user_id] = {
+      id: socket.request.session.user_id,
+      room: {},
+    };
+
+    users[socket.request.session.user_id].room[room] = room;
+
+    console.log('Users', users);
+
+    console.log(`${socket.request.session.user_id} has joined ${room}.`);
     // we know user1 exists because it comes from request session data
     // now check that user2 exists before proceeding
     User.findByPk(user2).then((dbUserData) => {
@@ -128,6 +141,10 @@ io.on('connection', (socket) => {
           ) {
             // user is not blocked, proceed with message
             data.room = room;
+
+            // check if the recipient is both online AND in the same room as the sender, if so, flag the message as read (true), otherwise, unread (false)
+            data.read = users[user2] && users[user2].room[room] ? true : false;
+            console.log(data.read);
             data.createdAt = new Date();
             Message.create(data).then((dbData) => {
               io.to(room).emit('newmsg', data);
@@ -139,6 +156,13 @@ io.on('connection', (socket) => {
         });
       });
     });
+  });
+
+  // on disconnect, remove the user from the online users object
+  socket.on('disconnect', () => {
+    console.log(`${socket.request.session.user_id} has disconnected`);
+    delete users[socket.request.session.user_id];
+    console.log(users);
   });
 });
 

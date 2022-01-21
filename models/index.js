@@ -3,7 +3,7 @@ const Message = require('./Message');
 
 // create relationships between user and message models
 User.hasMany(Message, {
-  foreignKey: 'sender',
+  foreignKey: 'sender_id',
 });
 
 User.hasMany(Message, {

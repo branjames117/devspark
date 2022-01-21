@@ -51,11 +51,12 @@ router.post('/unblock', withAuth, (req, res) => {
 
   // need to get user's current block list
   User.findByPk(id).then((dbUserData) => {
-    // const blockedUsers = dbUserData.dataValues.blocked_users.split(';');
-    const blockedUsers = ['1', '2', '3', '4'];
+    const blockedUsers = dbUserData.dataValues.blocked_users.split(';');
 
     // filter out the user to be unblocked
-    const updatedBlockedUsers = blockedUsers.filter((user) => user != 2);
+    const updatedBlockedUsers = blockedUsers.filter(
+      (user) => user != idToUnblock
+    );
 
     // convert the array to a string with ';' between each id
     const updatedBlockedStr =
@@ -98,7 +99,14 @@ router.get('/:id', (req, res) => {
       // include user's messages
       {
         model: Message,
-        attributes: ['id', 'body', 'sender_id', 'recipient_id', 'created_at'],
+        attributes: [
+          'id',
+          'body',
+          'sender_id',
+          'recipient_id',
+          'read',
+          'created_at',
+        ],
       },
     ],
   })
