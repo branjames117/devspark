@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const path = require('path');
 const { User, Message } = require('./models');
 
 // set up session with sequelize
@@ -10,12 +11,12 @@ const session = require('express-session');
 const { sequelize } = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-// handlebars, session, sequelize, sequelize session, helpers and routes
+// handlebars, routes, utilities
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
 const { notificationCount } = require('./utils/helpers');
 
-// tell app to use session middleware
+// tell app and socket.io to use session middleware
 const sessionMiddleware = session({
   secret: process.env.SECRET,
   cookie: {},
@@ -39,7 +40,6 @@ app.set('view engine', 'handlebars');
 // boilerplate app middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static('uploads'));
 
@@ -57,6 +57,10 @@ app.use((req, res, next) => {
 // tell app to use our custom routes
 app.use(routes);
 
+// ---------------------------- //
+// BEGINNING OF SOCKET.IO LOGIC //
+// ---------------------------- //
+
 // track who is online and in what room for socket.io
 const users = {};
 
@@ -65,20 +69,17 @@ io.on('connection', (socket) => {
   // listen for a user attempting to open a notification socket based on the user's ID
   socket.on('open-notifications', async () => {
     const notificationRoom = socket.request.session.user_id;
-    // ... if the room exists, meaning the user is logged in...
-    if (notificationRoom) {
-      // ... then join the room
-      socket.join(notificationRoom);
+    // ... if the room does not exist, user is not logged in...
+    if (!notificationRoom) return;
 
-      // ... then get the number of unread messages
-      const count = await notificationCount(socket.request.session.user_id);
+    // ... otherwise, join the room
+    socket.join(notificationRoom);
 
-      // ... then emit that number to the user's unique notificationRoom
-      io.to(notificationRoom).emit('update-notifications', count);
-    } else {
-      // ... if the room does not exist, user hasn't logged in yet...
-      return;
-    }
+    // ... then get the number of unread messages
+    const count = await notificationCount(socket.request.session.user_id);
+
+    // ... then emit that number to the user's unique notificationRoom
+    io.to(notificationRoom).emit('update-notifications', count);
   });
 
   // listen for a user joining a chat room with another user based on both user's IDs
@@ -95,7 +96,6 @@ io.on('connection', (socket) => {
 
     // update list of "active" chat users with what room they're in
     users[sender] = room;
-    console.log(users);
 
     // we know user1 exists because it comes from request session data
     // now check that user2 exists before proceeding
@@ -116,15 +116,14 @@ io.on('connection', (socket) => {
       },
     });
 
-    // now find all messages where user is recipient in this room and update to read: true
+    // find all messages where user is recipient in this room and update to read: true
     await Message.update(
       { read: true },
       { where: { room, recipient_id: sender, read: false } }
     );
 
-    // now update the user's notification count
+    // update the user's notification count
     const count = await notificationCount(sender);
-
     io.to(parseInt(sender)).emit('update-notifications', count);
 
     // convert the messages into a plain array
@@ -142,12 +141,12 @@ io.on('connection', (socket) => {
       if (socket.request.session.user_id != msg.sender_id) return;
 
       // convert string of recipient's blocked user IDs to array of integers
-      const blockedUsersIntArray = receivingUser.dataValues.blocked_users
+      const blockedUsers = receivingUser.dataValues.blocked_users
         .split(';')
         .map((id) => parseInt(id));
 
       // check if senderID is in recipientID's list of blocked users
-      if (blockedUsersIntArray.indexOf(sender) !== -1) return;
+      if (blockedUsers.indexOf(sender) !== -1) return;
 
       // check if the recipient is both online AND in the same room as the sender, if so, flag the message as read (true), otherwise, unread (false)
       msg.read = users[receiver] && users[receiver] === room ? true : false;
@@ -163,30 +162,28 @@ io.on('connection', (socket) => {
       io.to(room).emit('newmsg', msg);
 
       // ... then, update the receiver's notification socket to the latest unread message count
-
       const count = await notificationCount(receiver);
-
       io.to(parseInt(receiver)).emit('update-notifications', count);
     });
   });
 
   // on disconnect, remove the user from the online users object
   socket.on('disconnect', () => {
-    console.log(`${socket.request.session.user_id} has disconnected`);
     delete users[socket.request.session.user_id];
-    console.log(users);
   });
 });
 
-const PORT = process.env.PORT || 3001;
+// ---------------------- //
+// END OF SOCKET.IO LOGIC //
+// ---------------------- //
 
 // sync sequelize with db before telling server to listen
 sequelize.sync({ force: false }).then(() => {
-  http.listen(PORT, () => {
-    if (process.env.PORT) {
-      console.log('Server is listening.');
-    } else {
-      console.log(`Server listening at http://localhost:${PORT}`);
+  http.listen(process.env.PORT || 3001, () => {
+    if (!process.env.PORT) {
+      console.log('|-----------------------|');
+      console.log('| http://localhost:3001 |');
+      console.log('|-----------------------|');
     }
   });
 });
