@@ -4,14 +4,15 @@ const { User, Message } = require('../models');
 
 router.get('/', async (req, res) => {
   console.log(req.session)
-  const user= await User.findOne({
-    where: {
-      id: req.session.user_id
-    }
-  })
-  console.log(user.dataValues)
+  // const user= await User.findOne({
+  //   where: {
+  //     id: req.session.user_id
+  //   }
+  // })
+  // console.log(user.dataValues)
   console.log(req.session)
-  res.render('home', { loggedIn: req.session.loggedIn, session: req.session, user: user.dataValues });
+  res.render('home', { loggedIn: req.session.loggedIn});
+  // , session: req.session, user: user.dataValues 
 });
 
 // display login prompt (Login Page)
@@ -33,5 +34,19 @@ router.get('/signup', (req, res) => {
 
   res.render('signup');
 });
+
+router.get('/home', async (req, res) => {
+  console.log(req.session)
+  const user= await User.findOne({
+    where: {
+      id: req.session.user_id
+    }
+  })
+  console.log(user.dataValues)
+  console.log(req.session)
+  res.render('home', { loggedIn: req.session.loggedIn, session: req.session, user: user.dataValues 
+  });
+});
+
 
 module.exports = router;
