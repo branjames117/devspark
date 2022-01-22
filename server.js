@@ -13,7 +13,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 // handlebars, session, sequelize, sequelize session, helpers and routes
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
-const helpers = require('./utils/helpers');
+const { notificationCount } = require('./utils/helpers');
 
 // tell app to use session middleware
 const sessionMiddleware = session({
@@ -31,7 +31,8 @@ io.use((socket, next) => {
 app.use(sessionMiddleware);
 
 // tell app to use handlebars for its view engine
-const hbs = exphbs.create({ helpers });
+// const hbs = exphbs.create({ helpers });
+const hbs = exphbs.create({});
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
@@ -56,7 +57,7 @@ app.use((req, res, next) => {
 // tell app to use our custom routes
 app.use(routes);
 
-// track who is online and in what room
+// track who is online and in what room for socket.io
 const users = {};
 
 // when a user (new socket) connects to the server...
@@ -70,12 +71,10 @@ io.on('connection', (socket) => {
       socket.join(notificationRoom);
 
       // ... then get the number of unread messages
-      const unreadMessageCount = await Message.count({
-        where: { recipient_id: socket.request.session.user_id, read: false },
-      });
+      const count = await notificationCount(socket.request.session.user_id);
 
       // ... then emit that number to the user's unique notificationRoom
-      io.to(notificationRoom).emit('update-notifications', unreadMessageCount);
+      io.to(notificationRoom).emit('update-notifications', count);
     } else {
       // ... if the room does not exist, user hasn't logged in yet...
       return;
@@ -83,7 +82,7 @@ io.on('connection', (socket) => {
   });
 
   // listen for a user joining a chat room with another user based on both user's IDs
-  socket.on('joinroom', (data) => {
+  socket.on('joinroom', async (data) => {
     // get IDs of both users from the client
     const [sender, receiver] = data.room.split('x');
 
@@ -94,91 +93,80 @@ io.on('connection', (socket) => {
     const room =
       sender < receiver ? `${sender}x${receiver}` : `${receiver}x${sender}`;
 
-    // update list of "active" chat users with the list of rooms they currently have opened
-    // useful for when a client has multiple tabs of chats opened
-    users[sender] = {
-      id: sender,
-      room: {},
-    };
-    users[sender].room[room] = room;
-
-    console.log(`${sender} has joined ${room}.`);
+    // update list of "active" chat users with what room they're in
+    users[sender] = room;
+    console.log(users);
 
     // we know user1 exists because it comes from request session data
     // now check that user2 exists before proceeding
-    User.findByPk(receiver).then((dbUserData) => {
-      if (!dbUserData) return;
+    const receivingUser = await User.findByPk(receiver);
+    if (!receivingUser) return;
 
-      // join the unique private room we're creating
-      console.log(`ClientID ${sender} joined RoomID ${room}`);
-      socket.join(room);
+    // join the unique private room
+    socket.join(room);
 
-      // find all the messages belonging to that room
-      Message.findAll({
-        where: {
-          room,
-        },
-        include: {
-          model: User,
-          attributes: ['id', 'email'],
-        },
-      }).then((data) => {
-        // now find all messages where user is recipient in this room and update to read: true
-        Message.update(
-          { read: true },
-          { where: { room, recipient_id: sender, read: false } }
-        ).then(() => {
-          // convert the messages into a plain array
-          const history = [];
-          data.forEach((message) => {
-            history.push(message.get({ plain: true }));
-          });
+    // find all the messages belonging to that room
+    const messages = await Message.findAll({
+      where: {
+        room,
+      },
+      include: {
+        model: User,
+        attributes: ['id', 'email'],
+      },
+    });
 
-          // emit the chat history to the client
-          io.to(room).emit('populateHistory', history);
+    // now find all messages where user is recipient in this room and update to read: true
+    await Message.update(
+      { read: true },
+      { where: { room, recipient_id: sender, read: false } }
+    );
 
-          // start listening for messages in that chatroom
-          socket.on('msg', function (data) {
-            // check if sender matches the session ID, otherwise user might be trying to spoof
-            if (socket.request.session.user_id != data.sender_id) return;
+    // now update the user's notification count
+    const count = await notificationCount(sender);
 
-            // convert string of recipient's blocked user IDs to array of integers
-            const blockedUsersIntArray = dbUserData.dataValues.blocked_users
-              .split(';')
-              .map((id) => parseInt(id));
+    io.to(parseInt(sender)).emit('update-notifications', count);
 
-            // check if senderID is in recipientID's list of blocked users
-            if (blockedUsersIntArray.indexOf(sender) !== -1) return;
+    // convert the messages into a plain array
+    const history = [];
+    messages.forEach((message) => {
+      history.push(message.get({ plain: true }));
+    });
 
-            // check if the recipient is both online AND in the same room as the sender, if so, flag the message as read (true), otherwise, unread (false)
-            data.read =
-              users[receiver] && users[receiver].room[room] ? true : false;
-            // add datetime to message
-            data.createdAt = new Date();
-            // add roomname
-            data.room = room;
+    // emit the chat history to the client
+    io.to(room).emit('populateHistory', history);
 
-            // ... then create the message in the database
-            Message.create(data).then(async (dbData) => {
-              // ... then, emit the message to the clientside chatroom
-              io.to(room).emit('newmsg', data);
+    // start listening for messages in that chatroom
+    socket.on('msg', async (msg) => {
+      // check if sender matches the session ID, otherwise user might be trying to spoof
+      if (socket.request.session.user_id != msg.sender_id) return;
 
-              // ... then, update the receiver's notification socket to the latest unread message count
-              const notificationsCount = await Message.count({
-                where: {
-                  recipient_id: receiver,
-                  read: false,
-                },
-              });
+      // convert string of recipient's blocked user IDs to array of integers
+      const blockedUsersIntArray = receivingUser.dataValues.blocked_users
+        .split(';')
+        .map((id) => parseInt(id));
 
-              io.to(parseInt(receiver)).emit(
-                'update-notifications',
-                notificationsCount
-              );
-            });
-          });
-        });
-      });
+      // check if senderID is in recipientID's list of blocked users
+      if (blockedUsersIntArray.indexOf(sender) !== -1) return;
+
+      // check if the recipient is both online AND in the same room as the sender, if so, flag the message as read (true), otherwise, unread (false)
+      msg.read = users[receiver] && users[receiver] === room ? true : false;
+      // add datetime to message
+      msg.createdAt = new Date();
+      // add roomname
+      msg.room = room;
+
+      // ... then create the message in the database
+      await Message.create(msg);
+
+      // ... then, emit the message to the clientside chatroom
+      io.to(room).emit('newmsg', msg);
+
+      // ... then, update the receiver's notification socket to the latest unread message count
+
+      const count = await notificationCount(receiver);
+
+      io.to(parseInt(receiver)).emit('update-notifications', count);
     });
   });
 
