@@ -82,6 +82,15 @@ router.get('/:id', withAuth, (req, res) => {
   const senderId = req.session.user_id;
   const recipientId = req.params.id;
 
+  // if user is trying to message themselves, redirect back to chats
+  if (senderId == recipientId) {
+    res.render('chats', {
+      loggedIn: req.session.loggedIn,
+      userID: req.session.user_id,
+    });
+    return;
+  }
+
   // find recipient
   User.findByPk(recipientId).then((dbUserData) => {
     // if recipient ID does not exist, send user back to chats
