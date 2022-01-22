@@ -31,6 +31,11 @@
   <script src='/socket.io/socket.io.js'></script>
   <script>
     var socket = io();
+
+    socket.emit('open-notifications');
+    socket.on('update-notifications', (data) => {
+      document.getElementById('notif-count').textContent = data;
+    });
   </script>
 
   <body>
@@ -39,7 +44,9 @@
 
       <header>
         <h1>
-          <a href='/'>devspark</a>
+          <a href='/'>devspark</a><br />
+          userID: {{userID}}
+          Unread Messages: <span id="notif-count"></span>
         </h1>
         <nav>
           {{#if loggedIn}}

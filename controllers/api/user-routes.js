@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const withAuth = require('../../utils/auth');
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const { User, Message } = require('../../models');
 const { randomBytes } = require('crypto');
 const nodemailer = require('nodemailer');
@@ -145,7 +145,7 @@ router.post('/forgot', async function (req, res) {
   User.update(
     {
       resetPasswordToken: token,
-      resetPasswordExpires: Date.now() + 3600000,
+      resetPasswordExpires: Date.now() + 360000,
     },
     { where: { email: req.body.email } }
   ).then((userFound) => {
@@ -176,15 +176,20 @@ router.post('/forgot', async function (req, res) {
 });
 
 router.get('/reset/:token', function (req, res) {
-  User.findOne({ where: { resetPasswordToken: req.params.token } }).then(
-    function (user) {
-      if (!user) {
-        return res.redirect('/api/users/forgot');
-      }
-
-      res.render('reset', { token: req.params.token });
+  User.findOne({
+    where: {
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { [Op.gt]: Date.now() },
+    },
+  }).then(function (user) {
+    if (!user) {
+      console.log('expired');
+      return res.redirect('/api/users/forgot');
     }
-  );
+
+    console.log('not expired');
+    res.render('reset', { token: req.params.token });
+  });
 });
 
 router.post('/reset/:token', (req, res) => {
@@ -192,29 +197,33 @@ router.post('/reset/:token', (req, res) => {
     // res.flash('error', 'Password reset token is invalid or has expired');
     return res.redirect('back');
   } else {
-    User.findOne({ where: { resetPasswordToken: req.params.token } }).then(
-      (dbUserData) => {
-        if (dbUserData) {
-          User.update(
-            {
-              resetPasswordToken: null,
-              resetPasswordExpires: null,
-              password: req.body.password,
-            },
-            {
-              where: { resetPasswordToken: req.params.token },
-              individualHooks: true,
-            }
-          ).then((rowsUpdated) => {
-            if (rowsUpdated) {
-              res.render('login');
-            } else {
-              console.log('Something went wrong.');
-            }
-          });
-        }
+    User.findOne({
+      where: {
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: { [Op.gt]: Date.now() },
+      },
+    }).then((dbUserData) => {
+      console.log(dbUserData);
+      if (dbUserData) {
+        User.update(
+          {
+            resetPasswordToken: null,
+            resetPasswordExpires: null,
+            password: req.body.password,
+          },
+          {
+            where: { resetPasswordToken: req.params.token },
+            individualHooks: true,
+          }
+        ).then((rowsUpdated) => {
+          if (rowsUpdated) {
+            res.render('login');
+          } else {
+            console.log('Something went wrong.');
+          }
+        });
       }
-    );
+    });
   }
 });
 

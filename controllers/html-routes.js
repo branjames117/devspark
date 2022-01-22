@@ -4,7 +4,11 @@ const { User, Message } = require('../models');
 
 // GET / (root route)
 router.get('/', (req, res) => {
-  res.render('home', { loggedIn: req.session.loggedIn });
+  console.log(req.session);
+  res.render('home', {
+    loggedIn: req.session.loggedIn,
+    userID: req.session.user_id,
+  });
 });
 
 // GET /login
