@@ -325,6 +325,7 @@ router.post('/login', (req, res) => {
 // POST /api/users/logout
 router.post('/logout', withAuth, (req, res) => {
   // destroy session if logged in
+  console.log(req.session)
   if (req.session.loggedIn) {
     req.session.destroy(() => {
       res.status(204).end();
