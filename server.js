@@ -151,7 +151,7 @@ io.on('connection', (socket) => {
       // check if the recipient is both online AND in the same room as the sender, if so, flag the message as read (true), otherwise, unread (false)
       msg.read = users[receiver] && users[receiver] === room ? true : false;
       // add datetime to message
-      msg.createdAt = new Date();
+      msg.createdAt = new Date() + 0;
       // add roomname
       msg.room = room;
 

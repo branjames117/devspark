@@ -15,7 +15,7 @@
   }
   
   socket.on('newmsg', function(data) {
-    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.sender_id}</b> (${data.createdAt.slice(11,19)})<br /> ${data.body} </div>`;
+    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.sender_id}</b> (${data.createdAt.slice(16,24)})<br /> ${data.body} </div>`;
     
     window.scrollTo(0,document.body.scrollHeight);
   })
@@ -30,14 +30,16 @@
   });
 </script>
 
-<div id='message-container'></div>
+<div id='chat-container'>
+  <div id='message-container'></div>
 
-<div id="chat-textbox-container">
-  <div id='error-container'></div>
-  <form id="textbox-and-btn">
-    <textarea id='message'></textarea>
-    <button type='submit' name='button' id="chat-submit-btn">>>></button>
-  </form>
+  <div id="chat-textbox-container">
+    <div id='error-container'></div>
+    <form id="textbox-and-btn">
+      <textarea id='message'></textarea>
+      <button type='submit' name='button' id="chat-submit-btn">>>></button>
+    </form>
+  </div>
 </div>
 
 

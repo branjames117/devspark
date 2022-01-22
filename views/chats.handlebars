@@ -1,16 +1,17 @@
-<h3>Active Conversations</h3>
 <div id="active-chats-container">
   {{#each activeChats}}
   <div>
-    <a class="active-chat-btn" href='/chat/{{this.sender}}'>{{this.sender}}<br />{{this.message}}<br />{{#if this.read}}read{{else}}unread{{/if}}</a>
-    <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
-    <input type="hidden" name="blockedID" id="blocked-id" value={{this.sender}} />
-    <button type="submit">Block User</button>
-    </form>
-    <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
-    <input type="hidden" name="deletedID" id="deleted-id" value={{this.sender}} />
-    <button type="submit">Delete Conversation</button>
-    </form>
+    <a class="active-chat-btn" href='/chat/{{this.sender}}'><span class="sender-id">{{this.sender}}</span><span class="message-body">{{this.message}}</span><span class="read-status">{{#if this.read}}read{{else}}unread{{/if}}</span></a>
+    <div>
+      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+      <input type="hidden" name="deletedID" id="deleted-id" value={{this.sender}} />
+      <button type="submit">Delete Conversation</button>
+      </form>
+      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+      <input type="hidden" name="blockedID" id="blocked-id" value={{this.sender}} />
+      <button type="submit">Block User</button>
+      </form>
+    </div>
   </div>
   {{/each}}
 </div>
