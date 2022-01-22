@@ -43,10 +43,10 @@ User.init(
         len: [8],
       },
     },
-    github:{
+    github: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
     resetPasswordToken: {
       type: DataTypes.STRING,
       allowNull: true,

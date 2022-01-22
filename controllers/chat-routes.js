@@ -86,7 +86,10 @@ router.get('/:id', withAuth, (req, res) => {
   User.findByPk(recipientId).then((dbUserData) => {
     // if recipient ID does not exist, send user back to chats
     if (!dbUserData) {
-      res.render('chats');
+      res.render('chats', {
+        loggedIn: req.session.loggedIn,
+        userID: req.session.user_id,
+      });
       return;
     }
 
