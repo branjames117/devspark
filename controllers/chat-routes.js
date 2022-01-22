@@ -13,6 +13,10 @@ router.get('/', withAuth, (req, res) => {
       // find all messages where user is either a sender or a recipient
       [Op.or]: [{ sender_id: userId }, { recipient_id: userId }],
     },
+    include: {
+      model: User,
+      attributes: ['id', 'email'],
+    },
     // sort the messages in descending order by ID so that the most recent message is first
     order: [['id', 'DESC']],
   }).then((data) => {
@@ -22,19 +26,29 @@ router.get('/', withAuth, (req, res) => {
       plainData.push(data.get({ plain: true }));
     });
 
-    // find all unique IDs involved in the user's chats
-    const activeChats = [];
+    // find all unique IDs involved in the user's chats and store the latest messages
+    const activeChatUsers = [];
+    const activeChatMessages = [];
     plainData.forEach((data) => {
-      if (activeChats.indexOf(data.recipient_id) === -1) {
-        activeChats.push(data.recipient_id);
+      if (activeChatUsers.indexOf(data.recipient_id) === -1) {
+        activeChatUsers.push(data.recipient_id);
+        activeChatMessages.push({
+          sender: data.recipient_id,
+          message: data.body,
+          read: data.read,
+        });
       }
-      if (activeChats.indexOf(data.sender_id) === -1) {
-        activeChats.push(data.sender_id);
+      if (activeChatUsers.indexOf(data.sender_id) === -1) {
+        activeChatUsers.push(data.sender_id);
+        activeChatMessages.push({
+          sender: data.sender_id,
+          message: data.body,
+          read: data.read,
+        });
       }
     });
 
     // to do: look up the user by id then filter out blocked users from the list of active chats
-
     User.findByPk(userId).then((dbUserData) => {
       // convert string of recipient's blocked user IDs to array of integers, which is some tomfoolery we have to do since Sequelize/MySQL doesn't support array datatypes
       const blockedUsersIntArray = dbUserData.dataValues.blocked_users
@@ -42,23 +56,21 @@ router.get('/', withAuth, (req, res) => {
         .map((id) => parseInt(id));
 
       // go through list of user's blocked users and only add to their active chats the users who are not blocked
-      const newActiveChats = [];
-      const blockedActiveChats = [];
-      activeChats.forEach((activeChat) => {
-        if (blockedUsersIntArray.indexOf(activeChat) === -1) {
-          newActiveChats.push(activeChat);
-        } else {
-          blockedActiveChats.push(activeChat);
+
+      const newActiveChatMessages = [];
+      activeChatMessages.forEach((message) => {
+        if (blockedUsersIntArray.indexOf(message.sender) === -1) {
+          newActiveChatMessages.push(message);
         }
       });
-
-      console.log(blockedActiveChats);
 
       res.render('chats', {
         loggedIn: req.session.loggedIn,
         // filter out the user's own ID from the list of active chats, otherwise user will see themselves as an active chat
-        activeChats: newActiveChats.filter((id) => id !== userId),
-        blockedActiveChats: blockedActiveChats,
+        activeChats: newActiveChatMessages.filter(
+          (message) => message.sender !== userId
+        ),
+        userID: req.session.user_id,
       });
     });
   });
@@ -71,11 +83,9 @@ router.get('/:id', withAuth, (req, res) => {
   const recipientId = req.params.id;
 
   // find recipient
-  console.log('seeking');
   User.findByPk(recipientId).then((dbUserData) => {
     // if recipient ID does not exist, send user back to chats
     if (!dbUserData) {
-      console.log('redirecting');
       res.render('chats');
       return;
     }
@@ -92,6 +102,7 @@ router.get('/:id', withAuth, (req, res) => {
         senderId,
         recipientId,
         loggedIn: req.session.loggedIn,
+        userID: req.session.user_id,
       });
     } else {
       // otherwise, inform the sender they're blocked
