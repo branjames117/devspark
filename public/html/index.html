@@ -14,25 +14,32 @@
     <title>devSpark</title>
   </head>
   <body>
-      <nav class= "nav">
+      <!-- Messenger and Profile Page -->
+      <div class="wrapper">
+        <nav class= "nav">
           <!-- add svg logo -->
+          <img class="logo" src="../img/Asset 5.svg" alt="">
           <ul>
-            <li><a href="">Home</a></li>
+            <li><a href="">My Profile</a></li>
+            <li><a href="">My Messages</a></li>
+            <button class="logout btn">Log Out</button>
       </nav>
-      <!-- Profile Page -->
+<div class="sidebar">
+  <a href="#profile">My Profile</a>
+  <a href="#messages">My Messages</a>
+</div>
+<div class="content">
+<!--this is where profile or messenger appears  -->
+</div>
+<div class="footer">
+  <!-- add license, copyright, team name etc -->
+</div>
+      </div>
+      <!-- Profile -->
     <div class="container">
       <div class="pic">
-        <div class="pic-toggle">
-          <span class="dot" id="active"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
         </div>
         <img class="user" src="../img/selfie_2.jpg" alt="selfie" />
-      </div>
-      <div class="arrow-box">
-        <!-- add svg here -->
       </div>
       <div class="name-box">
         <h2>Olivia, <span class="age"> 35</span></h2>
@@ -53,9 +60,10 @@
       <div class= "actions">
           <!-- add message button here -->
       </div>
-      <div class="footer">
-          <!-- add three circles svg here, back arrow, star, heart -->
-      </div>
+     
+    </div>
+    
+
     </div>
   </body>
 </html>
