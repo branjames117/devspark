@@ -1,9 +1,9 @@
 const User = require('./User');
 const Message = require('./Message');
-const Image = require('./Image');
 
+// create relationships between user and message models
 User.hasMany(Message, {
-  foreignKey: 'sender',
+  foreignKey: 'sender_id',
 });
 
 User.hasMany(Message, {
@@ -12,14 +12,6 @@ User.hasMany(Message, {
 
 Message.belongsTo(User, {
   foreignKey: 'sender_id',
-});
-
-User.hasOne(Image, {
-  foreignKey: 'user_id',
-});
-
-Image.belongsTo(User, {
-  foreignKey: 'user_id',
 });
 
 module.exports = { User, Message };

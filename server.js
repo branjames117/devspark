@@ -1,7 +1,6 @@
 // configure express app with http server so we can use socket.io
 const express = require('express');
 const app = express();
-const multer = require('multer');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const { User, Message } = require('./models');
@@ -57,6 +56,9 @@ app.use((req, res, next) => {
 // tell app to use our custom routes
 app.use(routes);
 
+// track who is online and in what room
+const users = {};
+
 // when a user (new socket) connects to the server
 io.on('connection', (socket) => {
   // listen for joinroom requests, meaning a user is initiating a chat with another user
@@ -80,10 +82,20 @@ io.on('connection', (socket) => {
 
     const room = user1 < user2 ? `${user1}x${user2}` : `${user2}x${user1}`;
 
+    users[socket.request.session.user_id] = {
+      id: socket.request.session.user_id,
+      room: {},
+    };
+
+    users[socket.request.session.user_id].room[room] = room;
+
+    console.log('Users', users);
+
+    console.log(`${socket.request.session.user_id} has joined ${room}.`);
     // we know user1 exists because it comes from request session data
     // now check that user2 exists before proceeding
-    User.findByPk(user2).then((data) => {
-      if (!data) {
+    User.findByPk(user2).then((dbUserData) => {
+      if (!dbUserData) {
         console.log(`UserID ${user2} does not exist`);
         return;
       }
@@ -118,21 +130,39 @@ io.on('connection', (socket) => {
             return;
           }
 
-          data.room = room;
-          data.createdAt = new Date();
-          Message.create(data).then((dbData) => {
-            io.to(room).emit('newmsg', data);
-          });
+          // convert string of recipient's blocked user IDs to array of integers, which is some tomfoolery we have to do since Sequelize/MySQL doesn't support array datatypes
+          const blockedUsersIntArray = dbUserData.dataValues.blocked_users
+            .split(';')
+            .map((id) => parseInt(id));
+
+          // check if senderID is in recipientID's list of blocked users
+          if (
+            blockedUsersIntArray.indexOf(socket.request.session.user_id) === -1
+          ) {
+            // user is not blocked, proceed with message
+            data.room = room;
+
+            // check if the recipient is both online AND in the same room as the sender, if so, flag the message as read (true), otherwise, unread (false)
+            data.read = users[user2] && users[user2].room[room] ? true : false;
+            console.log(data.read);
+            data.createdAt = new Date();
+            Message.create(data).then((dbData) => {
+              io.to(room).emit('newmsg', data);
+            });
+          } else {
+            // user is blocked, exit function
+            return;
+          }
         });
       });
     });
+  });
 
-    // find out which user ID is the lowest, then generate a string like "lowerIDxhigherID" e.g. 5x16 or 100x556; this will be the unique "room name" socket.io will use for emitting messages to the two clients, and this data will also be stored in each message for faster querying
-    // when user joins a preexisting room, all messages in that room will be marked as read
-    // when a user receives a message from a user that has never messaged them before, the user will receive a notification (an invite) to join the unique room ("So and so messaged you")
-    // when a user receives a new message, the notification will also be "So and so messaged you"
-    // from the /chat route, the user will have access to all their existing chatrooms
-    // socket.join(uniqueRoomNameBasedOnUserIDs);
+  // on disconnect, remove the user from the online users object
+  socket.on('disconnect', () => {
+    console.log(`${socket.request.session.user_id} has disconnected`);
+    delete users[socket.request.session.user_id];
+    console.log(users);
   });
 });
 

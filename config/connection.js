@@ -24,8 +24,12 @@ if (process.env.JAWSDB_URL) {
 }
 
 // set up multer
+
+// variable to limit image file size
+const limits = {fileSize: 1024 * 1024}
 const upload = multer({
   storage: multer.diskStorage({}),
+  limits: limits,
   fileFilter: (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
       cb(null, true);
@@ -41,7 +45,5 @@ cloudinary.config({
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
-
-// configure multer, the middleware for handling multipart/form-data
 
 module.exports = { sequelize, cloudinary, upload };
