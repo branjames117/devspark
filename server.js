@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
       },
       include: {
         model: User,
-        attributes: ['id', 'email'],
+        attributes: ['id', 'email', 'username'],
       },
     });
 
@@ -160,16 +160,16 @@ io.on('connection', (socket) => {
         .split(';')
         .map((id) => parseInt(id));
 
-      console.log(blockedUsers);
       // check if senderID is in recipientID's list of blocked users
       if (blockedUsers.indexOf(sender) !== -1) return;
 
       // check if the recipient is both online AND in the same room as the sender, if so, flag the message as read (true), otherwise, unread (false)
       msg.read = users[receiver] && users[receiver] === room ? true : false;
-      // add datetime to message
-      msg.createdAt = new Date() + 0;
       // add roomname
       msg.room = room;
+      msg.createdAt = new Date();
+      msg.user = {};
+      msg.user.username = socket.request.session.username;
 
       // ... then create the message in the database
       await Message.create(msg);
@@ -178,11 +178,7 @@ io.on('connection', (socket) => {
       io.to(room).emit('newmsg', msg);
 
       // if user is online but not in room, update the user's chat list based on their unique chat list room (which would be '4x' if their userID is 4)
-      console.log('=====================================');
-      console.log(users[receiver]);
-      console.log(users[receiver] !== room);
       if (users[receiver] !== room) {
-        console.log(msg);
         io.to(msg.recipient_id + 'x').emit('update-list', msg);
       }
 

@@ -1,20 +1,22 @@
 const router = require('express').Router();
-const { sequelize } = require('../config/connection');
-const { User, Message } = require('../models');
+const { Op } = require('Sequelize');
+const { User } = require('../models');
+const withAuth = require('../utils/auth');
 
 // GET / (root route)
 router.get('/', (req, res) => {
-  console.log(req.session);
-  res.render('home', {
-    loggedIn: req.session.loggedIn,
-    userID: req.session.user_id,
-  });
+  if (req.session.loggedIn) {
+    res.redirect('/profile');
+    return;
+  }
+
+  res.render('login');
 });
 
 // GET /login
 router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect('/');
+    res.redirect('/profile');
     return;
   }
 
@@ -24,25 +26,42 @@ router.get('/login', (req, res) => {
 // GET /signup
 router.get('/signup', (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect('/');
+    res.redirect('/profile');
     return;
   }
 
   res.render('signup');
 });
 
-router.get('/home', async (req, res) => {
-  console.log(req.session)
-  const user= await User.findOne({
-    where: {
-      id: req.session.user_id
-    }
-  })
-  console.log(user.dataValues)
-  console.log(req.session)
-  res.render('home', { loggedIn: req.session.loggedIn, session: req.session, user: user.dataValues 
-  });
+// GET /forgot
+router.get('/forgot', (req, res) => {
+  // get user email
+  res.render('forgot-password');
 });
 
+// GET /reset/:token
+router.get('/reset/:token', async (req, res) => {
+  const user = await User.findOne({
+    where: {
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { [Op.gt]: Date.now() },
+    },
+  });
+
+  if (!user) {
+    return res.redirect('/forgot');
+  }
+
+  res.render('reset', { token: req.params.token });
+});
+
+// GET /profile
+router.get('/profile', withAuth, (req, res) => {
+  res.render('profile', {
+    username: req.session.username,
+    loggedIn: req.session.loggedIn,
+    userID: req.session.user_id,
+  });
+});
 
 module.exports = router;

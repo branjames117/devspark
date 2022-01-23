@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { sequelize } = require('../config/connection');
 const { Op } = require('sequelize');
 const { User, Message } = require('../models');
 const withAuth = require('../utils/auth');
@@ -15,7 +14,7 @@ router.get('/', withAuth, (req, res) => {
     },
     include: {
       model: User,
-      attributes: ['id', 'email'],
+      attributes: ['id', 'email', 'username'],
     },
     // sort the messages in descending order by ID so that the most recent message is first
     order: [['id', 'DESC']],
@@ -115,6 +114,8 @@ router.get('/:id', withAuth, (req, res) => {
         recipientId,
         loggedIn: req.session.loggedIn,
         userID: req.session.user_id,
+        username: req.session.username,
+        recipient_name: dbUserData.dataValues.username,
       });
     } else {
       // otherwise, inform the sender they're blocked

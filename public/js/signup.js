@@ -19,9 +19,9 @@ async function signupFormHandler(e) {
     return;
   }
 
-  if(!username) {
+  if (!username) {
     document.querySelector('#username-login').style.borderColor = 'red';
-    errMessageEl.textContent = 'Username field must not be blank.'
+    errMessageEl.textContent = 'Username field must not be blank.';
   }
 
   if (!password) {
@@ -55,12 +55,12 @@ async function signupFormHandler(e) {
   if (email && username && matchPasswords) {
     const response = await fetch('/api/users', {
       method: 'post',
-      body: JSON.stringify({ email, username, password, }),
+      body: JSON.stringify({ email, username, password }),
       headers: { 'Content-Type': 'application/json' },
     });
 
     if (response.ok) {
-      document.location.replace('/chat');
+      document.location.replace('/profile');
     } else {
       errMessageEl.textContent =
         'Something went wrong. Try a different username.';

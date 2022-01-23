@@ -8,26 +8,28 @@ require('dotenv').config();
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
 
-// temporary GET /api/users
-router.get('/', (req, res) => {
-  User.findAll({
+// GET /api/users
+router.get('/', async (req, res) => {
+  const users = await User.findAll({
     attributes: {
       exclude: ['password'],
     },
-  })
-    .then((dbUserData) => res.json(dbUserData))
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+  });
+
+  if (!users) {
+    res.status(500).json({ message: 'Something went wrong' });
+    return;
+  } else {
+    res.json(users);
+  }
 });
 
 // POST /api/users/block
-router.post('/block', withAuth, (req, res) => {
+router.post('/block', withAuth, async (req, res) => {
   const id = req.session.user_id;
   const idToBlock = req.body.blockedID;
 
-  User.update(
+  const user = await User.update(
     {
       // use Sequelize to concat the current blocked_users list with the new blocked userID, adding also a ';' to the end of the string, important for splitting the string into an array later, since MySQL does not support Array datatypes
       blocked_users: Sequelize.fn(
@@ -42,119 +44,90 @@ router.post('/block', withAuth, (req, res) => {
         id,
       },
     }
-  ).then((dbUserData) => {
-    if (!dbUserData) {
-      res.status(404).json({ message: 'No user found with this id' });
-      return;
-    }
+  );
+
+  if (!user) {
+    res.status(404).json({ message: 'No user found with this id' });
+    return;
+  } else {
     res.redirect('/chat');
-  });
+  }
 });
 
 // POST /api/users/unblock
-router.post('/unblock', withAuth, (req, res) => {
+router.post('/unblock', withAuth, async (req, res) => {
   const id = req.session.user_id;
   const idToUnblock = req.body.unblockedID;
 
   // need to get user's current block list
-  User.findByPk(id).then((dbUserData) => {
-    const blockedUsers = dbUserData.dataValues.blocked_users.split(';');
+  const user = await User.findByPk(id);
 
-    // filter out the user to be unblocked
-    const updatedBlockedUsers = blockedUsers.filter(
-      (user) => user != idToUnblock
-    );
+  const blockedUsers = user.dataValues.blocked_users.split(';');
 
-    // convert the array to a string with ';' between each id
-    const updatedBlockedStr =
-      updatedBlockedUsers.flat().toString().replaceAll(',', ';') + ';';
+  // filter out the user to be unblocked
+  const updatedBlockedUsers = blockedUsers.filter(
+    (user) => user != idToUnblock
+  );
 
-    // now update the user
-    User.update({ blocked_users: updatedBlockedStr }, { where: { id } }).then(
-      (dbUserData) => {
-        if (!dbUserData) {
-          res.status(404).json({ message: 'No user found with this id' });
-          return;
-        }
-        res.redirect('/chat');
-      }
-    );
-  });
+  // convert the array to a string with ';' between each id
+  const updatedBlockedStr =
+    updatedBlockedUsers.flat().toString().replaceAll(',', ';') + ';';
+
+  // now update the user
+  const updatedUser = await User.update(
+    { blocked_users: updatedBlockedStr },
+    { where: { id } }
+  );
+
+  if (!updatedUser) {
+    res.status(404).json({ message: 'No user found with this id' });
+    return;
+  } else {
+    res.redirect('/chat');
+  }
 });
 
-// PUT /api/users/delete-conversation
-router.post('/delete-conversation', withAuth, (req, res) => {
+// POST /api/users/delete-conversation
+router.post('/delete-conversation', withAuth, async (req, res) => {
   const user1 = req.session.user_id;
   const user2 = req.body.deletedID;
 
   const room = user1 < user2 ? `${user1}x${user2}` : `${user2}x${user1}`;
 
-  Message.destroy({ where: { room } }).then((dbMessageData) => {
-    res.redirect('/chat');
+  await Message.destroy({ where: { room } });
+
+  res.redirect('/chat');
+});
+
+// POST /api/users/profile
+router.post('/profile', async (req, res) => {
+  const id = req.session.user_id;
+  console.log(req.body);
+
+  console.log(req.body.yearStartCoding);
+
+  // create a new object so we only update the fields the user filled out
+  const updatedInfo = {};
+  if (req.body.birthday) updatedInfo.birthday = req.body.birthday;
+  if (req.body.yearStartCoding)
+    updatedInfo.yearStartCoding = req.body.yearStartCoding;
+  if (req.body.github) updatedInfo.github = req.body.github;
+  if (req.body.bio) updatedInfo.bio = req.body.bio;
+  if (req.body.city) updatedInfo.city = req.body.city;
+  if (req.body.state) updatedInfo.state = req.body.state;
+  if (req.body.education) updatedInfo.education = req.body.education;
+
+  const updatedUser = await User.update(updatedInfo, {
+    where: { id },
   });
-});
 
-router.get('/profile', (req,res) => {
-    const id = req.session.user_id;
-    // User.findOne({
-    //     where: { id } 
-    // })
-    // .then((dbUserData) => {
-    //     if(!dbUserData) {
-    //         res.json({ message: 'some err'})
-    //         res.redirect('/login')
-    //     }
-    //     console.log(dbUserData);
-    console.log('The house is on fire')
-    res.render('profile')
-});
-
-
-router.post('/profile', (req,res) => {
-    const id = req.session.user_id;
-    User.findOne({
-        where: { id } 
-    })
-    .then((dbUserData) => {
-        if(!dbUserData) {
-            res.json({ message: 'some err'})
-            res.redirect('/login')
-        }
-        console.log(dbUserData.dataValues);
-        User.update(
-            {
-                birthday: req.body.birthday,
-                yearStartCoding: req.body.yearOfCode,
-                github: req.body.github,
-                bio: req.body.bio,
-                city: req.body.city,
-                state: req.body.state,
-                education: req.body.education
-            },
-            {
-                where: { id: req.session.user_id },
-                
-              }
-            ).then((rowsUpdated) => {
-              if (rowsUpdated) {
-                  console.log('======');
-                  console.log('success')
-                res.redirect('/api/users');
-              } else {
-                console.log('Something went wrong.');
-              }
-            });
-            
-
-        
-
-    })
-})
-
-// GET /api/users/forgot
-router.get('/forgot', (req, res) => {
-  // get user email
-  res.render('forgot-password');
+  if (updatedUser) {
+    console.log('======');
+    console.log('success');
+    res.redirect('/api/users');
+  } else {
+    console.log('Something went wrong.');
+  }
 });
 
 // create the transporter for our gmail-based forgot-password message
@@ -199,98 +172,79 @@ router.post('/forgot', async function (req, res) {
   const token = randomBytes(20).toString('hex');
 
   // update the requested email address with the token
-  User.update(
+  const userFound = await User.update(
     {
       resetPasswordToken: token,
       resetPasswordExpires: Date.now() + 360000,
     },
     { where: { email: req.body.email } }
-  ).then((userFound) => {
-    // then, if we found the user to update, send the email with the token
-    if (userFound) {
-      var mailOptions = {
-        to: req.body.email,
-        from: 'devspark003@gmail.com',
-        subject: 'DevSpark Password Reset',
-        text: 'For clients with plaintext support only',
-        html: `
+  );
+
+  // then, if we found the user to update, send the email with the token
+  if (userFound) {
+    var mailOptions = {
+      to: req.body.email,
+      from: 'devspark003@gmail.com',
+      subject: 'DevSpark Password Reset',
+      text: 'For clients with plaintext support only',
+      html: `
             <p>You are receiving this link because you have requested the reset of your password for your account ${req.body.email}.
             'Please click on the following link, or paste this into your browser to complete this process:</p>
-            <a href="http://localhost:3001/api/users/reset/${token}">Reset link</a>
+            <a href="https://devsparkio.herokuapp.com/reset/${token}">Reset link</a>
             <p>If you did not request a password reset. Please ignore this email.</p>`,
-      };
+    };
 
-      const sendEmail = async (emailOptions) => {
-        let emailTransporter = await createTransporter();
-        await emailTransporter.sendMail(emailOptions);
-      };
+    const sendEmail = async (emailOptions) => {
+      let emailTransporter = await createTransporter();
+      await emailTransporter.sendMail(emailOptions);
+    };
 
-      sendEmail(mailOptions).then(() => {
-        res.status(200).json({ status: 'success', message: 'message sent' });
-      });
-    }
-  });
-});
+    await sendEmail(mailOptions);
 
-router.get('/reset/:token', function (req, res) {
-    User.findOne({
-        where: {
-          resetPasswordToken: req.params.token,
-          resetPasswordExpires: { [Op.gt]: Date.now() },
-        },
-      }).then(function (user) {
-      if (!user) {
-        return res.redirect('/api/users/forgot');
-      }
-
-      res.render('reset', { token: req.params.token });
-    }
-
-    console.log('not expired');
-    res.render('reset', { token: req.params.token });
-  });
-});
-
-router.post('/reset/:token', (req, res) => {
-  if (req.body.password !== req.body.confirm) {
-    // res.flash('error', 'Password reset token is invalid or has expired');
-    return res.redirect('back');
-  } else {
-    User.findOne({
-        where: {
-          resetPasswordToken: req.params.token,
-          resetPasswordExpires: { [Op.gt]: Date.now() },
-        },
-      }).then((dbUserData) => {
-        if (dbUserData) {
-          User.update(
-            {
-              resetPasswordToken: null,
-              resetPasswordExpires: null,
-              password: req.body.password,
-            },
-            {
-              where: { resetPasswordToken: req.params.token },
-              individualHooks: true,
-            }
-          ).then((rowsUpdated) => {
-            if (rowsUpdated) {
-              res.render('login');
-            } else {
-              console.log('Something went wrong.');
-            }
-          });
-        }
-      }
-    });
+    res.status(200).json({ status: 'success', message: 'message sent' });
   }
 });
 
-// temporary GET /api/users/1
-router.get('/:id', (req, res) => {
+// POST /api/users/reset/:token
+router.post('/reset/:token', async (req, res) => {
+  if (req.body.password !== req.body.confirm) {
+    // res.flash('error', 'Password reset token is invalid or has expired');
+    return;
+  }
+
+  const user = await User.findOne({
+    where: {
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { [Op.gt]: Date.now() },
+    },
+  });
+
+  if (user) {
+    const rowsUpdated = await User.update(
+      {
+        resetPasswordToken: null,
+        resetPasswordExpires: null,
+        password: req.body.password,
+      },
+      {
+        where: { resetPasswordToken: req.params.token },
+        individualHooks: true,
+      }
+    );
+
+    if (rowsUpdated) {
+      res.render('login');
+    } else {
+      console.log('Something went wrong.');
+    }
+  }
+});
+
+// GET /api/users/1
+router.get('/:id', async (req, res) => {
   const id = req.params.id;
 
-  User.findOne({
+  const user = await User.findOne({
     // display everything except the user's hashed password
     attributes: { exclude: ['password'] },
     where: { id },
@@ -308,85 +262,78 @@ router.get('/:id', (req, res) => {
         ],
       },
     ],
-  })
-    .then((dbUserData) => {
-      if (!dbUserData) {
-        res.status(404).json({ message: 'No user found with this id' });
-        return;
-      }
-      res.json(dbUserData);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+  });
+
+  if (!user) {
+    res.status(404).json({ message: 'No user found with this id' });
+    return;
+  } else {
+    res.json(user);
+  }
 });
 
 // POST /api/users
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // verify that required fields were submitted
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.email || !req.body.username || !req.body.password) {
     res.status(500).json({ message: 'Need username and password!' });
   }
 
   // req.body must be object with username and password
-  User.create(req.body)
-    .then((dbUserData) => {
-      // save new user's session
-      req.session.save(() => {
-        req.session.user_id = dbUserData.id;
-        req.session.email = dbUserData.email;
-        req.session.loggedIn = true;
+  const newUser = await User.create(req.body);
 
-        res.json(dbUserData);
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+  // save new user's session
+  req.session.save(() => {
+    req.session.user_id = newUser.id;
+    req.session.email = newUser.email;
+    req.session.username = newUser.username;
+    req.session.loggedIn = true;
+
+    res.redirect('/profile');
+  });
 });
 
 // POST /api/users/login
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   // find user based on username or password
-  User.findOne({
+  const user = await User.findOne({
     where: {
-        [Op.or]: [{ email: req.body.email }, { username: req.body.username }],
+      [Op.or]: [{ email: req.body.login }, { username: req.body.login }],
     },
-  }).then((dbUserData) => {
-    if (!dbUserData) {
-      res.status(400).json({ message: 'No user found!' });
-      return;
-    }
+  });
 
-    // check if password is valid with checkPassword class method
-    // console.log(dbUserData);
-    
-    const validPassword = dbUserData.checkPassword(req.body.password);
+  if (!user) {
+    res.status(400).json({ message: 'No user found!' });
+    return;
+  }
 
-    // if password invalid, err
-    if (!validPassword) {
-      res.status(400).json({ message: 'Incorrect password!' });
-      return;
-    }
+  // check if password is valid with checkPassword class method
+  // console.log(dbUserData);
 
-    // if password valid, save new session data
-    req.session.save(() => {
-      // declare session variables
-      req.session.user_id = dbUserData.id;
-      req.session.email = dbUserData.email;
-      req.session.loggedIn = true;
-      
-      res.json({ user: dbUserData, message: 'You are now logged in!' });
-    });
+  const validPassword = user.checkPassword(req.body.password);
+
+  // if password invalid, err
+  if (!validPassword) {
+    res.status(400).json({ message: 'Incorrect password!' });
+    return;
+  }
+
+  // if password valid, save new session data
+  req.session.save(() => {
+    // declare session variables
+    req.session.user_id = user.id;
+    req.session.email = user.email;
+    req.session.username = user.username;
+    req.session.loggedIn = true;
+
+    res.json({ user, message: 'You are now logged in!' });
   });
 });
 
 // POST /api/users/logout
 router.post('/logout', withAuth, (req, res) => {
   // destroy session if logged in
-  console.log(req.session)
+  console.log(req.session);
   if (req.session.loggedIn) {
     req.session.destroy(() => {
       res.status(204).end();
@@ -396,65 +343,30 @@ router.post('/logout', withAuth, (req, res) => {
   }
 });
 
-// PUT /api/users/1
-router.put('/:id', withAuth, (req, res) => {
-  const id = req.params.id;
-
-  // update user data
-  User.update(req.body, {
-    individualHooks: true,
-    where: {
-      id,
-    },
-  })
-    .then((dbUserData) => {
-      if (!dbUserData[0]) {
-        res.status(404).json({ message: 'No user found with this id' });
-        return;
-      }
-      res.json(dbUserData);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
-});
-
 // DELETE /api/users/1
-router.delete('/:id', withAuth, (req, res) => {
+router.delete('/:id', withAuth, async (req, res) => {
   const id = req.params.id;
   const sessionId = res.session.user_id;
 
   // check if id in param matches session id so auth'd users can only delete themselves via this route
   const validDelete = id == sessionId;
 
-  if (validDelete) {
-    User.destroy({
-      where: {
-        id,
-      },
-    })
-      .then((dbUserData) => {
-        if (!dbUserData) {
-          res.status(404).json({ message: 'No user found with this id' });
-          return;
-        }
-        res.json(dbUserData);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json(err);
-      });
-  } else {
+  if (!validDelete)
     res
       .status(403)
       .json({ message: 'You do not have authorization to delete this user' });
+
+  const deletedUser = await User.destroy({
+    where: {
+      id,
+    },
+  });
+
+  if (!deletedUser) {
+    res.status(404).json({ message: 'No user found with this id' });
+    return;
   }
+  res.json(deletedUser);
 });
-
-
-
-
-
 
 module.exports = router;

@@ -16,7 +16,7 @@
   }
   
   socket.on('newmsg', function(data) {
-    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.sender_id}</b> (${data.createdAt.slice(16,24)})<br /> ${data.body} </div>`;
+    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.user.username}</b> (${data.createdAt})<br /> ${data.body} </div>`;
     
     window.scrollTo(0,document.body.scrollHeight);
   })
@@ -25,7 +25,7 @@
   socket.on('populateHistory', (history) => {
     document.getElementById('message-container').innerHTML = '';
     history.forEach((message) => {
-      document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.email}</b> (${message.createdAt.slice(11,19)})<br /> ${message.body} </div>`;
+      document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> (${message.createdAt})<br /> ${message.body} </div>`;
     })
     window.scrollTo(0,document.body.scrollHeight);
   });

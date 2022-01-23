@@ -43,11 +43,10 @@ Message.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
   },
   {
     sequelize,
+    timestamps: true,
     freezeTableName: true,
     underscored: true,
     modelName: 'message',

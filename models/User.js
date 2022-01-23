@@ -1,4 +1,4 @@
-const { Model, DataTypes, DATEONLY } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../config/connection');
 const bcrypt = require('bcrypt');
 
@@ -6,9 +6,6 @@ class User extends Model {
   // add check password method to user model
   // compares entered password with password stored in instance
   checkPassword(loginPw) {
-    console.log(loginPw);
-    console.log(this.password);
-    console.log(bcrypt.compareSync(loginPw, this.password));
     return bcrypt.compareSync(loginPw, this.password);
   }
 }
@@ -63,37 +60,32 @@ User.init(
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
     },
     birthday: {
       type: DataTypes.DATE,
-      defaultValue: null
+      defaultValue: null,
     },
     yearStartCoding: {
       type: DataTypes.DATE,
-      defaultValue: null
-    },
-    github: {
-      type: DataTypes.STRING,
-      defaultValue: null
+      defaultValue: null,
     },
     bio: {
       type: DataTypes.TEXT,
-      defaultValue: null
+      defaultValue: null,
     },
     city: {
       type: DataTypes.STRING,
-      defaultValue: null
+      defaultValue: null,
     },
     state: {
       type: DataTypes.STRING,
-      defaultValue: null
+      defaultValue: null,
     },
     education: {
       type: DataTypes.STRING,
-      defaultValue: null
-    }
-
+      defaultValue: null,
+    },
   },
   {
     hooks: {

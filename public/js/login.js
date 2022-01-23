@@ -1,41 +1,37 @@
 async function loginFormHandler(event) {
   event.preventDefault();
 
-  const email = document.querySelector('#email-login').value.trim();
-  const password = document.querySelector('#password-login').value.trim();
-  const username = document.querySelector('#username-login').value.trim();
- 
+  const login = document.querySelector('#login').value.trim();
+  const password = document.querySelector('#password').value.trim();
 
   // client validation
-  
-   if(!email && !username) {
-    document.querySelector('#username-login').style.borderColor = 'red';
-    document.querySelector('#email-login').style.borderColor = 'red';
-    errMessageEl.textContent = 'Must use one field.'
+
+  if (!login) {
+    document.querySelector('#login').style.borderColor = 'red';
+    errMessageEl.textContent =
+      'Must enter either your username or your email address.';
   }
 
   if (!password) {
-    document.querySelector('#password-login').style.borderColor = 'red';
+    document.querySelector('#password').style.borderColor = 'red';
     errMessageEl.textContent = 'Password field must not be blank.';
     return;
   }
 
   if (password.length < 8) {
-    document.querySelector('#password-login').style.borderColor = 'red';
+    document.querySelector('#password').style.borderColor = 'red';
     errMessageEl.textContent = 'Password must be 8 characters or longer.';
     return;
   }
 
   // last client validation check
-  if (email || username && password) {
+  if (login && password) {
     // post request to /api/users to create a user
     const response = await fetch('/api/users/login', {
       method: 'post',
       body: JSON.stringify({
-        email,
-        username,
+        login,
         password,
-        
       }),
       headers: { 'Content-Type': 'application/json' },
     });
@@ -54,12 +50,12 @@ document
 
 const errMessageEl = document.querySelector('.error-text');
 
-document.querySelector('#email-login').addEventListener('input', () => {
-  document.querySelector('#email-login').style.borderColor = '#ccc';
+document.querySelector('#login').addEventListener('input', () => {
+  document.querySelector('#login').style.borderColor = '#ccc';
   errMessageEl.textContent = '';
 });
 
-document.querySelector('#password-login').addEventListener('input', () => {
-  document.querySelector('#password-login').style.borderColor = '#ccc';
+document.querySelector('#password').addEventListener('input', () => {
+  document.querySelector('#password').style.borderColor = '#ccc';
   errMessageEl.textContent = '';
 });

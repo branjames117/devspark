@@ -1,12 +1,12 @@
 <form action='/api/users/profile' method='POST'>
-    <legend>{{user}}'s Profile Editor</legend>
+    <legend>{{username}}'s Profile Editor</legend>
     <div>
         <label for='birthday'>Birthday </label>
         <input type='date' name='birthday' id='birthday'>
     </div>
     <div>
-        <label for="years-of-code">How many years have you been coding?</label>
-        <input type='number' name='years-of-code' id='yearsOfCode'>
+        <label for="yearStartCoding">How many years have you been coding?</label>
+        <input type='number' name='yearStartCoding' id='yearStartCoding'>
     </div>
     <div>
         <label for='github'>Link your github here</label>
@@ -32,6 +32,11 @@
 
         <input type='submit' value='Update Profile'>
     </div>
+</form>
+<br /><br />
+<form id='image-form' name='image-form' action='/api/images/upload' enctype="multipart/form-data" method='post'>
+  <input type="file" name="image" id="file-input" />
+  <button type="submit">Upload Image</button>
 </form>
 
 <script src='/js/profile.js'></script>
