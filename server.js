@@ -4,7 +4,8 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
-const { User, Message } = require('./models');
+const { User, Message, Skill } = require('./models');
+const seedAll = require('./seeds');
 
 // set up session with sequelize
 const session = require('express-session');
@@ -201,7 +202,13 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force: false }).then(async () => {
+  // check if there are skills in the database
+  const skillsAlreadySeeded = await Skill.findByPk(1);
+  if (!skillsAlreadySeeded) {
+    await seedAll();
+  }
+
   http.listen(process.env.PORT || 3001, () => {
     if (!process.env.PORT) {
       console.log('|-----------------------|');
