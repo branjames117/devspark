@@ -4,7 +4,6 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
-const { Op } = require('Sequelize');
 const { User, Message } = require('./models');
 
 // set up session with sequelize
