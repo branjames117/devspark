@@ -20,7 +20,7 @@ async function chatList(userID) {
     },
     include: {
       model: User,
-      attributes: ['id', 'email'],
+      attributes: ['id', 'email', 'username'],
     },
     // sort the messages in descending order by ID so that the most recent message is first
     order: [['id', 'DESC']],
@@ -31,6 +31,7 @@ async function chatList(userID) {
   messages.forEach((data) => {
     plainData.push(data.get({ plain: true }));
   });
+
   // find all unique IDs involved in the user's chats and store the latest messages
   const activeChatUsers = [];
   const activeChatMessages = [];
@@ -41,7 +42,8 @@ async function chatList(userID) {
         sender: data.recipient_id,
         message: data.body,
         read: data.read,
-        timestamp: data.createdAt,
+        createdAt: data.createdAt,
+        room: data.room,
       });
     }
     if (activeChatUsers.indexOf(data.sender_id) === -1) {
@@ -51,6 +53,7 @@ async function chatList(userID) {
         message: data.body,
         read: data.read,
         createdAt: data.createdAt,
+        room: data.room,
       });
     }
   });
@@ -67,12 +70,21 @@ async function chatList(userID) {
 
   const newActiveChatMessages = [];
   activeChatMessages.forEach((message) => {
-    if (blockedUsersIntArray.indexOf(message.sender) === -1) {
+    if (
+      blockedUsersIntArray.indexOf(message.sender) === -1 &&
+      message.sender !== userID
+    ) {
       newActiveChatMessages.push(message);
     }
   });
+  for (const chat of newActiveChatMessages) {
+    const user = await User.findByPk(chat.sender, {
+      attributes: ['username'],
+    });
+    chat.username = user.dataValues.username;
+  }
 
-  return newActiveChatMessages.filter((message) => message.sender !== userID);
+  return newActiveChatMessages;
 }
 
 module.exports = { notificationCount, chatList };

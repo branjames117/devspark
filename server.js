@@ -166,9 +166,9 @@ io.on('connection', (socket) => {
       msg.read = users[receiver] && users[receiver] === room ? true : false;
       // add roomname
       msg.room = room;
-      msg.createdAt = new Date();
       msg.user = {};
       msg.user.username = socket.request.session.username;
+      msg.createdAt = new Date();
 
       // ... then create the message in the database
       await Message.create(msg);
@@ -200,7 +200,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
   http.listen(process.env.PORT || 3001, () => {
     if (!process.env.PORT) {
       console.log('|-----------------------|');
