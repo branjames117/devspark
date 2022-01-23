@@ -3,11 +3,6 @@ const { cloudinary, upload } = require('../../config/connection');
 const withAuth = require('../../utils/auth');
 const User = require('../../models/User');
 
-// /api/images/upload
-router.get('/upload', withAuth, (req, res) => {
-  res.render('image');
-});
-
 router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
   // be sure to change below out of comment to allow users to upload picture
   // const result = await cloudinary.uploader.upload(req.file.path);

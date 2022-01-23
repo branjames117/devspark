@@ -201,7 +201,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   http.listen(process.env.PORT || 3001, () => {
     if (!process.env.PORT) {
       console.log('|-----------------------|');
