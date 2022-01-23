@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, DATEONLY } = require('sequelize');
 const { sequelize } = require('../config/connection');
 const bcrypt = require('bcrypt');
 
@@ -60,6 +60,40 @@ User.init(
       type: DataTypes.TEXT,
       defaultValue: '0;',
     },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    birthday: {
+      type: DataTypes.DATE,
+      defaultValue: null
+    },
+    yearStartCoding: {
+      type: DataTypes.DATE,
+      defaultValue: null
+    },
+    github: {
+      type: DataTypes.STRING,
+      defaultValue: null
+    },
+    bio: {
+      type: DataTypes.TEXT,
+      defaultValue: null
+    },
+    city: {
+      type: DataTypes.STRING,
+      defaultValue: null
+    },
+    state: {
+      type: DataTypes.STRING,
+      defaultValue: null
+    },
+    education: {
+      type: DataTypes.STRING,
+      defaultValue: null
+    }
+
   },
   {
     hooks: {

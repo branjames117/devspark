@@ -4,6 +4,7 @@ async function signupFormHandler(e) {
   const email = document.querySelector('#email-signup').value.trim();
   const password = document.querySelector('#password-signup').value.trim();
   const confirm = document.querySelector('#confirm-signup').value.trim();
+  const username = document.querySelector('#username-login').value.trim();
 
   // user validation
   if (!email) {
@@ -16,6 +17,11 @@ async function signupFormHandler(e) {
     document.querySelector('#email-signup').style.borderColor = 'red';
     errMessageEl.textContent = 'Email cannot exceed 30 characters in length.';
     return;
+  }
+
+  if(!username) {
+    document.querySelector('#username-login').style.borderColor = 'red';
+    errMessageEl.textContent = 'Username field must not be blank.'
   }
 
   if (!password) {
@@ -46,10 +52,10 @@ async function signupFormHandler(e) {
     return;
   }
 
-  if (email && matchPasswords) {
+  if (email && username && matchPasswords) {
     const response = await fetch('/api/users', {
       method: 'post',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, username, password, }),
       headers: { 'Content-Type': 'application/json' },
     });
 

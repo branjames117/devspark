@@ -1,0 +1,37 @@
+<form action='/api/users/profile' method='POST'>
+    <legend>{{user}}'s Profile Editor</legend>
+    <div>
+        <label for='birthday'>Birthday </label>
+        <input type='date' name='birthday' id='birthday'>
+    </div>
+    <div>
+        <label for="years-of-code">How many years have you been coding?</label>
+        <input type='number' name='years-of-code' id='yearsOfCode'>
+    </div>
+    <div>
+        <label for='github'>Link your github here</label>
+        <input type='url' name='github' id='github'>
+    </div>
+    <div>
+        <label for='bio'>Add a user bio</label>
+        <input type='text' name='bio' id='bio'>
+    </div>
+    <div>
+        <p>Where are you located?</p>
+        <label for='user-from-city'>City</label>
+        <input type='text' name='city' id='city'>
+        <label for='user-from-state'>State</label>
+        <input type='text' name='state' id='state'>
+    </div>
+    <div>
+        <label for='bio'>What is your highest level of education?</label>
+        <input type='text' name='education' id='education'>
+    </div>
+
+    <div>
+
+        <input type='submit' value='Update Profile'>
+    </div>
+</form>
+
+<script src='/js/profile.js'></script>

@@ -39,7 +39,7 @@
         <nav>
           {{#if loggedIn}}
             <a href="/home">Home</a>
-            <a href='/users/{{userID}}'>My Profile (ID: {{userID}})</a>
+            <a href='/api/users/profile'>My Profile (ID: {{userID}})</a>
             <a href='/chat'>My Conversations (<span id="notif-count"></span>)</a>
             <a id='logout'>Logout</a>
           {{else}}
