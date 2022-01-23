@@ -2,6 +2,9 @@ require('dotenv').config();
 const Sequelize = require('sequelize');
 const cloudinary = require('cloudinary');
 const multer = require('multer');
+const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
+const OAuth2 = google.auth.OAuth2;
 
 // in this file we configure our Sequelize, multer, and Cloudinary connections
 
@@ -26,7 +29,7 @@ if (process.env.JAWSDB_URL) {
 // set up multer
 
 // variable to limit image file size
-const limits = {fileSize: 1024 * 1024}
+const limits = { fileSize: 1024 * 1024 };
 const upload = multer({
   storage: multer.diskStorage({}),
   limits: limits,
@@ -46,4 +49,41 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-module.exports = { sequelize, cloudinary, upload };
+// configure gmail transporter for nodemailer
+// create the transporter for our gmail-based forgot-password message
+const createTransporter = async () => {
+  const oauth2Client = new OAuth2(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    'https://developers.google.com/oauthplayground'
+  );
+
+  oauth2Client.setCredentials({
+    refresh_token: process.env.REFRESH_TOKEN,
+  });
+
+  const accessToken = await new Promise((resolve, reject) => {
+    oauth2Client.getAccessToken((err, token) => {
+      if (err) {
+        reject();
+      }
+      resolve(token);
+    });
+  });
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: 'devspark003@gmail.com',
+      accessToken,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
+    },
+  });
+
+  return transporter;
+};
+
+module.exports = { sequelize, cloudinary, upload, createTransporter };

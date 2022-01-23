@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Skill, UserSkill } = require('../../models');
+const { User, Skill } = require('../../models');
 
 // GET /api/skills
 router.get('/', async (req, res) => {
@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
   });
 
   if (!skill) {
-    res.status(404).json({ message: 'No tag found with this id' });
+    res.status(404).json({ message: 'No skill found with this id' });
     return;
   }
 
