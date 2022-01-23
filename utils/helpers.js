@@ -1,4 +1,4 @@
-const { Op } = require('Sequelize');
+const { Op } = require('sequelize');
 const { User, Message } = require('../models');
 
 // return a user's number of unread messages
