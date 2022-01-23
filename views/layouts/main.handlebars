@@ -28,7 +28,7 @@
   </head>
   
   <script src='/socket.io/socket.io.js'></script>
-  <script src='/js/notifications.js'></script>
+  {{#if loggedIn}}<script src='/js/notifications.js'></script>{{/if}}
 
   <body>
     <div class='wrapper'>
@@ -38,7 +38,7 @@
         </h1>
         <nav>
           {{#if loggedIn}}
-            <a href='/profile'>My Profile (ID: {{userID}})</a>
+            <a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a>
             <a href='/chat'>My Conversations (<span id="notif-count"></span>)</a>
             <a id='logout'>Logout</a>
           {{else}}

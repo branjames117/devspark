@@ -1,6 +1,11 @@
 const { Op } = require('sequelize');
 const { User, Message } = require('../models');
 
+// returns true if user is on his/her own profile
+function ownProfile(id1, id2) {
+  return id1 === id2;
+}
+
 // return a user's number of unread messages
 async function notificationCount(userID) {
   return await Message.count({
@@ -87,4 +92,4 @@ async function chatList(userID) {
   return newActiveChatMessages;
 }
 
-module.exports = { notificationCount, chatList };
+module.exports = { notificationCount, chatList, ownProfile };

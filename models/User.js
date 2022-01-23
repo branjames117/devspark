@@ -63,11 +63,11 @@ User.init(
       unique: true,
     },
     birthday: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       defaultValue: null,
     },
     yearStartCoding: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       defaultValue: null,
     },
     bio: {

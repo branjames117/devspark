@@ -1,0 +1,101 @@
+<form action='/api/users/profile' method='POST'>
+    <legend>{{username}}'s Profile Editor</legend>
+    <div>
+        <label for='birthday'>Birthday </label>
+        <input type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
+    </div>
+    <div>
+        <label for="yearStartCoding">How many years have you been coding?</label>
+        <input type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
+    </div>
+    <div>
+        <label for='github'>Link your github here</label>
+        <input type='url' name='github' id='github' value='{{user.github}}'>
+    </div>
+    <div>
+        <label for='bio'>Add a user bio</label>
+        <input type='text' name='bio' id='bio' value='{{user.bio}}'>
+    </div>
+    <div>
+        <p>Where are you located?</p>
+        <label for='user-from-city'>City</label>
+        <input type='text' name='city' id='city' value='{{user.city}}'>
+        <label for='user-from-state'>State</label>
+        <input type='text' name='state' id='state' value='{{user.state}}'>
+    </div>
+    <div>
+        <label for='bio'>What is your highest level of education?</label>
+        <input type='text' name='education' id='education' value='{{user.education}}'>
+    </div>
+
+    <div><br />
+        Select your skills (do not check any boxes if you do not wish to update your entire skillset):<br />
+        <input type="checkbox" id="skill1" name="skill1" value="JavaScript">
+        <label for="skill1"> JavaScript</label><br>
+        <input type="checkbox" id="skill2" name="skill2" value="HTML/CSS">
+        <label for="skill2"> HTML/CSS</label><br>
+        <input type="checkbox" id="skill3" name="skill3" value="Node.js">
+        <label for="skill3"> Node.js</label><br>
+        <input type="checkbox" id="skill4" name="skill4" value="React">
+        <label for="skill4"> React</label><br>
+        <input type="checkbox" id="skill5" name="skill5" value="AngularJS">
+        <label for="skill5"> AngularJS</label><br>
+        <input type="checkbox" id="skill6" name="skill6" value="Vue.js">
+        <label for="skill6"> Vue.js</label><br>
+        <input type="checkbox" id="skill7" name="skill7" value="MySQL">
+        <label for="skill7"> MySQL</label><br>
+        <input type="checkbox" id="skill8" name="skill8" value="Express">
+        <label for="skill8"> Express</label><br>
+        <input type="checkbox" id="skill9" name="skill9" value="NoSQL">
+        <label for="skill9"> NoSQL</label><br>
+        <input type="checkbox" id="skill10" name="skill10" value="TypeScript">
+        <label for="skill10"> TypeScript</label><br>
+        <input type="checkbox" id="skill11" name="skill11" value="Python">
+        <label for="skill11"> Python</label><br>
+        <input type="checkbox" id="skill12" name="skill12" value="Java">
+        <label for="skill12"> Java</label><br>
+        <input type="checkbox" id="skill13" name="skill13" value="PHP">
+        <label for="skill13"> PHP</label><br>
+        <input type="checkbox" id="skill14" name="skill14" value="C/C++">
+        <label for="skill14"> C/C++</label><br>
+        <input type="checkbox" id="skill15" name="skill15" value="C#">
+        <label for="skill15"> C#"</label><br>
+        <input type="checkbox" id="skill16" name="skill16" value="R">
+        <label for="skill16"> R</label><br>
+        <input type="checkbox" id="skill17" name="skill17" value="Swift">
+        <label for="skill17"> Swift</label><br>
+        <input type="checkbox" id="skill18" name="skill18" value="Objective-C">
+        <label for="skill18"> Objective-C</label><br>
+        <input type="checkbox" id="skill19" name="skill19" value="Bash/Shell">
+        <label for="skill19"> Bash/Shell</label><br>
+        <input type="checkbox" id="skill20" name="skill20" value="Go">
+        <label for="skill20"> Go</label><br>
+        <input type="checkbox" id="skill21" name="skill21" value="Rust">
+        <label for="skill21"> Rust</label><br>
+        <input type="checkbox" id="skill22" name="skill22" value="Perl">
+        <label for="skill22"> Perl</label><br>
+        <input type="checkbox" id="skill23" name="skill23" value="Ruby">
+        <label for="skill23"> Ruby</label><br>
+        <input type="checkbox" id="skill24" name="skill24" value="Ruby on Rails">
+        <label for="skill24"> Ruby on Rails</label><br>
+        <input type="checkbox" id="skill25" name="skill25" value="VB.NET">
+        <label for="skill25"> VB.NET</label><br>
+        <input type="checkbox" id="skill26" name="skill26" value="Scala">
+        <label for="skill26"> Scala</label><br>
+        
+    </div>
+
+    <div>
+        <input type='submit' value='Update Profile'>
+    </div>
+</form>
+<br /><br />
+Current profile image:<br />
+<img src="{{user.profile_image}}" />
+
+<form id='image-form' name='image-form' action='/api/images/upload' enctype="multipart/form-data" method='post'>
+  <input type="file" name="image" id="file-input" />
+  <button type="submit">Upload Image</button>
+</form>
+
+<script src='/js/profile.js'></script>

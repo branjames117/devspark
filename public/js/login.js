@@ -36,7 +36,7 @@ async function loginFormHandler(event) {
       headers: { 'Content-Type': 'application/json' },
     });
     if (response.ok) {
-      document.location.replace('/');
+      document.location.replace('/profile/editor');
     } else {
       errMessageEl.textContent =
         'Something went wrong. Are you sure the username and password are correct?';
