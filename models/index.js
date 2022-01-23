@@ -1,7 +1,7 @@
 const User = require('./User');
 const Message = require('./Message');
 const Skill = require('./Skill');
-const UserSkill = require('./UserSkill.js');
+const UserSkill = require('./UserSkill');
 
 // create relationships between user and message models
 User.hasMany(Message, {

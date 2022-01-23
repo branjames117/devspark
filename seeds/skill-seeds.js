@@ -83,4 +83,4 @@ const skillData = [
 
 const seedSkills = () => Skill.bulkCreate(skillData);
 
-module.exports = seedTags;
+module.exports = seedSkills;

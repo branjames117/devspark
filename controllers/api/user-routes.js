@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const withAuth = require('../../utils/auth');
 const { Sequelize, Op } = require('sequelize');
-const { User, Message } = require('../../models');
+const { User, Message, Skill, UserSkill } = require('../../models');
 const { randomBytes } = require('crypto');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -14,6 +14,12 @@ router.get('/', async (req, res) => {
     attributes: {
       exclude: ['password'],
     },
+    include: [
+      {
+        model: Skill,
+        attributes: ['id', 'skill_name'],
+      },
+    ],
   });
 
   if (!users) {
@@ -102,24 +108,48 @@ router.post('/delete-conversation', withAuth, async (req, res) => {
 // POST /api/users/profile
 router.post('/profile', async (req, res) => {
   const id = req.session.user_id;
-  console.log(req.body);
-
-  console.log(req.body.yearStartCoding);
 
   // create a new object so we only update the fields the user filled out
+  const fields = [
+    'birthday',
+    'yearStartCoding',
+    'github',
+    'bio',
+    'city',
+    'state',
+    'education',
+  ];
   const updatedInfo = {};
-  if (req.body.birthday) updatedInfo.birthday = req.body.birthday;
-  if (req.body.yearStartCoding)
-    updatedInfo.yearStartCoding = req.body.yearStartCoding;
-  if (req.body.github) updatedInfo.github = req.body.github;
-  if (req.body.bio) updatedInfo.bio = req.body.bio;
-  if (req.body.city) updatedInfo.city = req.body.city;
-  if (req.body.state) updatedInfo.state = req.body.state;
-  if (req.body.education) updatedInfo.education = req.body.education;
+  for (field of fields) {
+    if (req.body[field]) updatedInfo[field] = req.body[field];
+  }
 
+  // update the user with the new info
   const updatedUser = await User.update(updatedInfo, {
     where: { id },
   });
+
+  // now go through the submitted skills and create an array out of them
+  // i = 26 because we have 26 pre-seeded skills to go through
+  updatedInfo.skills = [];
+  for (let i = 26; i > 0; i--) {
+    if (req.body['skill' + i]) updatedInfo.skills.push(i);
+  }
+
+  // if any skills were selected...
+  if (updatedInfo.skills.length) {
+    // ... map each skill to a UserSkill instance...
+    const userSkillIdArr = updatedInfo.skills.map((skill_id) => {
+      return {
+        user_id: req.session.user_id,
+        skill_id,
+      };
+    });
+    // ... then destroy all previous UserSkills for the user
+    await UserSkill.destroy({ where: { user_id: req.session.user_id } });
+    // ... and create the new ones!
+    await UserSkill.bulkCreate(userSkillIdArr);
+  }
 
   if (updatedUser) {
     console.log('======');
@@ -261,6 +291,10 @@ router.get('/:id', async (req, res) => {
           'created_at',
         ],
       },
+      {
+        model: Skill,
+        attributes: ['id', 'skill_name'],
+      },
     ],
   });
 
@@ -308,8 +342,6 @@ router.post('/login', async (req, res) => {
   }
 
   // check if password is valid with checkPassword class method
-  // console.log(dbUserData);
-
   const validPassword = user.checkPassword(req.body.password);
 
   // if password invalid, err
