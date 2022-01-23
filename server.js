@@ -4,6 +4,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
+const { Op } = require('Sequelize');
 const { User, Message } = require('./models');
 
 // set up session with sequelize
@@ -14,7 +15,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 // handlebars, routes, utilities
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
-const { notificationCount } = require('./utils/helpers');
+const { notificationCount, chatList } = require('./utils/helpers');
 
 // tell app and socket.io to use session middleware
 const sessionMiddleware = session({
@@ -82,6 +83,16 @@ io.on('connection', (socket) => {
     io.to(notificationRoom).emit('update-notifications', count);
   });
 
+  socket.on('request-chat-list', async (data) => {
+    const userID = socket.request.session.user_id;
+    const chatListRoom = userID + 'x';
+    socket.join(chatListRoom);
+
+    const listOfChats = await chatList(userID);
+
+    io.to(chatListRoom).emit('populate-list', listOfChats);
+  });
+
   // listen for a user joining a chat room with another user based on both user's IDs
   socket.on('joinroom', async (data) => {
     // get IDs of both users from the client
@@ -140,11 +151,16 @@ io.on('connection', (socket) => {
       // check if sender matches the session ID, otherwise user might be trying to spoof
       if (socket.request.session.user_id != msg.sender_id) return;
 
+      // get recipient's blocked users
+      const blockingUser = await User.findByPk(receiver);
+      if (!blockingUser) return;
+
       // convert string of recipient's blocked user IDs to array of integers
-      const blockedUsers = receivingUser.dataValues.blocked_users
+      const blockedUsers = blockingUser.dataValues.blocked_users
         .split(';')
         .map((id) => parseInt(id));
 
+      console.log(blockedUsers);
       // check if senderID is in recipientID's list of blocked users
       if (blockedUsers.indexOf(sender) !== -1) return;
 
@@ -161,9 +177,20 @@ io.on('connection', (socket) => {
       // ... then, emit the message to the clientside chatroom
       io.to(room).emit('newmsg', msg);
 
-      // ... then, update the receiver's notification socket to the latest unread message count
-      const count = await notificationCount(receiver);
-      io.to(parseInt(receiver)).emit('update-notifications', count);
+      // if user is online but not in room, update the user's chat list based on their unique chat list room (which would be '4x' if their userID is 4)
+      console.log('=====================================');
+      console.log(users[receiver]);
+      console.log(users[receiver] !== room);
+      if (users[receiver] !== room) {
+        console.log(msg);
+        io.to(msg.recipient_id + 'x').emit('update-list', msg);
+      }
+
+      // ... then, update the receiver's notification socket to the latest unread message count, but only if they're online
+      if (users[receiver] !== room) {
+        const count = await notificationCount(receiver);
+        io.to(parseInt(receiver)).emit('update-notifications', count);
+      }
     });
   });
 

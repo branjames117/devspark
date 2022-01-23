@@ -1,10 +1,11 @@
-<script src='/socket.io/socket.io.js'></script>
-
 <script>
   // join a room using the senderID and the recipientID with an x between them
   socket.emit('joinroom', { room: {{ senderId }} + 'x' + {{ recipientId }} });
+  const msgSentSound = new Audio('/sounds/msg_sent.wav');
+  const msgRecdSound = new Audio('/sounds/msg_recd.wav');
 
   function sendMessage() {
+    msgSentSound.play();
     var msg = document.getElementById('message').value;
     if(msg.trim()) { 
       socket.emit('msg', { body: msg, sender_id: {{ senderId }}, recipient_id: {{ recipientId }} });
@@ -51,7 +52,6 @@
     })
 
     document.getElementById('message').addEventListener('keyup', (e) => {
-      console.log(e);
       if (e.key === 'Enter' && !e.shiftKey) {
         document.getElementById('chat-submit-btn').click(); 
       }
