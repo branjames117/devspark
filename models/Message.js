@@ -44,7 +44,6 @@ Message.init(
       allowNull: false,
     },
     createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
   },
   {
     sequelize,

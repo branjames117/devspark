@@ -4,7 +4,6 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
-const { Op } = require('Sequelize');
 const { User, Message } = require('./models');
 
 // set up session with sequelize
@@ -42,7 +41,6 @@ app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static('uploads'));
 
 // cors handling
 app.use((req, res, next) => {
@@ -65,24 +63,23 @@ app.use(routes);
 // start tracking who is online and what room they're in
 const users = {};
 
-// explanation of rooms
-/* when userID 5 first logs in, they're automatically joined into room "5", which is
-their notification socket in the header that shows how many unread messages they have,
+/* explanation of rooms
+when userID 5 first logs in, they're automatically joined into room "5", which is
+their unique notification socket in the header that shows how many unread messages they have,
 and updates live, no matter where they are on the site.
 
 when userID 5 is sitting on their /chat page, they're automatically joined into room "5x",
-which is there live-chat-list socket, which updates with their latest messages from all
+which is their unique live-chat-list socket, which updates with their latest messages from all
 other users.
 
 when userID 5 initiates a chat with userID 6 by visiting /chat/6, they join a room
 called "5x6", which is where their messages are directly sent. If userID 6 then also
 joins that room, they'll still join room "5x6", because the lower ID will always be to
-the left of the x, keeping the rooms unique between 2 users.
+the left of the x, keeping the rooms unique and persistent between 2 users.
 
-we keep track of which users are in which rooms above for the purpose of notifications:
+we keep track of which users are in which rooms above solely for the purpose of notifications:
 if userID 1 is already in room "1x5", they don't need to be notified when userID 5 sends
-them a message, because they're already looking at it.
-*/
+them a message, because they're already looking at it. */
 
 // when a user (new socket) connects to the server...
 io.on('connection', (socket) => {
