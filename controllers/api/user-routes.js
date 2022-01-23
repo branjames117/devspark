@@ -3,10 +3,7 @@ const withAuth = require('../../utils/auth');
 const { Sequelize, Op } = require('sequelize');
 const { User, Message, Skill, UserSkill } = require('../../models');
 const { randomBytes } = require('crypto');
-const nodemailer = require('nodemailer');
-require('dotenv').config();
-const { google } = require('googleapis');
-const OAuth2 = google.auth.OAuth2;
+const { createTransporter } = require('../../config/connection');
 
 // GET /api/users
 router.get('/', async (req, res) => {
@@ -160,42 +157,6 @@ router.post('/profile', async (req, res) => {
   }
 });
 
-// create the transporter for our gmail-based forgot-password message
-const createTransporter = async () => {
-  const oauth2Client = new OAuth2(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
-    'https://developers.google.com/oauthplayground'
-  );
-
-  oauth2Client.setCredentials({
-    refresh_token: process.env.REFRESH_TOKEN,
-  });
-
-  const accessToken = await new Promise((resolve, reject) => {
-    oauth2Client.getAccessToken((err, token) => {
-      if (err) {
-        reject();
-      }
-      resolve(token);
-    });
-  });
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: 'devspark003@gmail.com',
-      accessToken,
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN,
-    },
-  });
-
-  return transporter;
-};
-
 // POST /api/users/forgot
 router.post('/forgot', async function (req, res) {
   // generate a token
@@ -216,12 +177,13 @@ router.post('/forgot', async function (req, res) {
       to: req.body.email,
       from: 'devspark003@gmail.com',
       subject: 'DevSpark Password Reset',
-      text: 'For clients with plaintext support only',
+      text: `You are receiving this email because you have requested the reset of your password for your devSpark account ${req.body.email}. Paste the following link into your browser to reset your password: https://devsparkio.herokuapp.com/reset/${token}. If you did not request a password reset, please ignore this email.`,
       html: `
-            <p>You are receiving this link because you have requested the reset of your password for your account ${req.body.email}.
-            'Please click on the following link, or paste this into your browser to complete this process:</p>
-            <a href="https://devsparkio.herokuapp.com/reset/${token}">Reset link</a>
-            <p>If you did not request a password reset. Please ignore this email.</p>`,
+            <p>You are receiving this email because you have requested the reset of your password for your <em>devSpark</em> account ${req.body.email}. Click on the following link or paste it into your browser to reset your password:</p>
+
+            <p>Reset link: <a href="https://devsparkio.herokuapp.com/reset/${token}">https://devsparkio.herokuapp.com/reset/${token}</a></p>
+
+            <p>If you did not request a password reset, please ignore this email.</p>`,
     };
 
     const sendEmail = async (emailOptions) => {
