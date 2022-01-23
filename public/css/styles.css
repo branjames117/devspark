@@ -1,28 +1,88 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: white;
   min-height: 100%;
   font-family: 'Roboto', sans-serif;
+  position: relative;
+}
+
+a {
+  color: green;
+  text-decoration: none;
+}
+
+.wrapper {
+  width: 95%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header/Navbar Styles */
+
+header {
+  background-color: white;
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+header nav {
+  display: flex;
+  gap: 20px;
+}
+
+#logout {
+  cursor: pointer;
+}
+
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 90%;
+  min-height: 90%;
 }
 
 /* Active Chats styles */
 
-#active-chats-container,
-#blocked-chats-container {
+#active-chats-container {
+  margin: 20px auto;
   width: 100%;
 }
 
-#active-chats-container div,
-#blocked-chats-container div {
+#active-chats-container > div {
   display: flex;
-  margin: 20px;
+  justify-content: space-between;
+  margin: 20px auto;
+  width: 90%;
+  border-bottom: 1px solid black;
 }
 
 #active-chats-container div a,
 #blocked-chats-container div a {
-  border: 1px solid black;
-  display: block;
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
-  width: 200px;
+}
+
+#active-chats-container > div > div {
+  display: flex;
+  gap: 20px;
+}
+
+#active-chats-container form button {
+  background-color: white;
+  color: green;
+  border: 0;
+  cursor: pointer;
 }
 
 /* Chat styles */
@@ -32,7 +92,6 @@ body {
   margin: 20px auto;
   max-width: 800px;
   width: 100%;
-  position: relative;
 }
 
 #message-container div {
@@ -52,8 +111,11 @@ body {
 }
 
 #chat-textbox-container {
+  background-color: white;
   margin: 20px auto 0px;
   max-width: 800px;
+  position: sticky;
+  bottom: 0;
   width: 100%;
 }
 
@@ -65,6 +127,7 @@ body {
   border-radius: 10px;
   font-size: 1.2rem;
   height: 4rem;
+  margin-bottom: 10px;
   margin-right: 6px;
   padding: 4px 8px;
   resize: vertical;
@@ -78,6 +141,7 @@ body {
 #chat-submit-btn {
   background-color: rgb(170, 170, 255);
   border-radius: 10px;
+  margin-bottom: 10px;
   font-size: 1.2rem;
   text-align: center;
 }

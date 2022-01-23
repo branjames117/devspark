@@ -245,7 +245,10 @@ router.get('/reset/:token', function (req, res) {
 
       res.render('reset', { token: req.params.token });
     }
-  );
+
+    console.log('not expired');
+    res.render('reset', { token: req.params.token });
+  });
 });
 
 router.post('/reset/:token', (req, res) => {
@@ -279,7 +282,7 @@ router.post('/reset/:token', (req, res) => {
           });
         }
       }
-    );
+    });
   }
 });
 
@@ -383,6 +386,7 @@ router.post('/login', (req, res) => {
 // POST /api/users/logout
 router.post('/logout', withAuth, (req, res) => {
   // destroy session if logged in
+  console.log(req.session)
   if (req.session.loggedIn) {
     req.session.destroy(() => {
       res.status(204).end();

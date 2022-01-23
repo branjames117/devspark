@@ -1,45 +1,49 @@
-<h3>Active Conversations</h3>
+<script>
+  socket.emit('request-chat-list', { user_id: {{ userID }} })
+
+  socket.on('populate-list', data => {
+    console.log(data);
+    data.forEach(chat => {
+      document.getElementById('active-chats-container').innerHTML += `<div id="chat-${chat.sender}">
+    <a class="active-chat-btn" href='/chat/${chat.sender}'><span class="sender-id">${chat.sender}</span><span class="message-body">${chat.message}</span><span class="read-status">${chat.read ? 'read' : 'unread'}</span>${chat.createdAt}</a>
+    <div>
+      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+      <input type="hidden" name="deletedID" id="deleted-id" value=${chat.sender} />
+      <button type="submit">Delete Conversation</button>
+      </form>
+      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+      <input type="hidden" name="blockedID" id="blocked-id" value=${chat.sender} />
+      <button type="submit">Block User</button>
+      </form>
+    </div>
+  </div>`;
+    })
+  })
+
+  socket.on('update-list', data => {
+    const chatElementToUpdate = document.getElementById('chat-' + data.sender_id);
+
+    if (chatElementToUpdate) {
+      chatElementToUpdate.remove();
+    }
+
+    const newDiv = document.createElement('div');
+    newDiv.id = 'chat-' + data.sender_id;
+    newDiv.innerHTML = `<a class="active-chat-btn" href='/chat/${data.sender_id}'><span class="sender-id">${data.sender_id}</span><span class="message-body">${data.body}</span><span class="read-status">${data.read ? 'read' : 'unread'}</span>${data.createdAt}</a>
+    <div>
+      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+      <input type="hidden" name="deletedID" id="deleted-id" value=${data.sender_id} />
+      <button type="submit">Delete Conversation</button>
+      </form>
+      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+      <input type="hidden" name="blockedID" id="blocked-id" value=${data.sender_id} />
+      <button type="submit">Block User</button>
+      </form>
+    </div>`;
+
+    document.getElementById('active-chats-container').prepend(newDiv);
+  })
+</script>
+
 <div id="active-chats-container">
 </div>
-
-<h3>Blocked Conversations</h3>
-<div id="blocked-chats-container">
-</div>
-
-<script>
-
-  const activeChats = [{{activeChats}}];
-  const blockedActiveChats = [{{blockedActiveChats}}];
-
-  function redirect(activeChat) {
-    window.location.replace(window.location + '/' + activeChat);
-  }
-
-  activeChats.forEach(activeChat => {
-    document.getElementById('active-chats-container').innerHTML += `<div>
-      <a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>
-      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
-        <input type="hidden" name="blockedID" id="blocked-id" value=${activeChat} />
-        <button type="submit">Block User</button>
-      </form>
-      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
-        <input type="hidden" name="deletedID" id="deleted-id" value=${activeChat} />
-        <button type="submit">Delete Conversation</button>
-      </form>
-    </div>`;
-  });
-
-  blockedActiveChats.forEach(activeChat => {
-    document.getElementById('blocked-chats-container').innerHTML += `<div>
-      <a class="active-chat-btn" href='/chat/${activeChat}'>${activeChat}</a>
-      <form id='unblock-user-form' name='unblock-user-form' action='/api/users/unblock' method='post'>
-        <input type="hidden" name="unblockedID" id="unblocked-id" value=${activeChat} />
-        <button type="submit">Unblock User</button>
-      </form>
-      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
-        <input type="hidden" name="deletedID" id="deleted-id" value=${activeChat} />
-        <button type="submit">Delete Conversation</button>
-      </form>
-    </div>`;
-  });
-</script>
