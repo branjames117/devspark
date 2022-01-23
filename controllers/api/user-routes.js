@@ -349,8 +349,7 @@ router.post('/login', (req, res) => {
   // find user based on username or password
   User.findOne({
     where: {
-      [Op.or]: {email: req.body.email},
-      [Op.or]: {username: req.body.username}
+        [Op.or]: [{ email: req.body.email }, { username: req.body.username }],
     },
   }).then((dbUserData) => {
     if (!dbUserData) {

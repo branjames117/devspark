@@ -8,11 +8,11 @@ async function loginFormHandler(event) {
 
   // client validation
   
-  //  if(!email && !username) {
-  //   document.querySelector('#username-login').style.borderColor = 'red';
-  //   document.querySelector('#email-login').style.borderColor = 'red';
-  //   errMessageEl.textContent = 'Must use one field.'
-  // }
+   if(!email && !username) {
+    document.querySelector('#username-login').style.borderColor = 'red';
+    document.querySelector('#email-login').style.borderColor = 'red';
+    errMessageEl.textContent = 'Must use one field.'
+  }
 
   if (!password) {
     document.querySelector('#password-login').style.borderColor = 'red';
@@ -39,8 +39,6 @@ async function loginFormHandler(event) {
       }),
       headers: { 'Content-Type': 'application/json' },
     });
-    localStorage.setItem('userData', JSON.stringify(response));
-
     if (response.ok) {
       document.location.replace('/');
     } else {
