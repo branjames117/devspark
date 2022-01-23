@@ -3,13 +3,16 @@ async function loginFormHandler(event) {
 
   const email = document.querySelector('#email-login').value.trim();
   const password = document.querySelector('#password-login').value.trim();
+  const username = document.querySelector('#username-login').value.trim();
+ 
 
   // client validation
-  if (!email) {
-    document.querySelector('#email-login').style.borderColor = 'red';
-    errMessageEl.textContent = 'Email field must not be blank.';
-    return;
-  }
+  
+  //  if(!email && !username) {
+  //   document.querySelector('#username-login').style.borderColor = 'red';
+  //   document.querySelector('#email-login').style.borderColor = 'red';
+  //   errMessageEl.textContent = 'Must use one field.'
+  // }
 
   if (!password) {
     document.querySelector('#password-login').style.borderColor = 'red';
@@ -24,19 +27,22 @@ async function loginFormHandler(event) {
   }
 
   // last client validation check
-  if (email && password) {
+  if (email || username && password) {
     // post request to /api/users to create a user
     const response = await fetch('/api/users/login', {
       method: 'post',
       body: JSON.stringify({
         email,
+        username,
         password,
+        
       }),
       headers: { 'Content-Type': 'application/json' },
     });
+    localStorage.setItem('userData', JSON.stringify(response));
 
     if (response.ok) {
-      document.location.replace('/chat/');
+      document.location.replace('/');
     } else {
       errMessageEl.textContent =
         'Something went wrong. Are you sure the username and password are correct?';

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const withAuth = require('../../utils/auth');
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const { User, Message } = require('../../models');
 const { randomBytes } = require('crypto');
 const nodemailer = require('nodemailer');
@@ -94,6 +94,63 @@ router.post('/delete-conversation', withAuth, (req, res) => {
   });
 });
 
+router.get('/profile', (req,res) => {
+    const id = req.session.user_id;
+    // User.findOne({
+    //     where: { id } 
+    // })
+    // .then((dbUserData) => {
+    //     if(!dbUserData) {
+    //         res.json({ message: 'some err'})
+    //         res.redirect('/login')
+    //     }
+    //     console.log(dbUserData);
+    console.log('The house is on fire')
+    res.render('profile')
+});
+
+
+router.post('/profile', (req,res) => {
+    const id = req.session.user_id;
+    User.findOne({
+        where: { id } 
+    })
+    .then((dbUserData) => {
+        if(!dbUserData) {
+            res.json({ message: 'some err'})
+            res.redirect('/login')
+        }
+        console.log(dbUserData.dataValues);
+        User.update(
+            {
+                birthday: req.body.birthday,
+                yearStartCoding: req.body.yearOfCode,
+                github: req.body.github,
+                bio: req.body.bio,
+                city: req.body.city,
+                state: req.body.state,
+                education: req.body.education
+            },
+            {
+                where: { id: req.session.user_id },
+                
+              }
+            ).then((rowsUpdated) => {
+              if (rowsUpdated) {
+                  console.log('======');
+                  console.log('success')
+                res.redirect('/api/users');
+              } else {
+                console.log('Something went wrong.');
+              }
+            });
+            
+
+        
+
+    })
+})
+
 // GET /api/users/forgot
 router.get('/forgot', (req, res) => {
   // get user email
@@ -145,7 +202,7 @@ router.post('/forgot', async function (req, res) {
   User.update(
     {
       resetPasswordToken: token,
-      resetPasswordExpires: Date.now() + 3600000,
+      resetPasswordExpires: Date.now() + 360000,
     },
     { where: { email: req.body.email } }
   ).then((userFound) => {
@@ -176,8 +233,12 @@ router.post('/forgot', async function (req, res) {
 });
 
 router.get('/reset/:token', function (req, res) {
-  User.findOne({ where: { resetPasswordToken: req.params.token } }).then(
-    function (user) {
+    User.findOne({
+        where: {
+          resetPasswordToken: req.params.token,
+          resetPasswordExpires: { [Op.gt]: Date.now() },
+        },
+      }).then(function (user) {
       if (!user) {
         return res.redirect('/api/users/forgot');
       }
@@ -192,8 +253,12 @@ router.post('/reset/:token', (req, res) => {
     // res.flash('error', 'Password reset token is invalid or has expired');
     return res.redirect('back');
   } else {
-    User.findOne({ where: { resetPasswordToken: req.params.token } }).then(
-      (dbUserData) => {
+    User.findOne({
+        where: {
+          resetPasswordToken: req.params.token,
+          resetPasswordExpires: { [Op.gt]: Date.now() },
+        },
+      }).then((dbUserData) => {
         if (dbUserData) {
           User.update(
             {
@@ -281,18 +346,21 @@ router.post('/', (req, res) => {
 
 // POST /api/users/login
 router.post('/login', (req, res) => {
-  // find user based on username
+  // find user based on username or password
   User.findOne({
     where: {
-      email: req.body.email,
+      [Op.or]: {email: req.body.email},
+      [Op.or]: {username: req.body.username}
     },
   }).then((dbUserData) => {
     if (!dbUserData) {
-      res.status(400).json({ message: 'No user with that email!' });
+      res.status(400).json({ message: 'No user found!' });
       return;
     }
 
     // check if password is valid with checkPassword class method
+    // console.log(dbUserData);
+    
     const validPassword = dbUserData.checkPassword(req.body.password);
 
     // if password invalid, err
@@ -307,7 +375,7 @@ router.post('/login', (req, res) => {
       req.session.user_id = dbUserData.id;
       req.session.email = dbUserData.email;
       req.session.loggedIn = true;
-
+      
       res.json({ user: dbUserData, message: 'You are now logged in!' });
     });
   });
@@ -380,5 +448,10 @@ router.delete('/:id', withAuth, (req, res) => {
       .json({ message: 'You do not have authorization to delete this user' });
   }
 });
+
+
+
+
+
 
 module.exports = router;
