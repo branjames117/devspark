@@ -60,10 +60,10 @@ async function signupFormHandler(e) {
     });
 
     if (response.ok) {
-      document.location.replace('/profile');
+      document.location.replace('/profile/editor');
     } else {
       errMessageEl.textContent =
-        'Something went wrong. Try a different username.';
+        'Something went wrong. Try a different username or email address.';
     }
   }
 }

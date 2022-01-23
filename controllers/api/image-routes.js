@@ -27,7 +27,7 @@ router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
         });
         return;
       } else {
-        res.redirect('/api/users/' + req.session.user_id);
+        res.redirect(`/profile/${req.session.user_id}`);
       }
     })
     .catch((err) => {

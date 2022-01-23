@@ -14,7 +14,9 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 // handlebars, routes, utilities
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
-const { notificationCount, chatList } = require('./utils/helpers');
+const helpers = require('./utils/helpers');
+const notificationCount = helpers.notificationCount;
+const chatList = helpers.chatList;
 
 // tell app and socket.io to use session middleware
 const sessionMiddleware = session({
@@ -32,8 +34,7 @@ io.use((socket, next) => {
 app.use(sessionMiddleware);
 
 // tell app to use handlebars for its view engine
-// const hbs = exphbs.create({ helpers });
-const hbs = exphbs.create({});
+const hbs = exphbs.create({ helpers });
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 

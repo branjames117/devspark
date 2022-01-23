@@ -120,6 +120,7 @@ router.get('/:id', withAuth, (req, res) => {
     } else {
       // otherwise, inform the sender they're blocked
       res.render('blocked', {
+        userID: req.session.user_id,
         recipientId,
         loggedIn: req.session.loggedIn,
       });

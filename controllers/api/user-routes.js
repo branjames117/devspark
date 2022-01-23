@@ -103,40 +103,25 @@ router.post('/delete-conversation', withAuth, async (req, res) => {
 });
 
 // POST /api/users/profile
-router.post('/profile', async (req, res) => {
+router.post('/profile', withAuth, async (req, res) => {
   const id = req.session.user_id;
 
-  // create a new object so we only update the fields the user filled out
-  const fields = [
-    'birthday',
-    'yearStartCoding',
-    'github',
-    'bio',
-    'city',
-    'state',
-    'education',
-  ];
-  const updatedInfo = {};
-  for (field of fields) {
-    if (req.body[field]) updatedInfo[field] = req.body[field];
-  }
-
   // update the user with the new info
-  const updatedUser = await User.update(updatedInfo, {
+  const updatedUser = await User.update(req.body, {
     where: { id },
   });
 
   // now go through the submitted skills and create an array out of them
   // i = 26 because we have 26 pre-seeded skills to go through
-  updatedInfo.skills = [];
-  for (let i = 26; i > 0; i--) {
-    if (req.body['skill' + i]) updatedInfo.skills.push(i);
+  const skills = [];
+  for (let i = 1; i <= 26; i++) {
+    if (req.body['skill' + i]) skills.push(i);
   }
 
   // if any skills were selected...
-  if (updatedInfo.skills.length) {
+  if (skills.length) {
     // ... map each skill to a UserSkill instance...
-    const userSkillIdArr = updatedInfo.skills.map((skill_id) => {
+    const userSkillIdArr = skills.map((skill_id) => {
       return {
         user_id: req.session.user_id,
         skill_id,
@@ -151,7 +136,7 @@ router.post('/profile', async (req, res) => {
   if (updatedUser) {
     console.log('======');
     console.log('success');
-    res.redirect('/api/users');
+    res.redirect(`/profile/${req.session.user_id}`);
   } else {
     console.log('Something went wrong.');
   }
@@ -269,6 +254,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/users
+// Create new account route
 router.post('/', async (req, res) => {
   // verify that required fields were submitted
   if (!req.body.email || !req.body.username || !req.body.password) {
@@ -278,15 +264,21 @@ router.post('/', async (req, res) => {
   // req.body must be object with username and password
   const newUser = await User.create(req.body);
 
-  // save new user's session
-  req.session.save(() => {
-    req.session.user_id = newUser.id;
-    req.session.email = newUser.email;
-    req.session.username = newUser.username;
-    req.session.loggedIn = true;
+  console.log(newUser);
 
-    res.redirect('/profile');
-  });
+  if (newUser) {
+    // save new user's session
+    req.session.save(() => {
+      req.session.user_id = newUser.id;
+      req.session.email = newUser.email;
+      req.session.username = newUser.username;
+      req.session.loggedIn = true;
+      res.status(200).json({ message: 'Success!' });
+    });
+    return;
+  }
+
+  res.status(500).json({ message: 'Something went wrong.' });
 });
 
 // POST /api/users/login
@@ -320,18 +312,16 @@ router.post('/login', async (req, res) => {
     req.session.username = user.username;
     req.session.loggedIn = true;
 
-    res.json({ user, message: 'You are now logged in!' });
+    res.status(200).json({ message: 'You are now logged in!' });
   });
 });
 
 // POST /api/users/logout
 router.post('/logout', withAuth, (req, res) => {
   // destroy session if logged in
-  console.log(req.session);
   if (req.session.loggedIn) {
-    req.session.destroy(() => {
-      res.status(204).end();
-    });
+    req.session.destroy(() => {});
+    res.status(200).json({ message: 'You are now logged out!' });
   } else {
     res.status(404).end();
   }
