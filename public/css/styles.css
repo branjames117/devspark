@@ -113,6 +113,53 @@ header {
   color: white;
   font-size: xx-large;
 }
+
+/* Messenger Styles */
+.messenger-container {
+  height: 100vh;
+  width: 75%;
+  background-color: #AEE7E2;
+  position: center;
+  margin: 0 auto;
+}
+
+.messages {
+  padding: 2px;
+  margin: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: white;
+  overflow: auto;
+}
+
+.messages li {
+  list-style-type: none;
+  margin: 2px 8px 2px 0;
+  float: left;
+  border-radius: 8px;
+  padding: 8px;
+  color: black;
+  position: relative;
+  z-index: 1;
+  background: #eee;
+}
+
+.messages li.mine {
+  margin: 2px 0 2px 8px;
+  align-self: flex-end;
+  z-index: 0;
+  background: cyan;
+  color: white;
+}
+
+.new-chat {
+  position: absolute;
+  
+}
+
+/* Profile Styles */
 /* profile -set displays to none so I can style the layout grid*/
 .container {
   width: 500px;
