@@ -11,12 +11,23 @@
 {{/if}}
 
 {{#if user.bio}}<p>Bio: {{user.bio}}</p>{{/if}}
+{{#if user.portfolio}}<p>Portfolio: {{user.portfolio}}</p>{{/if}}
 {{#if user.github}}<p>Github: {{user.github}}</p>{{/if}}
 {{#if user.birthday}}<p>Birthday: {{user.birthday}}</p>{{/if}}
-{{#if user.yearStartCoding}}<p>Years in Coding: {{user.yearStartCoding}}</p>{{/if}}
+{{#if user.yearStartCoding}}<p>Years Coding: {{user.yearStartCoding}}</p>{{/if}}
 {{#if user.city}}<p>City: {{user.city}}</p>{{/if}}
 {{#if user.state}}<p>State: {{user.state}}</p>{{/if}}
 {{#if user.education}}<p>Highest Education: {{user.education}}</p>{{/if}}
 <br />
+
+{{#if skills}}
+<ul>
+  {{#each skills}}
+    <li>{{this.skill_name}}</li>
+  {{/each}}
+</ul>
+{{/if}}
+
 {{#if user.profile_image}}Profile Picture
-<img src='{{user.profile_image}}' />{{/if}}
+<img src='{{user.profile_image}}' />
+{{/if}}
