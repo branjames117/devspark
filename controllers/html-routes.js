@@ -136,9 +136,10 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
   const { city, state, skills } = req.query;
 
   // convert skill section of query string into array of skill objects
+  let skillsArr;
   const skillsObjArr = [];
   if (skills) {
-    const skillsArr = skills.split(';');
+    skillsArr = skills.split(';');
     skillsArr.pop();
     skillsArr.forEach((skill) => {
       skillsObjArr.push({ id: skill });
@@ -167,7 +168,6 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
       {
         model: Skill,
         attributes: ['skill_name'],
-        where: { [Op.and]: skillsObjArr },
         required: skillsObjArr.length > 0 ? true : false,
       },
     ],
@@ -175,25 +175,42 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
     order: sequelize.random(),
   });
 
-  console.log(users);
-
+  // if we found some users...
   if (users) {
-    // create a searchedFor object to render with results
-    const searchedFor = {};
-    if (city) searchedFor.city = city;
-    if (state) searchedFor.state = state;
-    console.log(searchedFor);
-
     // convert results to array of plain data for easier parsing
     const plainUsers = [];
     users.forEach((user) => {
       plainUsers.push(user.get({ plain: true }));
     });
 
+    // now filter out the users that don't match every specified skill
+    const resultingUsers = [];
+    if (skills) {
+      plainUsers.forEach((user) => {
+        const userSkills = [];
+        user.skills.forEach((skill) => {
+          userSkills.push(skill.user_skill.skill_id);
+        });
+
+        // start out assuming we will include the user in the final results
+        let includeUser = true;
+        skillsArr.forEach((skill) => {
+          // if the user is lacking one of the searched-for skills, cut the user out of inclusion
+          if (userSkills.indexOf(parseInt(skill)) === -1 && includeUser) {
+            includeUser = false;
+          }
+        });
+        // otherwise, push the user to the resultingUsers arr
+        if (includeUser) {
+          resultingUsers.push(user);
+        }
+      });
+    }
+
     res.render('results', {
       loggedIn: req.session.loggedIn,
       userID: req.session.user_id,
-      users: plainUsers,
+      users: resultingUsers.length > 0 ? resultingUsers : plainUsers,
     });
   } else {
     res.render('results', {
