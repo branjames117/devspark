@@ -136,7 +136,7 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
   const { city, state, skills } = req.query;
 
   // convert skill section of query string into array of skill objects
-  let skillsArr;
+  let skillsArr = [];
   const skillsObjArr = [];
   if (skills) {
     skillsArr = skills.split(';');
@@ -146,10 +146,13 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
     });
   }
 
+  console.log(skillsObjArr);
+
   // convert city/state into location array of objects if they exist
   const locationArr = [];
   if (city) locationArr.push({ city });
   if (state) locationArr.push({ state });
+  console.log(locationArr);
 
   // find users based on data extrapolated from query string
   const users = await User.findAll({
@@ -185,34 +188,33 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
 
     // now filter out the users that don't match every specified skill
     const resultingUsers = [];
-    if (skills) {
-      plainUsers.forEach((user) => {
-        const userSkills = [];
-        user.skills.forEach((skill) => {
-          userSkills.push(skill.user_skill.skill_id);
-        });
+    plainUsers.forEach((user) => {
+      const userSkills = [];
+      user.skills.forEach((skill) => {
+        userSkills.push(skill.user_skill.skill_id);
+      });
 
-        // start out assuming we will include the user in the final results
-        let includeUser = true;
-        skillsArr.forEach((skill) => {
-          // if the user is lacking one of the searched-for skills, cut the user out of inclusion
-          if (userSkills.indexOf(parseInt(skill)) === -1 && includeUser) {
-            includeUser = false;
-          }
-        });
-        // otherwise, push the user to the resultingUsers arr
-        if (includeUser) {
-          resultingUsers.push(user);
+      // start out assuming we will include the user in the final results
+      let includeUser = true;
+      skillsArr.forEach((skill) => {
+        // if the user is lacking one of the searched-for skills, cut the user out of inclusion
+        if (userSkills.indexOf(parseInt(skill)) === -1 && includeUser) {
+          includeUser = false;
         }
       });
-    }
+      // otherwise, push the user to the resultingUsers arr
+      if (includeUser) {
+        resultingUsers.push(user);
+      }
+    });
 
     res.render('results', {
       loggedIn: req.session.loggedIn,
       userID: req.session.user_id,
-      users: resultingUsers.length > 0 ? resultingUsers : plainUsers,
+      users: resultingUsers.length !== 0 ? plainUsers : resultingUsers,
     });
   } else {
+    // if we did not find users... shame...
     res.render('results', {
       loggedIn: req.session.loggedIn,
       userID: req.session.user_id,
