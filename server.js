@@ -28,22 +28,10 @@ const sessionMiddleware = session({
   store: new SequelizeStore({ db: sequelize }),
 });
 
-<<<<<<< HEAD
-// tell app to use session middleware
-app.use(session({
-    secret: process.env.SECRET,
-    cookie: {},
-    resave: false,
-    saveUninitialized: true,
-    store: new SequelizeStore({ db: sequelize }),
-  })
-);
-=======
 io.use((socket, next) => {
   sessionMiddleware(socket.request, socket.request.res || {}, next);
 });
->>>>>>> 80e33001f0e220a5c3336d408d0703e3edf20fd6
-
+git 
 app.use(sessionMiddleware);
 
 // tell app to use handlebars for its view engine
