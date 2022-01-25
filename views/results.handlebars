@@ -1,0 +1,25 @@
+Search Results:<br />
+<br />
+{{#if users}}
+{{#each users}}
+  <div>
+    {{#if this.profile_image}}<img src="{{this.profile_image}}" width="100px" height="100px" />{{/if}}
+    <p>Username: {{this.username}}</p>
+    {{#if this.github}}<p>Github: {{this.github}}</p>{{/if}}
+    {{#if this.city}}<p>City: {{this.city}}</p>{{/if}}
+    {{#if this.state}}<p>State: {{this.state}}</p>{{/if}}
+    {{#if this.skills}}
+      <p>Skills: 
+        {{#each this.skills}}
+        <span>{{this.skill_name}}</span>
+        {{/each}}
+      </p>
+    {{/if}}
+    <p><a href="/chat/{{this.id}}">Start a conversation...</a></p>
+    <p><a href="/profile/{{this.id}}">Visit their profile...</a></p>
+  </div>
+  <br />
+{{/each}}
+{{else}}
+<p>Sorry, no users found! <a href="/search">Try another search.</a></p>
+{{/if}}
