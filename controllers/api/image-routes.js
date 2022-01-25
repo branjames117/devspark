@@ -5,10 +5,13 @@ const User = require('../../models/User');
 
 router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
   // be sure to change below out of comment to allow users to upload picture
-  // const result = await cloudinary.uploader.upload(req.file.path);
-  const result = {
-    url: 'http://res.cloudinary.com/devspark/image/upload/v1642556816/am390ru0diihz9jznnon.png',
-  };
+  const result = await cloudinary.uploader.upload(req.file.path, {public_id: req.session.user_id});
+  // const result = {
+  //   url: 'http://res.cloudinary.com/devspark/image/upload/v1642556816/am390ru0diihz9jznnon.png',
+  // };
+  if(req.session.profile_image != null){
+    cloudinary.uploader.destroy('image', function(result) { console.log(result) });
+  }
   User.update(
     {
       profile_image: result.url,
