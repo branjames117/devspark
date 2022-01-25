@@ -11,8 +11,7 @@ const helpers = require('./utils/helpers');
 const app = express();
 
 // tell app to use session middleware
-app.use(
-  session({
+app.use(session({
     secret: process.env.SECRET,
     cookie: {},
     resave: false,
