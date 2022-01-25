@@ -4,8 +4,14 @@ async function signupFormHandler(e) {
   const email = document.querySelector('#email-signup').value.trim();
   const password = document.querySelector('#password-signup').value.trim();
   const confirm = document.querySelector('#confirm-signup').value.trim();
-  const username = document.querySelector('#username-login').value.trim();
+  const username = document.querySelector('#username-login').value;
 
+
+  if (username.includes(' ')) {
+    document.querySelector('#username-login').style.borderColor = 'red';
+    errMessageEl.textContent = 'Username field must not contain spaces.';
+    return;
+  }
   // user validation
   if (!email) {
     document.querySelector('#email-signup').style.borderColor = 'red';
