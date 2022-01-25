@@ -1,0 +1,48 @@
+<script>
+  socket.emit('request-chat-list', { user_id: {{ userID }} })
+
+  socket.on('populate-list', data => {
+    data.forEach(chat => {
+      document.getElementById('active-chats-container').innerHTML += `<div id="chat-${chat.sender}">
+    <a class="active-chat-btn" href='/chat/${chat.sender}'><span class="sender-id">${chat.username}</span><span class="message-body">${chat.message}</span><span class="read-status">${chat.read ? 'read' : 'unread'}</span>${chat.createdAt}</a>
+    <div>
+      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+      <input type="hidden" name="deletedID" id="deleted-id" value=${chat.sender} />
+      <button type="submit">Delete Conversation</button>
+      </form>
+      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+      <input type="hidden" name="blockedID" id="blocked-id" value=${chat.sender} />
+      <button type="submit">Block User</button>
+      </form>
+    </div>
+  </div>`;
+    })
+  })
+
+  socket.on('update-list', data => {
+    const chatElementToUpdate = document.getElementById('chat-' + data.sender_id);
+
+    if (chatElementToUpdate) {
+      chatElementToUpdate.remove();
+    }
+
+    const newDiv = document.createElement('div');
+    newDiv.id = 'chat-' + data.sender_id;
+    newDiv.innerHTML = `<a class="active-chat-btn" href='/chat/${data.sender_id}'><span class="sender-id">${data.user.username}</span><span class="message-body">${data.body}</span><span class="read-status">${data.read ? 'read' : 'unread'}</span>${data.createdAt}</a>
+    <div>
+      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+      <input type="hidden" name="deletedID" id="deleted-id" value=${data.sender_id} />
+      <button type="submit">Delete Conversation</button>
+      </form>
+      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+      <input type="hidden" name="blockedID" id="blocked-id" value=${data.sender_id} />
+      <button type="submit">Block User</button>
+      </form>
+    </div>`;
+
+    document.getElementById('active-chats-container').prepend(newDiv);
+  })
+</script>
+
+<div id="active-chats-container">
+</div>

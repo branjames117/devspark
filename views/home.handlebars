@@ -1,0 +1,25 @@
+{{#if loggedIn}}
+<div id="containter">
+    {{#if user.github}}
+    <div>
+        <a href="https://github.com/users/" + {{user.github}}>
+        <span id="githubusername">
+        {{user.github}}
+        </span>
+        </a>
+        <div id="repoContainerEl">
+
+        </div>
+    </div>
+    
+    {{else}}
+    <div>
+        <p> {{user.email}} has NO Starred Repos</p>
+    </div>
+    {{/if}}
+</div>
+<script src="/js/gitStarred.js"></script>
+{{/if}}
+
+{{!-- Example of expected link:
+https://api.github.com/users/cody-junier/starred? --}}
