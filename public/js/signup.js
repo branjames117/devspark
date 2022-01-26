@@ -5,6 +5,8 @@ async function signupFormHandler(e) {
   const password = document.querySelector('#password-signup').value.trim();
   const confirm = document.querySelector('#confirm-signup').value.trim();
   const username = document.querySelector('#username-login').value;
+  let regex = /[^A-Za-z0-9]+/
+  
 
   if (username.includes(' ')) {
     document.querySelector('#username-login').style.borderColor = 'red';
@@ -12,11 +14,11 @@ async function signupFormHandler(e) {
     return;
   }
 
-  if (/[^A-Za-z0-9]+/.test(username)) {
+  if (regex.test(username)) {
     document.querySelector('#username-login').style.borderColor = 'red';
-    errMessageEl.innerHTML += 'Email field must not be blank.<br />';
+    errMessageEl.innerHTML += 'Username field must not contain special characters.<br />';
     return;
-  }
+  } 
 
   // user validation
   if (!email) {
