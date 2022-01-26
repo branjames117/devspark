@@ -31,7 +31,7 @@ const sessionMiddleware = session({
 io.use((socket, next) => {
   sessionMiddleware(socket.request, socket.request.res || {}, next);
 });
-git 
+
 app.use(sessionMiddleware);
 
 // tell app to use handlebars for its view engine
