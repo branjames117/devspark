@@ -9,12 +9,16 @@
         <input type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
     </div>
     <div>
-        <label for='github'>What is your github username</label>
+        <label for='github'>GitHub username</label>
         <input type='text' name='github' id='github' value='{{user.github}}'>
     </div>
     <div>
+        <label for='portfolio'>Portfolio URL</label>
+        <input type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
+    </div>
+    <div>
         <label for='bio'>Add a user bio</label>
-        <input type='text' name='bio' id='bio' value='{{user.bio}}'>
+        <textarea name='bio' id='bio'>{{user.bio}}</textarea>
     </div>
     <div>
         <p>Where are you located?</p>
@@ -81,7 +85,14 @@
     </div>
     <div>
         <label for='bio'>What is your highest level of education?</label>
-        <input type='text' name='education' id='education' value='{{user.education}}'>
+        <select name='education' id='education' value="{{user.education}}">
+            <option value='Boot Camp Certification'>Boot Camp Certification</option>
+            <option value='High School'>High School</option>
+            <option value='Associate\'s Degree'>Associate's Degree</option>
+            <option value='Bachelor\'s Degree'>Bachelor's Degree</option>
+            <option value='Master\'s Degree'>Master's Degree</option>
+            <option value='Doctoral Degree'>Doctoral Degree</option>
+        </select>
     </div>
 
     <div><br />
