@@ -33,6 +33,10 @@ User.init(
         isUrl: true,
       },
     },
+    profile_image_id: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
