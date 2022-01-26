@@ -83,6 +83,7 @@ router.get('/:id', withAuth, (req, res) => {
 
   // if user is trying to message themselves, redirect back to chats
   if (senderId == recipientId) {
+    console.log('redirecting');
     res.render('chats', {
       loggedIn: req.session.loggedIn,
       userID: req.session.user_id,
@@ -118,11 +119,11 @@ router.get('/:id', withAuth, (req, res) => {
         recipient_name: dbUserData.dataValues.username,
       });
     } else {
-      // otherwise, inform the sender they're blocked
+      // otherwise, redirect user back to chats view
       res.render('blocked', {
-        userID: req.session.user_id,
-        recipientId,
         loggedIn: req.session.loggedIn,
+        userID: req.session.user_id,
+        recipient_name: dbUserData.dataValues.username,
       });
     }
   });
