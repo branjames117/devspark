@@ -263,6 +263,15 @@ router.post('/', async (req, res) => {
     });
   }
 
+  let regex = /[^A-Za-z0-9]+/
+  if (regex.test(req.body.username)) {
+      console.log('Ya fucked up')
+    
+    return res.status(500).json({
+      message: "Username has special characters... Can't do that!",
+    });
+    
+  }
   // check if user already exists with either that email or that username
   const userExists = await User.findOne({
     where: {
@@ -299,7 +308,7 @@ router.post('/login', async (req, res) => {
       [Op.or]: [{ email: req.body.login }, { username: req.body.login }],
     },
   });
-
+  
   if (!user) {
     res.status(400).json({ message: 'No user found!' });
     return;
