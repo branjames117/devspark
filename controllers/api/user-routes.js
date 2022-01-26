@@ -258,27 +258,37 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   // verify that required fields were submitted
   if (!req.body.email || !req.body.username || !req.body.password) {
-    res.status(500).json({ message: 'Need username and password!' });
-  }
-
-  // req.body must be object with username and password
-  const newUser = await User.create(req.body);
-
-  console.log(newUser);
-
-  if (newUser) {
-    // save new user's session
-    req.session.save(() => {
-      req.session.user_id = newUser.id;
-      req.session.email = newUser.email;
-      req.session.username = newUser.username;
-      req.session.loggedIn = true;
-      res.status(200).json({ message: 'Success!' });
+    return res.status(500).json({
+      message: 'Username, email, and password required to create an account!',
     });
-    return;
   }
 
-  res.status(500).json({ message: 'Something went wrong.' });
+  // check if user already exists with either that email or that username
+  const userExists = await User.findOne({
+    where: {
+      [Op.or]: [{ username: req.body.username }, { email: req.body.email }],
+    },
+  });
+
+  // if so, error out
+  if (userExists) {
+    return res
+      .status(500)
+      .json({ message: 'A user with that username or email already exists!' });
+  } else {
+    const newUser = await User.create(req.body);
+    if (newUser) {
+      // save new user's session
+      req.session.save(() => {
+        req.session.user_id = newUser.id;
+        req.session.email = newUser.email;
+        req.session.username = newUser.username;
+        req.session.loggedIn = true;
+        res.status(200).json({ message: 'Success!' });
+      });
+      return;
+    }
+  }
 });
 
 // POST /api/users/login

@@ -8,19 +8,19 @@ async function loginFormHandler(event) {
 
   if (!login) {
     document.querySelector('#login').style.borderColor = 'red';
-    errMessageEl.textContent =
-      'Must enter either your username or your email address.';
+    errMessageEl.innerHTML +=
+      'Must enter either your username or your email address.<br />';
   }
 
   if (!password) {
     document.querySelector('#password').style.borderColor = 'red';
-    errMessageEl.textContent = 'Password field must not be blank.';
+    errMessageEl.innerHTML += 'Password field must not be blank.<br />';
     return;
   }
 
   if (password.length < 8) {
     document.querySelector('#password').style.borderColor = 'red';
-    errMessageEl.textContent = 'Password must be 8 characters or longer.';
+    errMessageEl.innerHTML += 'Password must be 8 characters or longer.<br />';
     return;
   }
 
@@ -38,8 +38,8 @@ async function loginFormHandler(event) {
     if (response.ok) {
       document.location.replace('/profile/editor');
     } else {
-      errMessageEl.textContent =
-        'Something went wrong. Are you sure the username and password are correct?';
+      errMessageEl.innerHTML =
+        'Something went wrong. Are you sure the username and password are correct?<br />';
     }
   }
 }
