@@ -26,10 +26,13 @@
       document.getElementById('message').focus();
     }
   }
+
+  function renderMessage(message) {
+    document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> (${convertDate(message.createdAt)})<br /> ${message.body} </div>`;
+  }
   
   socket.on('newmsg', function(data) {
-    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.user.username}</b> (${convertDate(data.createdAt)})<br /> ${data.body} </div>`;
-    
+    renderMessage(data);
     window.scrollTo(0,document.body.scrollHeight);
   })
 
@@ -37,7 +40,7 @@
   socket.on('populateHistory', (history) => {
     document.getElementById('message-container').innerHTML = '';
     history.forEach((message) => {
-      document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> (${convertDate(message.createdAt)})<br /> ${message.body} </div>`;
+      renderMessage(message);
     })
     window.scrollTo(0,document.body.scrollHeight);
   });
@@ -65,7 +68,7 @@
     document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
 
     document.getElementById('mute-sound-btn').addEventListener('click', () => {
-      soundEnabled = soundEnabled === 0 ? 1 : 0;
+      soundEnabled = soundEnabled == 0 ? 1 : 0;
       localStorage.setItem("soundEnabled", soundEnabled);
       document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
     });
