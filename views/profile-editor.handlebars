@@ -22,13 +22,13 @@
     </div>
     <div>
         <p>Where are you located?</p>
-        <label for='user-from-city'>City</label>
+        <label for='city'>City</label>
         <input type='text' name='city' id='city' value='{{user.city}}'>
         <div>
             <label for="state">State:</label>
-            {{!-- <input type='select' name='state' id='state' value='{{user.state}}'> --}}
-            <select id="state" name='state'value='{{user.state}}' placeholder="Pick a state...">
+            <select id="state" name='state' value='{{user.state}}'>
                 <option value="">Select a state...</option>
+                <option value="">No Thanks</option>
                 <option value="Alabama">Alabama</option>
                 <option value="Alaska">Alaska</option>
                 <option value="Arizona">Arizona</option>

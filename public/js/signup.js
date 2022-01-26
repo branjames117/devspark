@@ -11,6 +11,13 @@ async function signupFormHandler(e) {
     errMessageEl.innerHTML += 'Username field must not contain spaces.<br />';
     return;
   }
+
+  if (/[^A-Za-z0-9]+/.test(username)) {
+    document.querySelector('#username-login').style.borderColor = 'red';
+    errMessageEl.innerHTML += 'Email field must not be blank.<br />';
+    return;
+  }
+
   // user validation
   if (!email) {
     document.querySelector('#email-signup').style.borderColor = 'red';
