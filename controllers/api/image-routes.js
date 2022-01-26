@@ -4,14 +4,22 @@ const withAuth = require('../../utils/auth');
 const User = require('../../models/User');
 
 router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
-  // be sure to change below out of comment to allow users to upload picture
-  // const result = await cloudinary.uploader.upload(req.file.path);
-  const result = {
-    url: 'http://res.cloudinary.com/devspark/image/upload/v1642556816/am390ru0diihz9jznnon.png',
-  };
+  // grab the user
+  const user = await User.findByPk(req.session.user_id, { raw: true });
+
+  // if user already uploaded an image to their profile...
+  if (user.profile_image_id) {
+    // then delete their previous image from our cloudinary account
+    await cloudinary.uploader.destroy(user.profile_image_id);
+  }
+
+  // upload their image, extracting url and public_id from the returned object
+  const { url, public_id } = await cloudinary.uploader.upload(req.file.path);
+
   User.update(
     {
-      profile_image: result.url,
+      profile_image: url,
+      profile_image_id: public_id,
     },
     {
       where: {
@@ -35,5 +43,5 @@ router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
       res.status(500).json(err);
     });
 });
-// req.session.user_id
+
 module.exports = router;

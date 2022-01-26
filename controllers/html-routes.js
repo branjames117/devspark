@@ -73,8 +73,6 @@ router.get('/profile/editor', withAuth, async (req, res) => {
     raw: true,
   });
 
-  console.log(user);
-
   res.render('profile-editor', {
     username: req.session.username,
     loggedIn: req.session.loggedIn,
@@ -98,12 +96,12 @@ router.get('/profile/:id', withAuth, async (req, res) => {
     ],
   });
 
-  const plainUserData = user.get({ plain: true });
-  console.log(plainUserData.skills);
   if (!user) {
     res.status(404).json({ message: 'User with this id not found! ' });
     return;
   }
+
+  const plainUserData = user.get({ plain: true });
 
   res.render('profile', {
     username: req.session.username,
@@ -146,13 +144,10 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
     });
   }
 
-  console.log(skillsObjArr);
-
   // convert city/state into location array of objects if they exist
   const locationArr = [];
   if (city) locationArr.push({ city });
   if (state) locationArr.push({ state });
-  console.log(locationArr);
 
   // find users based on data extrapolated from query string
   const users = await User.findAll({

@@ -33,6 +33,10 @@ User.init(
         isUrl: true,
       },
     },
+    profile_image_id: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -41,6 +45,10 @@ User.init(
       },
     },
     github: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    portfolio: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -85,7 +93,7 @@ User.init(
     education: {
       type: DataTypes.STRING,
       defaultValue: null,
-    },
+    }
   },
   {
     hooks: {

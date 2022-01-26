@@ -4,42 +4,47 @@ async function signupFormHandler(e) {
   const email = document.querySelector('#email-signup').value.trim();
   const password = document.querySelector('#password-signup').value.trim();
   const confirm = document.querySelector('#confirm-signup').value.trim();
-  const username = document.querySelector('#username-login').value.trim();
+  const username = document.querySelector('#username-login').value;
 
+  if (username.includes(' ')) {
+    document.querySelector('#username-login').style.borderColor = 'red';
+    errMessageEl.innerHTML += 'Username field must not contain spaces.<br />';
+    return;
+  }
   // user validation
   if (!email) {
     document.querySelector('#email-signup').style.borderColor = 'red';
-    errMessageEl.textContent = 'Email field must not be blank.';
+    errMessageEl.innerHTML += 'Email field must not be blank.<br />';
     return;
   }
 
-  if (email.length > 30) {
+  if (!email.includes('@') || !email.includes('.')) {
     document.querySelector('#email-signup').style.borderColor = 'red';
-    errMessageEl.textContent = 'Email cannot exceed 30 characters in length.';
+    errMessageEl.innerHTML += 'Email must contain @ and . characters.<br />';
     return;
   }
 
   if (!username) {
     document.querySelector('#username-login').style.borderColor = 'red';
-    errMessageEl.textContent = 'Username field must not be blank.';
+    errMessageEl.innerHTML += 'Username field must not be blank.<br />';
   }
 
   if (!password) {
     document.querySelector('#password-signup').style.borderColor = 'red';
-    errMessageEl.textContent = 'Password field must not be blank.';
+    errMessageEl.innerHTML += 'Password field must not be blank.<br />';
     return;
   }
 
   if (password.length < 8) {
     document.querySelector('#password-signup').style.borderColor = 'red';
-    errMessageEl.textContent =
-      'Password must be at least 8 characters in length.';
+    errMessageEl.innerHTML +=
+      'Password must be at least 8 characters in length.<br />';
     return;
   }
 
   if (!confirm) {
     document.querySelector('#confirm-signup').style.borderColor = 'red';
-    errMessageEl.textContent = 'Confirm Password field must not be blank.';
+    errMessageEl.innerHTML += 'Confirm Password field must not be blank.<br />';
     return;
   }
 
@@ -47,8 +52,8 @@ async function signupFormHandler(e) {
 
   if (!matchPasswords) {
     document.querySelector('#confirm-signup').style.borderColor = 'red';
-    errMessageEl.textContent =
-      'Password and Confirm Password fields do not match.';
+    errMessageEl.innerHTML +=
+      'Password and Confirm Password fields do not match.<br />';
     return;
   }
 
@@ -62,8 +67,8 @@ async function signupFormHandler(e) {
     if (response.ok) {
       document.location.replace('/profile/editor');
     } else {
-      errMessageEl.textContent =
-        'Something went wrong. Try a different username or email address.';
+      errMessageEl.innerHTML =
+        'Something went wrong. Try a different username or email address.<br />';
     }
   }
 }

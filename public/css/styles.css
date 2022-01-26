@@ -209,18 +209,8 @@ input {
   font-weight: 200;
 }
 
-.msg-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50px;
-  box-shadow: #2b2d2f;
-  width: 100px;
-  height: 50px;
-  font-size: 15px;
-  color: white;
-  background-image: linear-gradient(45deg, #fd287c, #ff7654);
-  border: none;
-  outline: none;
-  cursor: pointer;
-} */
+/* profile */
+
+#profile-bio {
+  white-space: pre-line;
+}

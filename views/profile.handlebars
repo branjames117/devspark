@@ -10,9 +10,9 @@
 <br />
 {{/if}}
 
-{{#if user.bio}}<p>Bio: {{user.bio}}</p>{{/if}}
-{{#if user.portfolio}}<p>Portfolio: {{user.portfolio}}</p>{{/if}}
-{{#if user.github}}<p>Github: {{user.github}}</p>{{/if}}
+{{#if user.bio}}<p id="profile-bio">Bio: {{user.bio}}</p>{{/if}}
+{{#if user.portfolio}}<p>Portfolio: <a href="{{user.portfolio}}" target="new">{{user.portfolio}}</a></p>{{/if}}
+{{#if user.github}}<p>Github: <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
 {{#if user.birthday}}<p>Birthday: {{user.birthday}}</p>{{/if}}
 {{#if user.yearStartCoding}}<p>Years Coding: {{user.yearStartCoding}}</p>{{/if}}
 {{#if user.city}}<p>City: {{user.city}}</p>{{/if}}
@@ -30,4 +30,27 @@
 
 {{#if user.profile_image}}Profile Picture
 <img src='{{user.profile_image}}' />
+{{/if}}
+
+{{#if loggedIn}}
+<div id="containter">
+    {{#if user.github}}
+    <div>
+        <a href="https://github.com/users/" + {{user.github}}>
+        <span id="githubusername">
+        {{user.github}}
+        </span>
+        </a>
+        <div id="repoContainerEl">
+
+        </div>
+    </div>
+    
+    {{else}}
+    <div>
+        <p> {{user.email}} has NO Starred Repos</p>
+    </div>
+    {{/if}}
+</div>
+<script src="/js/gitStarred.js"></script>
 {{/if}}
