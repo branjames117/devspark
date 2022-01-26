@@ -1,6 +1,9 @@
 const { Op } = require('sequelize');
 const { User, Message } = require('../models');
 
+// a server-side object where we can store already-queried user IDs with their associated usernames for faster caching
+const userIDNameAssoc = {};
+
 // returns true if user is on his/her own profile
 function ownProfile(id1, id2) {
   return id1 === id2;
@@ -83,10 +86,15 @@ async function chatList(userID) {
     }
   });
   for (const chat of newActiveChatMessages) {
-    const user = await User.findByPk(chat.sender, {
-      attributes: ['username'],
-    });
-    chat.username = user.dataValues.username;
+    // check if userID to username association doesn't exist on server yet
+    if (!userIDNameAssoc[chat.sender]) {
+      const user = await User.findByPk(chat.sender, {
+        attributes: ['username'],
+      });
+      // create it if it doesn't
+      userIDNameAssoc[chat.sender] = user.dataValues.username;
+    }
+    chat.username = userIDNameAssoc[chat.sender];
   }
 
   return newActiveChatMessages;
