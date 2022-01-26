@@ -3,6 +3,7 @@ async function loginFormHandler(event) {
 
   const login = document.querySelector('#login').value.trim();
   const password = document.querySelector('#password').value.trim();
+  errMessageEl.innerHTML = '';
 
   // client validation
 

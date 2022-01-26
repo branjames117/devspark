@@ -145,3 +145,9 @@ header nav {
   font-size: 1.2rem;
   text-align: center;
 }
+
+/* profile */
+
+#profile-bio {
+  white-space: pre-line;
+}

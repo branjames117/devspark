@@ -48,6 +48,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    portfolio: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     resetPasswordToken: {
       type: DataTypes.STRING,
       allowNull: true,
