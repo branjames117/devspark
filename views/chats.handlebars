@@ -1,10 +1,22 @@
 <script>
   socket.emit('request-chat-list', { user_id: {{ userID }} })
 
+  function convertDate(date) {
+      const newDate = new Date(date);
+      var dateStr = 
+      ("00" + (newDate.getMonth() + 1)).slice(-2) + "/" +
+      ("00" + newDate.getDate()).slice(-2) + "/" +
+      newDate.getFullYear() + " " +
+      ("00" + newDate.getHours()).slice(-2) + ":" +
+      ("00" + newDate.getMinutes()).slice(-2) + ":" +
+      ("00" + newDate.getSeconds()).slice(-2);
+      return dateStr;
+    }
+
   socket.on('populate-list', data => {
     data.forEach(chat => {
       document.getElementById('active-chats-container').innerHTML += `<div id="chat-${chat.sender}">
-    <a class="active-chat-btn" href='/chat/${chat.sender}'><span class="sender-id">${chat.username}</span><span class="message-body">${chat.message}</span><span class="read-status">${chat.read ? 'read' : 'unread'}</span>${chat.createdAt}</a>
+    <a class="active-chat-btn" href='/chat/${chat.sender}'><span class="sender-id">${chat.username}</span><span class="message-body">${chat.message}</span><span class="read-status">${chat.read ? 'read' : 'unread'}</span>${convertDate(chat.createdAt)}</a>
     <div>
       <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
       <input type="hidden" name="deletedID" id="deleted-id" value=${chat.sender} />

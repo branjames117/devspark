@@ -54,16 +54,20 @@
       <button type='submit' name='button' id="chat-submit-btn">>>></button>
     </form>
   </div>
-  <button id='mute-sound-btn'>disable sound</button>
+  <button id='mute-sound-btn'></button>
 </div>
 
 
 <script>
-    let soundEnabled = 0;
+  console.log(localStorage.getItem("soundEnabled"));
+    let soundEnabled = localStorage.getItem("soundEnabled") || 0;
+
+    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
+
     document.getElementById('mute-sound-btn').addEventListener('click', () => {
       soundEnabled = soundEnabled === 0 ? 1 : 0;
       localStorage.setItem("soundEnabled", soundEnabled);
-      document.getElementById('mute-sound-btn').textContent = soundEnabled ? 'disable sound' : 'enable sound';
+      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
     });
 
     document.getElementById('textbox-and-btn').addEventListener('submit', (e) => {
