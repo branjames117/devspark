@@ -50,18 +50,6 @@ nav a {
   filter: alpha(opacity=100);
 }
 
-nav ul ul {
-  display: none;
-  position: absolute;
-  top: 60px; /* the height of the main nav */
-}
-
-nav ul ul li {
-  width: 170px;
-  float: none;
-  display: list-item;
-  position: relative;
-}
 
 .log {
   float: right;
@@ -93,8 +81,8 @@ header {
   height: 600px;
   width: 100%;
   background-image: url("../img/couple.jpg");
-  position: fixed; 
-  top: 0; 
+  position:relative; 
+  top: 0;
   left: 0; 
 	
   /* Preserve aspect ratio */
@@ -179,7 +167,15 @@ input {
   font-family: "Varela Round";
 }
   
-
+.footer {
+  display: flex;
+  background-color: #000000;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+}
 /* Profile Styles */
 /* .container {
   height: 100vh;

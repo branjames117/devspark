@@ -31,32 +31,34 @@
   {{#if loggedIn}}<script src='/js/notifications.js'></script>{{/if}}
 
   <body>
-    <div class='wrapper'>
       <header>
-        <h1>
-          <a href='/'>devspark</a><br />
-        </h1>
-        <nav>
+      <!-- Landing Page -->
+      <nav class= "nav">
+          <!-- add svg logo -->
+          <img class="logo" src="../img/Asset 5.svg" alt="">
+          <ul>
+            <li><a href="#about">About</a></li>
           {{#if loggedIn}}
-            <a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a>
-            <a href='/chat'>My Conversations (<span id="notif-count"></span>)</a>
-            <a href='/search'>Find Developers</a>
-            <a id='logout'>Logout</a>
+           <li><a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a></li> 
+            <li><a href='/chat'>My Conversations (<span id="notif-count"></span>)</a></li>
+            <li><a href='/search'>Find Developers</a></li>
+            <li><a id='logout'>Logout</a></li>
+            </ul>
           {{else}}
-            <a href='/login'>Login</a>
+            {{!-- <a href='/login'>Login</a>  --}}
+            <button class= "log btn" href="/login">Log In</button>
           {{/if}}
-        </nav>
-      </header>
+          </nav>
+        
 
       <main>
         {{{body}}}
       </main>
 
-      {{! <footer>
-        placeholder
-      </footer> }}
+      <footer class="footer">
+        <h1>blah blah</h1>
+      </footer> 
 
-    </div>
 
     {{#if loggedIn}}
       <script src='/js/logout.js'></script>
