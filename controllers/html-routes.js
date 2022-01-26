@@ -203,10 +203,20 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
       }
     });
 
+    // the user transformations continue...
+    const penUltimateUsers =
+      resultingUsers.length !== 0 ? plainUsers : resultingUsers;
+
+    // and one more for the road...
+    const finalUsers = penUltimateUsers.filter((user) => {
+      console.log(user.id, req.session.user_id);
+      return user.id != req.session.user_id;
+    });
+
     res.render('results', {
       loggedIn: req.session.loggedIn,
       userID: req.session.user_id,
-      users: resultingUsers.length !== 0 ? plainUsers : resultingUsers,
+      users: finalUsers,
     });
   } else {
     // if we did not find users... shame...
