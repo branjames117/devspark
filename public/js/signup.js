@@ -14,14 +14,12 @@ async function signupFormHandler(e) {
     return;
   }
 
-
   if (regex.test(username)) {
-    
     document.querySelector('#username-login').style.borderColor = 'red';
     errMessageEl.innerHTML += 'Username field must not contain special characters.<br />';
     return;
-    
   } 
+
   // user validation
   if (!email) {
     document.querySelector('#email-signup').style.borderColor = 'red';

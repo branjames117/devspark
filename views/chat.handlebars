@@ -2,10 +2,10 @@
   // join a room using the senderID and the recipientID with an x between them
   socket.emit('joinroom', { room: {{ senderId }} + 'x' + {{ recipientId }} });
   const msgSentSound = new Audio('/sounds/msg_sent.wav');
-  const msgRecdSound = new Audio('/sounds/msg_recd.wav');
 
   function sendMessage() {
-    msgSentSound.play();
+    const soundEnabled = localStorage.getItem("soundEnabled");
+    if (soundEnabled == 1) msgSentSound.play();
     var msg = document.getElementById('message').value;
     if(msg.trim()) { 
       socket.emit('msg', { body: msg, sender_id: {{ senderId }}, recipient_id: {{ recipientId }} });
@@ -41,15 +41,22 @@
       <button type='submit' name='button' id="chat-submit-btn">>>></button>
     </form>
   </div>
+  <button id='mute-sound-btn'>disable sound</button>
 </div>
 
 
 <script>
+    let soundEnabled = 0;
+    document.getElementById('mute-sound-btn').addEventListener('click', () => {
+      soundEnabled = soundEnabled === 0 ? 1 : 0;
+      localStorage.setItem("soundEnabled", soundEnabled);
+      document.getElementById('mute-sound-btn').textContent = soundEnabled ? 'disable sound' : 'enable sound';
+    });
 
     document.getElementById('textbox-and-btn').addEventListener('submit', (e) => {
       e.preventDefault();
       sendMessage();
-    })
+    });
 
     document.getElementById('message').addEventListener('keyup', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {

@@ -22,11 +22,10 @@
     </div>
     <div>
         <p>Where are you located?</p>
-        <label for='user-from-city'>City</label>
+        <label for='city'>City</label>
         <input type='text' name='city' id='city' value='{{user.city}}'>
         <div>
             <label for="state">State:</label>
-            {{!-- <input type='select' name='state' id='state' value='{{user.state}}'> --}}
             {{> states-dropdown}}
         </div>
     </div>
