@@ -93,7 +93,7 @@ User.init(
     education: {
       type: DataTypes.STRING,
       defaultValue: null,
-    },
+    }
   },
   {
     hooks: {
