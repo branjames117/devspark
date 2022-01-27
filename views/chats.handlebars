@@ -17,9 +17,14 @@
     </div>
   </div>`;
     })
+    if (!document.getElementById('active-chats-container').firstChild) { 
+      document.getElementById('no-chats-notification').textContent = 'You have no active chats at this time.';
+    }
   })
 
   socket.on('update-list', data => {
+    document.getElementById('no-chats-notification').textContent = '';
+
     const chatElementToUpdate = document.getElementById('chat-' + data.sender_id);
 
     if (chatElementToUpdate) {
@@ -44,5 +49,5 @@
   })
 </script>
 
-<div id="active-chats-container">
-</div>
+<p id='no-chats-notification'></p>
+<div id="active-chats-container"></div>
