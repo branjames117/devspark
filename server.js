@@ -8,6 +8,7 @@ const { User, Message, Skill } = require('./models');
 const seedAll = require('./seeds');
 
 // set up session with sequelize
+const { Sequelize, Op } = require('sequelize');
 const session = require('express-session');
 const { sequelize } = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
@@ -97,6 +98,100 @@ io.on('connection', (socket) => {
     io.to(chatListRoom).emit('populate-list', listOfChats);
   });
 
+  socket.on('spark', async (data) => {
+    const id = socket.request.session.user_id;
+    const idToMatch = data.matchThisUser;
+
+    const user = await User.update(
+      {
+        // use Sequelize to concat the current matched_users list with the new matched userID, adding also a ';' to the end of the string, important for splitting the string into an array later, since MySQL does not support Array datatypes
+        matched_users: Sequelize.fn(
+          'CONCAT',
+          Sequelize.col('matched_users'),
+          idToMatch,
+          ';'
+        ),
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+
+    // now check if our ID is in the other user's matched_users list...
+    const { matched_users } = await User.findOne({
+      where: { id: idToMatch },
+      attributes: ['matched_users'],
+      raw: true,
+    });
+
+    if (matched_users.indexOf(id) != -1) {
+      // it's a match!
+
+      // send a message to both users
+      const msg = {};
+      msg.body = 'We Matched! Jinx! Jinx again!';
+      msg.sender_id = id;
+      msg.recipient_id = idToMatch;
+      msg.read = false;
+      msg.room = id < idToMatch ? `${id}x${idToMatch}` : `${idToMatch}x${id}`;
+      msg.user = {};
+      msg.user.username = 'devSpark';
+      msg.createdAt = new Date();
+
+      // ... then create the message in the database
+      await Message.create(msg);
+
+      msg.sender_id = idToMatch;
+      msg.recipient_id = id;
+
+      await Message.create(msg);
+
+      // send a notification to each user
+      const myCount = await notificationCount(id);
+      io.to(parseInt(id)).emit('update-notifications', myCount);
+
+      const theirCount = await notificationCount(idToMatch);
+      io.to(parseInt(idToMatch)).emit('update-notifications', theirCount);
+    }
+  });
+
+  socket.on('despark', async (data) => {
+    const id = socket.request.session.user_id;
+    const idToUnmatch = data.unmatchThisUser;
+
+    // get the user's current list of matches
+    const { matched_users } = await User.findOne({
+      where: { id },
+      attributes: ['matched_users'],
+      raw: true,
+    });
+
+    // split it into an array
+    const matchedUsersArr = matched_users.split(';');
+    // filter out the user to be unmatched
+    const newMatchedUsersArr = matchedUsersArr.filter(
+      (user) => user != idToUnmatch
+    );
+
+    // convert the array to a string with ';' between each id
+    const newMatchedUsersStr =
+      newMatchedUsersArr.flat().toString().replaceAll(',', ';') + ';';
+
+    // now update the user
+    await User.update({ matched_users: newMatchedUsersStr }, { where: { id } });
+
+    // now delete any potential match messages that may have been sent out
+    const room =
+      id < idToUnmatch ? `${id}x${idToUnmatch}` : `${idToUnmatch}x${id}`;
+    await Message.destroy({
+      where: {
+        [Op.and]: [{ room }, { body: 'We Matched! Jinx! Jinx again!' }],
+      },
+    });
+  });
+
   // listen for a user joining a chat room with another user based on both user's IDs
   socket.on('joinroom', async (data) => {
     // get IDs of both users from the client
@@ -163,7 +258,6 @@ io.on('connection', (socket) => {
       const blockedUsers = blockingUser.dataValues.blocked_users
         .split(';')
         .map((id) => parseInt(id));
-      console.log(blockedUsers, sender);
 
       // check if senderID is in recipientID's list of blocked users
       if (blockedUsers.indexOf(parseInt(sender)) !== -1) {

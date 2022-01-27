@@ -1,3 +1,15 @@
+<script>
+
+function sendSpark() {
+  socket.emit('spark', { matchThisUser: '{{user.id}}' });
+}
+
+function deSpark() {
+  socket.emit('despark', { unmatchThisUser: '{{user.id}}' });
+}
+
+</script>
+
 <h2>{{user.username}}'s Profile</h2>
 
 {{#if (ownProfile user.id userID)}}
@@ -8,6 +20,11 @@
 <br />
 <p><a href="/chat/{{user.id}}">Chat with this user.</a></p>
 <br />
+{{#if notMatched }}
+  <p><a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'>Light a spark...</a></p>
+  {{else}}
+  <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark...</a></p>
+{{/if}}
 {{/if}}
 
 {{#if user.first_name}}<p>First name: {{user.first_name}}</p>{{/if}}
@@ -49,7 +66,5 @@
         </div>
     </div>
 </div>
-  {{#if user.github}}
-  <script src="/js/gitStarred.js"></script>
-  {{/if}}
+<script src="/js/gitStarred.js"></script>
 {{/if}}

@@ -103,12 +103,22 @@ router.get('/profile/:id', withAuth, async (req, res) => {
 
   const plainUserData = user.get({ plain: true });
 
+  // check if we've already 'sparked' the user whose profile we're visiting
+  const { matched_users } = await User.findOne({
+    where: { id: req.session.user_id },
+    attributes: ['matched_users'],
+    raw: true,
+  });
+
+  const notMatched = matched_users.indexOf(req.params.id) === -1;
+
   res.render('profile', {
     username: req.session.username,
     loggedIn: req.session.loggedIn,
     userID: req.session.user_id,
     user: plainUserData,
     skills: plainUserData.skills,
+    notMatched,
   });
 });
 
