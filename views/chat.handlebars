@@ -26,10 +26,13 @@
       document.getElementById('message').focus();
     }
   }
+
+  function renderMessage(message) {
+    document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> (${convertDate(message.createdAt)})<br /> ${message.body} </div>`;
+  }
   
   socket.on('newmsg', function(data) {
-    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.user.username}</b> (${convertDate(data.createdAt)})<br /> ${data.body} </div>`;
-    
+    renderMessage(data);
     window.scrollTo(0,document.body.scrollHeight);
   })
 
@@ -37,7 +40,7 @@
   socket.on('populateHistory', (history) => {
     document.getElementById('message-container').innerHTML = '';
     history.forEach((message) => {
-      document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> (${convertDate(message.createdAt)})<br /> ${message.body} </div>`;
+      renderMessage(message);
     })
     window.scrollTo(0,document.body.scrollHeight);
   });
@@ -54,16 +57,20 @@
       <button type='submit' name='button' id="chat-submit-btn">>>></button>
     </form>
   </div>
-  <button id='mute-sound-btn'>disable sound</button>
+  <button id='mute-sound-btn'></button>
 </div>
 
 
 <script>
-    let soundEnabled = 0;
+  console.log(localStorage.getItem("soundEnabled"));
+    let soundEnabled = localStorage.getItem("soundEnabled") || 0;
+
+    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
+
     document.getElementById('mute-sound-btn').addEventListener('click', () => {
-      soundEnabled = soundEnabled === 0 ? 1 : 0;
+      soundEnabled = soundEnabled == 0 ? 1 : 0;
       localStorage.setItem("soundEnabled", soundEnabled);
-      document.getElementById('mute-sound-btn').textContent = soundEnabled ? 'disable sound' : 'enable sound';
+      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
     });
 
     document.getElementById('textbox-and-btn').addEventListener('submit', (e) => {

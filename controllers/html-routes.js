@@ -149,6 +149,15 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
   if (city) locationArr.push({ city });
   if (state) locationArr.push({ state });
 
+  // grab the current user, we need their blocklist
+  const { blocked_users } = await User.findOne({
+    where: { id: req.session.user_id },
+    attributes: ['blocked_users'],
+    raw: true,
+  });
+  const blockedUsers = blocked_users.split(';');
+  blockedUsers.pop();
+
   // find users based on data extrapolated from query string
   const users = await User.findAll({
     attributes: {
@@ -208,9 +217,12 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
       resultingUsers.length !== 0 ? plainUsers : resultingUsers;
 
     // and one more for the road...
+    // filter out both the searching user and any users the searching user has already blocked
     const finalUsers = penUltimateUsers.filter((user) => {
-      console.log(user.id, req.session.user_id);
-      return user.id != req.session.user_id;
+      return (
+        user.id != req.session.user_id &&
+        blockedUsers.indexOf(user.id + '') === -1
+      );
     });
 
     res.render('results', {
