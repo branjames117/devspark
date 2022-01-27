@@ -131,7 +131,8 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
   }
 
   // extract variables from req.query
-  const { city, state, skills } = req.query;
+  const { city, state, skills, gender_identity, sexual_orientation } =
+    req.query;
 
   // convert skill section of query string into array of skill objects
   let skillsArr = [];
@@ -145,9 +146,12 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
   }
 
   // convert city/state into location array of objects if they exist
-  const locationArr = [];
-  if (city) locationArr.push({ city });
-  if (state) locationArr.push({ state });
+  const optionsArr = [];
+  if (city) optionsArr.push({ city });
+  if (state) optionsArr.push({ state });
+  if (gender_identity) optionsArr.push({ gender_identity });
+  if (sexual_orientation) optionsArr.push({ sexual_orientation });
+  console.log(optionsArr);
 
   // grab the current user, we need their blocklist
   const { blocked_users } = await User.findOne({
@@ -169,7 +173,7 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
       ],
     },
     where: {
-      [Op.and]: locationArr,
+      [Op.and]: optionsArr,
     },
     include: [
       {

@@ -44,6 +44,22 @@ User.init(
         len: [8],
       },
     },
+    first_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    last_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    gender_identity: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    sexual_orientation: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     github: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -63,7 +79,11 @@ User.init(
     // this is a string that looks like 0;5;15;6; and will ultimately be split into an array of user IDs that are blocked
     blocked_users: {
       type: DataTypes.TEXT,
-      defaultValue: '0;',
+      defaultValue: ';',
+    },
+    matched_users: {
+      type: DataTypes.TEXT,
+      defaultValue: ';',
     },
     username: {
       type: DataTypes.STRING,

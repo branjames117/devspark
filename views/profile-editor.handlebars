@@ -1,29 +1,46 @@
-<form action='/api/users/profile' method='POST'>
+<form id='profile-edit-form'>
     <legend>{{username}}'s Profile Editor</legend>
+    <p>All fields are optional, but filling out your profile will allow other users to find you more easily!</p>
     <div>
-        <label for='birthday'>Birthday </label>
-        <input type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
+        <label for='first_name'>First name</label>
+        <input class='profile-input' type='text' name='first_name' id='first_name' value='{{user.first_name}}'>
+    </div>
+    <div>
+        <label for='last_name'>Last name</label>
+        <input class='profile-input' type='text' name='last_name' id='last_name' value='{{user.last_name}}'>
+    </div>
+    <div>
+        <label for='gender_identity'>Gender identity</label>
+        {{> genders-dropdown }}
+    </div>
+    <div>
+        <label for='sexual_orientation'>Sexual orientation</label>
+        {{> sexuality-dropdown }}
+    </div>
+    <div>
+        <label for='birthday'>Birthday</label>
+        <input class='profile-input' type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
     </div>
     <div>
         <label for="yearStartCoding">How many years have you been coding?</label>
-        <input type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
+        <input class='profile-input' type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
     </div>
     <div>
         <label for='github'>GitHub username</label>
-        <input type='text' name='github' id='github' value='{{user.github}}'>
+        <input class='profile-input' type='text' name='github' id='github' value='{{user.github}}'>
     </div>
     <div>
         <label for='portfolio'>Portfolio URL</label>
-        <input type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
+        <input class='profile-input' type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
     </div>
     <div>
         <label for='bio'>Add a user bio</label>
-        <textarea name='bio' id='bio'>{{user.bio}}</textarea>
+        <textarea class='profile-input' name='bio' id='bio'>{{user.bio}}</textarea>
     </div>
     <div>
         <p>Where are you located?</p>
         <label for='city'>City</label>
-        <input type='text' name='city' id='city' value='{{user.city}}'>
+        <input class='profile-input' type='text' name='city' id='city' value='{{user.city}}'>
         <div>
             <label for="state">State:</label>
             {{> states-dropdown}}
@@ -31,7 +48,7 @@
     </div>
     <div>
         <label for='bio'>What is your highest level of education?</label>
-        <select name='education' id='education' value="{{user.education}}">
+        <select class='profile-input' name='education' id='education' value="{{user.education}}">
             <option value='Boot Camp Certification'>Boot Camp Certification</option>
             <option value='High School'>High School</option>
             <option value='Associate\'s Degree'>Associate's Degree</option>
@@ -43,64 +60,65 @@
 
     <div><br />
         Select your skills (do not check any boxes if you do not wish to update your entire skillset):<br />
-        <input type="checkbox" id="skill1" name="skill1" value="JavaScript">
+        <input class='skill-input' type="checkbox" id="skill1" name="skill1" value="JavaScript">
         <label for="skill1"> JavaScript</label><br>
-        <input type="checkbox" id="skill2" name="skill2" value="HTML/CSS">
+        <input class='skill-input' type="checkbox" id="skill2" name="skill2" value="HTML/CSS">
         <label for="skill2"> HTML/CSS</label><br>
-        <input type="checkbox" id="skill3" name="skill3" value="Node.js">
+        <input class='skill-input' type="checkbox" id="skill3" name="skill3" value="Node.js">
         <label for="skill3"> Node.js</label><br>
-        <input type="checkbox" id="skill4" name="skill4" value="React">
+        <input class='skill-input' type="checkbox" id="skill4" name="skill4" value="React">
         <label for="skill4"> React</label><br>
-        <input type="checkbox" id="skill5" name="skill5" value="AngularJS">
+        <input class='skill-input' type="checkbox" id="skill5" name="skill5" value="AngularJS">
         <label for="skill5"> AngularJS</label><br>
-        <input type="checkbox" id="skill6" name="skill6" value="Vue.js">
+        <input class='skill-input' type="checkbox" id="skill6" name="skill6" value="Vue.js">
         <label for="skill6"> Vue.js</label><br>
-        <input type="checkbox" id="skill7" name="skill7" value="MySQL">
+        <input class='skill-input' type="checkbox" id="skill7" name="skill7" value="MySQL">
         <label for="skill7"> MySQL</label><br>
-        <input type="checkbox" id="skill8" name="skill8" value="Express">
+        <input class='skill-input' type="checkbox" id="skill8" name="skill8" value="Express">
         <label for="skill8"> Express</label><br>
-        <input type="checkbox" id="skill9" name="skill9" value="NoSQL">
+        <input class='skill-input' type="checkbox" id="skill9" name="skill9" value="NoSQL">
         <label for="skill9"> NoSQL</label><br>
-        <input type="checkbox" id="skill10" name="skill10" value="TypeScript">
+        <input class='skill-input' type="checkbox" id="skill10" name="skill10" value="TypeScript">
         <label for="skill10"> TypeScript</label><br>
-        <input type="checkbox" id="skill11" name="skill11" value="Python">
+        <input class='skill-input' type="checkbox" id="skill11" name="skill11" value="Python">
         <label for="skill11"> Python</label><br>
-        <input type="checkbox" id="skill12" name="skill12" value="Java">
+        <input class='skill-input' type="checkbox" id="skill12" name="skill12" value="Java">
         <label for="skill12"> Java</label><br>
-        <input type="checkbox" id="skill13" name="skill13" value="PHP">
+        <input class='skill-input' type="checkbox" id="skill13" name="skill13" value="PHP">
         <label for="skill13"> PHP</label><br>
-        <input type="checkbox" id="skill14" name="skill14" value="C/C++">
+        <input class='skill-input' type="checkbox" id="skill14" name="skill14" value="C/C++">
         <label for="skill14"> C/C++</label><br>
-        <input type="checkbox" id="skill15" name="skill15" value="C#">
+        <input class='skill-input' type="checkbox" id="skill15" name="skill15" value="C#">
         <label for="skill15"> C#"</label><br>
-        <input type="checkbox" id="skill16" name="skill16" value="R">
+        <input class='skill-input' type="checkbox" id="skill16" name="skill16" value="R">
         <label for="skill16"> R</label><br>
-        <input type="checkbox" id="skill17" name="skill17" value="Swift">
+        <input class='skill-input' type="checkbox" id="skill17" name="skill17" value="Swift">
         <label for="skill17"> Swift</label><br>
-        <input type="checkbox" id="skill18" name="skill18" value="Objective-C">
+        <input class='skill-input' type="checkbox" id="skill18" name="skill18" value="Objective-C">
         <label for="skill18"> Objective-C</label><br>
-        <input type="checkbox" id="skill19" name="skill19" value="Bash/Shell">
+        <input class='skill-input' type="checkbox" id="skill19" name="skill19" value="Bash/Shell">
         <label for="skill19"> Bash/Shell</label><br>
-        <input type="checkbox" id="skill20" name="skill20" value="Go">
+        <input class='skill-input' type="checkbox" id="skill20" name="skill20" value="Go">
         <label for="skill20"> Go</label><br>
-        <input type="checkbox" id="skill21" name="skill21" value="Rust">
+        <input class='skill-input' type="checkbox" id="skill21" name="skill21" value="Rust">
         <label for="skill21"> Rust</label><br>
-        <input type="checkbox" id="skill22" name="skill22" value="Perl">
+        <input class='skill-input' type="checkbox" id="skill22" name="skill22" value="Perl">
         <label for="skill22"> Perl</label><br>
-        <input type="checkbox" id="skill23" name="skill23" value="Ruby">
+        <input class='skill-input' type="checkbox" id="skill23" name="skill23" value="Ruby">
         <label for="skill23"> Ruby</label><br>
-        <input type="checkbox" id="skill24" name="skill24" value="Ruby on Rails">
+        <input class='skill-input' type="checkbox" id="skill24" name="skill24" value="Ruby on Rails">
         <label for="skill24"> Ruby on Rails</label><br>
-        <input type="checkbox" id="skill25" name="skill25" value="VB.NET">
+        <input class='skill-input' type="checkbox" id="skill25" name="skill25" value="VB.NET">
         <label for="skill25"> VB.NET</label><br>
-        <input type="checkbox" id="skill26" name="skill26" value="Scala">
+        <input class='skill-input' type="checkbox" id="skill26" name="skill26" value="Scala">
         <label for="skill26"> Scala</label><br>
-        
     </div>
 
     <div>
-        <input type='submit' value='Update Profile'>
+        <button type='submit'>Update Profile</button>
     </div>
+
+    <div id="err-message"></div>
 </form>
 <br /><br />
 Current profile image:<br />
@@ -111,4 +129,62 @@ Current profile image:<br />
   <button type="submit">Upload Image</button>
 </form>
 
-<script src='/js/profile.js'></script>
+<script>
+    const profileEditForm = document.getElementById('profile-edit-form');
+
+    // pre-select previously-selected options
+    const prevUserGender = '{{user.gender_identity}}'
+    const prevUserSexuality = '{{user.sexual_orientation}}'
+    const prevUserState = '{{user.state}}';
+    const prevUserEducation = '{{user.education}}';
+    
+    if (prevUserGender) 
+        document.querySelector(`[value='${prevUserGender}']`).selected = true;
+    
+    if (prevUserSexuality)
+        document.querySelector(`[value='${prevUserSexuality}']`).selected = true;
+
+    if (prevUserState)
+        document.querySelector(`[value='${prevUserState}']`).selected = true;
+
+    if (prevUserEducation)
+        document.querySelector(`[value='${prevUserEducation}']`).selected = true;
+
+    async function profileEditFormHandler(e) {
+        e.preventDefault();
+        const userData = {};
+
+        // gather profile inputs, store in userData
+        const profileInputs = document.getElementsByClassName('profile-input');
+        for (let input of profileInputs) {
+            if (input.value) {
+            userData[input.id] = input.value;
+            }
+        }
+
+        // gather skill inputs, store in userData
+        const skillInputs = document.getElementsByClassName('skill-input');
+        for (let input of skillInputs) {
+            if (input.checked) {
+            userData[input.id] = true;
+            }
+        }
+
+        const response = await fetch('/api/users/profile', {
+            method: 'post',
+            body: JSON.stringify(userData),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        
+        if (response.ok) {
+            document.location.replace(
+            `/profile/{{userID}}`
+            );
+        } else {
+            document.getElementById('err-message').innerHTML =
+            'Something went wrong! Try again later.<br />';
+        }
+    }
+
+    profileEditForm.addEventListener('submit', profileEditFormHandler);
+</script>
