@@ -18,8 +18,8 @@ async function githubStarred(){
 
                         var repoEl = document.createElement("a");
                         repoEl.classList= "list-item flex-row justify-space-between align-center";
-                        repoEl.setAttribute("href", "./single-repo.html?repo=" + repoName);
-
+                        repoEl.setAttribute("href", "https://github.com/" + user + "/" +repoName);
+                        // https://github.com/Cody-Junier/u-develop-it
                         var titleEl= document.createElement("span");
                         titleEl.textContent= repoName;
 
@@ -28,12 +28,9 @@ async function githubStarred(){
                         var statusEl = document.createElement("span");
                         statusEl.classList="flex-row align-center";
 
-                        if (repos[i].open_issues_count > 0){
-                            statusEl.innerHTML = "<i class='fas fa-times status-icon icon-danger'></i>" +repos[i].open_issues_count + " issue(s)";
+                      statusEl.innerHTML = "<p class='fas fa-t[mes status-icon icon-danger'>Number of Open Issues: " +repos[i].open_issues_count + "</p>";
 
-                        }else{
-                            statusEl.innerHTML= "<i class='fas fa-check-square status-icon icon-success'></i>";
-                        }
+                    
                         repoEl.appendChild(statusEl);
                         repoContainerEl.appendChild(repoEl);
                     }
