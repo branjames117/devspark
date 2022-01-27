@@ -1,9 +1,28 @@
 
       {{!-- new form --}}
-<div class="wrapper">
+<div class="log-wrapper">
   <div class="title">
-    Log In
+    Welcome Back!
   </div>
+  <form>
+    <div class"field">
+    <input type="address" required>
+    <label>Email Address</label>
+    </div>
+    <div class"field">
+    <input type="password" required>
+    <label>Password</label>
+    </div>
+    <div class="forgot">
+      <a href='/forgot'>Forgot Password?</a>
+    </div>
+    <div class="field">
+      <button class="btn" type='submit'>Log In!</button>
+    </div>
+    <div class="sign-link">
+Not a member? <a href='/signup'>Sign up now</a>
+    </div>
+  </form>
 </div>
 
 {{!-- log in form --}}
