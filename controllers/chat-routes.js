@@ -76,7 +76,7 @@ router.get('/', withAuth, (req, res) => {
 });
 
 // GET /chat/1 opens chatroom with userID of 1
-router.get('/:id', withAuth, (req, res) => {
+router.get('/:id', withAuth, async (req, res) => {
   // get senderID from session data, recipientID from req params
   const senderId = req.session.user_id;
   const recipientId = req.params.id;
@@ -91,42 +91,46 @@ router.get('/:id', withAuth, (req, res) => {
     return;
   }
 
-  // find recipient
-  User.findByPk(recipientId).then((dbUserData) => {
-    // if recipient ID does not exist, send user back to chats
-    if (!dbUserData) {
-      res.render('chats', {
-        loggedIn: req.session.loggedIn,
-        userID: req.session.user_id,
-      });
-      return;
-    }
+  const sender = await User.findByPk(senderId, { raw: true });
+  const recipient = await User.findByPk(recipientId, { raw: true });
 
-    // convert string of recipient's blocked user IDs to array of integers, which is some tomfoolery we have to do since Sequelize/MySQL doesn't support array datatypes
-    const blockedUsersIntArray = dbUserData.dataValues.blocked_users
-      .split(';')
-      .map((id) => parseInt(id));
+  // if recipient does not exist, redirect back to /chat
+  if (!recipient) {
+    res.render('chats', {
+      loggedIn: req.session.loggedIn,
+      userID: req.session.user_id,
+    });
+    return;
+  }
 
-    // check if senderID is in recipientID's list of blocked users
-    if (blockedUsersIntArray.indexOf(senderId) === -1) {
-      // if not, proceed with the chat
-      res.render('chat', {
-        senderId,
-        recipientId,
-        loggedIn: req.session.loggedIn,
-        userID: req.session.user_id,
-        username: req.session.username,
-        recipient_name: dbUserData.dataValues.username,
-      });
-    } else {
-      // otherwise, redirect user back to chats view
-      res.render('blocked', {
-        loggedIn: req.session.loggedIn,
-        userID: req.session.user_id,
-        recipient_name: dbUserData.dataValues.username,
-      });
-    }
-  });
+  console.log(sender, recipient);
+
+  console.log(sender.blocked_users);
+  console.log(recipient.blocked_users);
+
+  // convert string of recipient's blocked user IDs to array of integers, which is some tomfoolery we have to do since Sequelize/MySQL doesn't support array datatypes
+  const blockedUsersIntArray = sender.blocked_users
+    .split(';')
+    .map((id) => parseInt(id));
+
+  // check if senderID is in recipientID's list of blocked users
+  if (blockedUsersIntArray.indexOf(parseInt(recipientId)) === -1) {
+    // if not, proceed with the chat
+    res.render('chat', {
+      senderId,
+      recipientId,
+      loggedIn: req.session.loggedIn,
+      userID: req.session.user_id,
+      username: req.session.username,
+      recipient_name: recipient.username,
+    });
+  } else {
+    res.render('chats', {
+      loggedIn: req.session.loggedIn,
+      userID: req.session.user_id,
+    });
+    return;
+  }
 });
 
 module.exports = router;
