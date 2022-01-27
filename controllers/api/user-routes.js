@@ -49,6 +49,10 @@ router.post('/block', withAuth, async (req, res) => {
     }
   );
 
+  // mark all messages in their shared chatroom as read to clear out notifications
+  const room = id < idToBlock ? `${id}x${idToBlock}` : `${idToBlock}x${id}`;
+  await Message.update({ read: true }, { where: { room, read: false } });
+
   if (!user) {
     res.status(404).json({ message: 'No user found with this id' });
     return;
@@ -263,6 +267,14 @@ router.post('/', async (req, res) => {
     });
   }
 
+  let regex = /[^A-Za-z0-9]+/;
+  if (regex.test(req.body.username)) {
+    console.log('Ya fucked up');
+
+    return res.status(500).json({
+      message: "Username has special characters... Can't do that!",
+    });
+  }
   // check if user already exists with either that email or that username
   const userExists = await User.findOne({
     where: {

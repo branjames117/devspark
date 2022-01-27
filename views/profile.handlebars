@@ -32,9 +32,8 @@
 <img src='{{user.profile_image}}' />
 {{/if}}
 
-{{#if loggedIn}}
+{{#if user.github}}
 <div id="containter">
-    {{#if user.github}}
     <div>
         <a href="https://github.com/users/" + {{user.github}}>
         <span id="githubusername">
@@ -45,12 +44,8 @@
 
         </div>
     </div>
-    
-    {{else}}
-    <div>
-        <p> {{user.email}} has NO Starred Repos</p>
-    </div>
-    {{/if}}
 </div>
-<script src="/js/gitStarred.js"></script>
+  {{#if user.github}}
+  <script src="/js/gitStarred.js"></script>
+  {{/if}}
 {{/if}}

@@ -2,10 +2,22 @@
   // join a room using the senderID and the recipientID with an x between them
   socket.emit('joinroom', { room: {{ senderId }} + 'x' + {{ recipientId }} });
   const msgSentSound = new Audio('/sounds/msg_sent.wav');
-  const msgRecdSound = new Audio('/sounds/msg_recd.wav');
+
+  function convertDate(date) {
+    const newDate = new Date(date);
+    var dateStr = 
+    ("00" + (newDate.getMonth() + 1)).slice(-2) + "/" +
+    ("00" + newDate.getDate()).slice(-2) + "/" +
+    newDate.getFullYear() + " " +
+    ("00" + newDate.getHours()).slice(-2) + ":" +
+    ("00" + newDate.getMinutes()).slice(-2) + ":" +
+    ("00" + newDate.getSeconds()).slice(-2);
+    return dateStr;
+  }
 
   function sendMessage() {
-    msgSentSound.play();
+    const soundEnabled = localStorage.getItem("soundEnabled");
+    if (soundEnabled == 1) msgSentSound.play();
     var msg = document.getElementById('message').value;
     if(msg.trim()) { 
       socket.emit('msg', { body: msg, sender_id: {{ senderId }}, recipient_id: {{ recipientId }} });
@@ -14,10 +26,13 @@
       document.getElementById('message').focus();
     }
   }
+
+  function renderMessage(message) {
+    document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> (${convertDate(message.createdAt)})<br /> ${message.body} </div>`;
+  }
   
   socket.on('newmsg', function(data) {
-    document.getElementById('message-container').innerHTML += `<div class='${data.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${data.user.username}</b> (${data.createdAt})<br /> ${data.body} </div>`;
-    
+    renderMessage(data);
     window.scrollTo(0,document.body.scrollHeight);
   })
 
@@ -25,13 +40,14 @@
   socket.on('populateHistory', (history) => {
     document.getElementById('message-container').innerHTML = '';
     history.forEach((message) => {
-      document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> (${message.createdAt})<br /> ${message.body} </div>`;
+      renderMessage(message);
     })
     window.scrollTo(0,document.body.scrollHeight);
   });
 </script>
 
 <div id='chat-container'>
+  <h2>Conversation with {{recipient_name}}</h2>
   <div id='message-container'></div>
 
   <div id="chat-textbox-container">
@@ -41,15 +57,26 @@
       <button type='submit' name='button' id="chat-submit-btn">>>></button>
     </form>
   </div>
+  <button id='mute-sound-btn'></button>
 </div>
 
 
 <script>
+  console.log(localStorage.getItem("soundEnabled"));
+    let soundEnabled = localStorage.getItem("soundEnabled") || 0;
+
+    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
+
+    document.getElementById('mute-sound-btn').addEventListener('click', () => {
+      soundEnabled = soundEnabled == 0 ? 1 : 0;
+      localStorage.setItem("soundEnabled", soundEnabled);
+      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
+    });
 
     document.getElementById('textbox-and-btn').addEventListener('submit', (e) => {
       e.preventDefault();
       sendMessage();
-    })
+    });
 
     document.getElementById('message').addEventListener('keyup', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {

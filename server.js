@@ -16,6 +16,9 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
 const helpers = require('./utils/helpers');
+const {
+  servicedirectory,
+} = require('googleapis/build/src/apis/servicedirectory');
 const notificationCount = helpers.notificationCount;
 const chatList = helpers.chatList;
 
@@ -160,9 +163,19 @@ io.on('connection', (socket) => {
       const blockedUsers = blockingUser.dataValues.blocked_users
         .split(';')
         .map((id) => parseInt(id));
+      console.log(blockedUsers, sender);
 
       // check if senderID is in recipientID's list of blocked users
-      if (blockedUsers.indexOf(sender) !== -1) return;
+      if (blockedUsers.indexOf(parseInt(sender)) !== -1) {
+        io.to(room).emit('newmsg', {
+          user: {
+            username: 'devSpark',
+          },
+          createdAt: new Date(),
+          body: `We're sorry, but this user has blocked you. New messages can no longer be sent to this user. Please delete this conversation.`,
+        });
+        return;
+      }
 
       // check if the recipient is both online AND in the same room as the sender, if so, flag the message as read (true), otherwise, unread (false)
       msg.read = users[receiver] && users[receiver] === room ? true : false;
@@ -202,7 +215,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: true }).then(async () => {
+sequelize.sync({ force: false }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database
