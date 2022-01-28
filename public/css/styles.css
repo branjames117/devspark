@@ -77,10 +77,25 @@ nav a {
   font-family: "Varela Round";
 }
 
-header {
+.header-one {
   height: 600px;
   width: 100%;
   background-image: url("../img/couple.jpg");
+  position:relative; 
+  top: 0;
+  left: 0; 
+	
+  /* Preserve aspect ratio */
+  min-width: 100%;
+  min-height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.header-two {
+  height: 600px;
+  width: 100%;
+  background-image: url("../img/bg-image.jpg");
   position:relative; 
   top: 0;
   left: 0; 
@@ -102,6 +117,7 @@ header {
   font-size: xx-large;
 }
 
+/* log in */
 .log-wrapper {
   width: 380px;
   backdrop-filter: blur(10px);
@@ -113,7 +129,7 @@ header {
 }
 
 .log-wrapper .title {
-  font-family: "Varela Round";
+/*   font-family: "Varela Round"; */
   font-size: 25px;
   text-align: center;
   line-height: 70px;
@@ -124,23 +140,28 @@ header {
 
 .log-wrapper form{
   padding: 10px 30px 50px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .log-wrapper form .field {
-  height: 50px;
+
   width: 100%;
-  margin-top: 20px;
+  margin: 20px 0;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .field input{
-  height: 80%;
   width: 100%;
   outline: none;
   font-size: 17px;
-  padding-left: 20px;
+  padding: 8px 16px;
   border: 1px solid lightgrey;
-  border-radius: 25px;
+  border-radius: 24px;
 }
 
 .field label{
@@ -150,6 +171,7 @@ header {
   color: #999999;
   font-weight: 400;
   font-size: 17px;
+  user-select: none;
 }
 
 .log-btn {
@@ -162,6 +184,19 @@ header {
   color: #fd287c;
 }
 
+button {
+  background: hsla(260, 50%, 40%, 1);
+  box-shadow: 0 6px 12px hsla(260, 50%, 30%, .2);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 24px;
+}
+
+button:hover {
+  background: hsla(260, 50%, 50%, 1);
+  transform: scale(1.02);
+}
 
 
 

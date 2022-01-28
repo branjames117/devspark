@@ -31,24 +31,26 @@
   {{#if loggedIn}}<script src='/js/notifications.js'></script>{{/if}}
 
   <body>
-      <header>
-      <!-- Landing Page -->
-      <nav class= "nav">
-          <!-- add svg logo -->
+    {{#if loggedIn}}
+      <header class="header-two">
+        <nav class="nav">
           <img class="logo" src="../img/Asset 5.svg" alt="">
           <ul>
-            <li><a href="#about">About</a></li>
-          {{#if loggedIn}}
-           <li><a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a></li> 
+            <li><a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a></li>
             <li><a href='/chat'>My Conversations (<span id="notif-count"></span>)</a></li>
             <li><a href='/search'>Find Developers</a></li>
             <li><a id='logout'>Logout</a></li>
-            </ul>
-          {{else}}
+          </ul>
+    {{else}}
+      <header class="header-one">
+        <nav class="nav">
+          <img class="logo" src="../img/Asset 5.svg" alt="">
+          <ul>
+            <li><a href="#about">About</a></li>
             {{!-- <a href='/login'>Login</a>  --}}
-            <button class= "log btn" href="/login">Log In</button>
-          {{/if}}
-          </nav>
+            <button class="log btn" href="/login">Log In</button>
+    {{/if}}
+    </nav>
       
 
       <main>
