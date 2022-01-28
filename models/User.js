@@ -68,11 +68,11 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    resetPasswordToken: {
+    reset_password_token: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    resetPasswordExpires: {
+    reset_password_expires: {
       type: DataTypes.DATE,
       allowNull: true,
     },
@@ -94,7 +94,7 @@ User.init(
       type: DataTypes.STRING,
       defaultValue: null,
     },
-    yearStartCoding: {
+    years_coding: {
       type: DataTypes.STRING,
       defaultValue: null,
     },

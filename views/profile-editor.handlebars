@@ -23,8 +23,8 @@
         {{> sexuality-dropdown }}
     </div>
     <div>
-        <label for="yearStartCoding">How many years have you been coding?</label>
-        <input class='profile-input' type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
+        <label for="years_coding">How many years have you been coding?</label>
+        <input class='profile-input' type='number' name='years_coding' id='years_coding' value='{{user.years_coding}}'>
     </div>
     <div>
         <label for='github'>GitHub username</label>
@@ -98,12 +98,12 @@ Current profile image:<br />
     // plug the sound enable/disable button into local storage
     let soundEnabled = localStorage.getItem("soundEnabled") || 0;
 
-    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Sound' : 'Disable Sound';
+    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
 
     document.getElementById('mute-sound-btn').addEventListener('click', () => {
       soundEnabled = soundEnabled == 0 ? 1 : 0;
       localStorage.setItem("soundEnabled", soundEnabled);
-      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Sound' : 'Disable Sound';
+      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
     });
 
     // fill out user's previous information - a tricky feat with the dropdown lists
