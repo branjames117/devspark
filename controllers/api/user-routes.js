@@ -14,8 +14,8 @@ router.get('/', withAuth, async (req, res) => {
           'password',
           'blocked_users',
           'matched_users',
-          'resetPasswordToken',
-          'resetPasswordExpires',
+          'reset_password_token',
+          'reset_password_expires',
         ],
       },
       include: [
@@ -188,8 +188,8 @@ router.post('/forgot', async (req, res) => {
     // update the requested email address with the token
     const user = await User.update(
       {
-        resetPasswordToken: token,
-        resetPasswordExpires: Date.now() + 360000,
+        reset_password_token: token,
+        reset_password_expires: Date.now() + 360000,
       },
       { where: { email: req.body.email } }
     );
@@ -235,12 +235,12 @@ router.post('/reset/:token', async (req, res) => {
   try {
     await User.update(
       {
-        resetPasswordToken: null,
-        resetPasswordExpires: null,
+        reset_password_token: null,
+        reset_password_expires: null,
         password: req.body.password,
       },
       {
-        where: { resetPasswordToken: req.params.token },
+        where: { reset_password_token: req.params.token },
         individualHooks: true,
       }
     );
@@ -268,8 +268,8 @@ router.get('/:id', async (req, res) => {
           'password',
           'blocked_users',
           'matched_users',
-          'resetPasswordToken',
-          'resetPasswordExpires',
+          'reset_password_token',
+          'reset_password_expires',
         ],
       },
       where: { id },

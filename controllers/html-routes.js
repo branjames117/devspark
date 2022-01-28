@@ -49,8 +49,8 @@ router.get('/reset/:token', async (req, res) => {
   try {
     const user = await User.findOne({
       where: {
-        resetPasswordToken: req.params.token,
-        resetPasswordExpires: { [Op.gt]: Date.now() },
+        reset_password_token: req.params.token,
+        reset_password_expires: { [Op.gt]: Date.now() },
       },
     });
 
@@ -76,8 +76,8 @@ router.get('/profile/editor', withAuth, async (req, res) => {
       attributes: {
         exclude: [
           'password',
-          'resetPasswordToken',
-          'resetPasswordExpires',
+          'reset_password_token',
+          'reset_password_expires',
           'matched_users',
           'blocked_users',
           'skills',
@@ -112,8 +112,8 @@ router.get('/profile/:id', withAuth, async (req, res) => {
       attributes: {
         exclude: [
           'password',
-          'resetPasswordToken',
-          'resetPasswordExpires',
+          'reset_password_token',
+          'reset_password_expires',
           'blocked_users',
           'matched_users',
         ],
@@ -262,8 +262,8 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
       attributes: {
         exclude: [
           'password',
-          'resetPasswordToken',
-          'resetPasswordExpires',
+          'reset_password_token',
+          'reset_password_expires',
           'blocked_users',
         ],
       },
