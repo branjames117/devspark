@@ -37,7 +37,7 @@ async function loginFormHandler(event) {
       headers: { 'Content-Type': 'application/json' },
     });
     if (response.ok) {
-      document.location.replace(`/chats`);
+      document.location.replace(`/chat/`);
     } else {
       errMessageEl.innerHTML =
         'Something went wrong. Are you sure the username and password are correct?<br />';
