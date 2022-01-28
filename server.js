@@ -17,9 +17,9 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
 const helpers = require('./utils/helpers');
-const {
-  servicedirectory,
-} = require('googleapis/build/src/apis/servicedirectory');
+// const {
+//   servicedirectory,
+// } = require('googleapis/build/src/apis/servicedirectory');
 const notificationCount = helpers.notificationCount;
 const chatList = helpers.chatList;
 
@@ -140,7 +140,7 @@ io.on('connection', (socket) => {
       msg.user.username = 'devSpark';
       msg.createdAt = new Date();
 
-      // ... then create the message in the database
+      // ... then create the messages in the database
       await Message.create(msg);
 
       msg.sender_id = idToMatch;
@@ -309,7 +309,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: false }).then(async () => {
+sequelize.sync({ force: true }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database
