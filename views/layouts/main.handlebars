@@ -32,12 +32,13 @@
 
   <body>
     <div class='wrapper'>
+      
+      {{#if loggedIn}}
       <header>
         <h1>
           <a href='/'>devspark</a><br />
         </h1>
         <nav>
-          {{#if loggedIn}}
             <a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a>
             <a href='/chat'>My Conversations (<span id="notif-count"></span>)</a>
             <a href='/search'>Find Developers</a>

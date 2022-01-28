@@ -72,6 +72,9 @@
 
     <div id="err-msg"></div>
 </form>
+
+<button id='mute-sound-btn'></button>
+
 <br /><br />
 Current profile image:<br />
 <img src="{{user.profile_image}}" />
@@ -82,6 +85,17 @@ Current profile image:<br />
 </form>
 
 <script>
+    // plug the sound enable/disable button into local storage
+    let soundEnabled = localStorage.getItem("soundEnabled") || 0;
+
+    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Sound' : 'Disable Sound';
+
+    document.getElementById('mute-sound-btn').addEventListener('click', () => {
+      soundEnabled = soundEnabled == 0 ? 1 : 0;
+      localStorage.setItem("soundEnabled", soundEnabled);
+      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Sound' : 'Disable Sound';
+    });
+
     // fill out user's previous information - a tricky feat with the dropdown lists
     const userPrevGender = '{{user.gender_identity}}';
     const userPrevSexuality = '{{user.sexual_orientation}}';
