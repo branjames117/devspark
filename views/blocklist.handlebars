@@ -1,0 +1,15 @@
+
+
+<h2>Your Blocklist</h2>
+
+{{#if blockedUsers}}
+  {{#each blockedUsers}}
+    <form action='/api/users/unblock' method='post'>
+      <label for='unblockedID'>{{this.username}}</label>
+      <input type='hidden' name='unblockedID' id='unblockedID' value='{{this.id}}' />
+      <button type='submit'>Unblock</button>
+    </form>
+  {{/each}}
+{{else}}
+Your blocklist is empty.
+{{/if}}
