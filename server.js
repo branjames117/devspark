@@ -17,9 +17,9 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const exphbs = require('express-handlebars');
 const routes = require('./controllers');
 const helpers = require('./utils/helpers');
-// const {
-//   servicedirectory,
-// } = require('googleapis/build/src/apis/servicedirectory');
+const {
+  servicedirectory,
+} = require('googleapis/build/src/apis/servicedirectory');
 const notificationCount = helpers.notificationCount;
 const chatList = helpers.chatList;
 

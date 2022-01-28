@@ -194,6 +194,8 @@ router.post('/forgot', async (req, res) => {
       { where: { email: req.body.email } }
     );
 
+    console.log(user);
+
     // then, if we found the user to update, send the email with the token
     if (user) {
       var mailOptions = {
@@ -213,8 +215,9 @@ router.post('/forgot', async (req, res) => {
         let emailTransporter = await createTransporter();
         await emailTransporter.sendMail(emailOptions);
       };
-
+      console.log('sending email');
       await sendEmail(mailOptions);
+      console.log('email not sent');
 
       res.status(200).json({ status: 'success', message: 'message sent' });
     }
@@ -330,7 +333,7 @@ router.post('/', async (req, res) => {
         message: 'A user with that username or email already exists!',
       });
     } else {
-      await User.create(req.body);
+      const newUser = await User.create(req.body);
 
       // save new user's session
       req.session.save(() => {

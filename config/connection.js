@@ -51,25 +51,30 @@ cloudinary.config({
 // configure gmail transporter for nodemailer
 // create the transporter for our gmail-based forgot-password message
 const createTransporter = async () => {
+  console.log('creating transporter...');
   const oauth2Client = new OAuth2(
     process.env.CLIENT_ID,
     process.env.CLIENT_SECRET,
     'https://developers.google.com/oauthplayground'
   );
 
+  console.log('setting credentials...');
   oauth2Client.setCredentials({
     refresh_token: process.env.REFRESH_TOKEN,
   });
 
+  console.log('setting access token...');
   const accessToken = await new Promise((resolve, reject) => {
     oauth2Client.getAccessToken((err, token) => {
       if (err) {
+        console.log(err);
         reject();
       }
       resolve(token);
     });
   });
 
+  console.log('creating transporter...');
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -82,6 +87,7 @@ const createTransporter = async () => {
     },
   });
 
+  console.log(transporter);
   return transporter;
 };
 
