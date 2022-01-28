@@ -126,7 +126,7 @@ header {
   padding: 10px 30px 50px 30px;
 }
 
-.log-wrapper form .field{
+.log-wrapper form .field {
   height: 50px;
   width: 100%;
   margin-top: 20px;
@@ -154,13 +154,14 @@ header {
 
 .log-btn {
   /* need to center */
+  text-align: center;
 }
 
-/* why is this not working? */
-form .forgot-link,
-form .sign-link {
+.log-wrapper a {
   text-decoration: none;
+  color: #fd287c;
 }
+
 
 
 
