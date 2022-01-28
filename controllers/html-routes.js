@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { Op } = require('sequelize');
 const { sequelize } = require('../config/connection');
-const { User, UserSkill, Skill } = require('../models');
+const { User, Skill } = require('../models');
 const withAuth = require('../utils/auth');
 
 // GET / (root route - will eventually be the landing page)
@@ -36,90 +36,127 @@ router.get('/signup', (req, res) => {
 
 // GET /forgot
 router.get('/forgot', (req, res) => {
-  // get user email
+  if (req.session.loggedIn) {
+    res.redirect(`/profile/${req.session.user_id}`);
+    return;
+  }
+
   res.render('forgot-password');
 });
 
 // GET /reset/:token
 router.get('/reset/:token', async (req, res) => {
-  const user = await User.findOne({
-    where: {
-      resetPasswordToken: req.params.token,
-      resetPasswordExpires: { [Op.gt]: Date.now() },
-    },
-  });
+  try {
+    const user = await User.findOne({
+      where: {
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: { [Op.gt]: Date.now() },
+      },
+    });
 
-  if (!user) {
-    return res.redirect('/forgot');
+    if (!user) {
+      return res.redirect('/forgot');
+    }
+
+    res.render('reset', { token: req.params.token });
+  } catch (error) {
+    const errMsg = {
+      message: 'Something went wrong with the database.',
+      error,
+    };
+    console.log(errMsg);
+    res.status(500).json(errMsg);
   }
-
-  res.render('reset', { token: req.params.token });
 });
 
-// GET /profile
+// GET /profile/editor
 router.get('/profile/editor', withAuth, async (req, res) => {
-  const user = await User.findOne({
-    attributes: {
-      exclude: [
-        'password',
-        'resetPasswordToken',
-        'resetPasswordExpires',
-        'skills',
-      ],
-    },
-    where: {
-      id: req.session.user_id,
-    },
-    raw: true,
-  });
+  try {
+    const user = await User.findOne({
+      attributes: {
+        exclude: [
+          'password',
+          'resetPasswordToken',
+          'resetPasswordExpires',
+          'matched_users',
+          'blocked_users',
+          'skills',
+        ],
+      },
+      where: {
+        id: req.session.user_id,
+      },
+      raw: true,
+    });
 
-  res.render('profile-editor', {
-    username: req.session.username,
-    loggedIn: req.session.loggedIn,
-    userID: req.session.user_id,
-    user,
-  });
+    res.render('profile-editor', {
+      username: req.session.username,
+      loggedIn: req.session.loggedIn,
+      userID: req.session.user_id,
+      user,
+    });
+  } catch (error) {
+    const errMsg = {
+      message: 'Something went wrong with the database.',
+      error,
+    };
+    console.log(errMsg);
+    res.status(500).json(errMsg);
+  }
 });
 
 router.get('/profile/:id', withAuth, async (req, res) => {
-  const user = await User.findOne({
-    // display everything except the user's hashed password
-    attributes: {
-      exclude: ['password', 'resetPasswordToken', 'resetPasswordExpires'],
-    },
-    where: { id: req.params.id },
-    include: [
-      {
-        model: Skill,
-        attributes: ['id', 'skill_name'],
+  try {
+    const user = await User.findOne({
+      // display everything except the user's hashed password
+      attributes: {
+        exclude: [
+          'password',
+          'resetPasswordToken',
+          'resetPasswordExpires',
+          'blocked_users',
+          'matched_users',
+        ],
       },
-    ],
-  });
+      where: { id: req.params.id },
+      include: [
+        {
+          model: Skill,
+          attributes: ['id', 'skill_name'],
+        },
+      ],
+      raw: true,
+    });
 
-  if (!user) {
-    res.status(404).json({ message: 'User with this id not found! ' });
-    return;
+    if (!user) {
+      return res.status(404).json({ message: 'User with this id not found! ' });
+    }
+
+    // check if we've already 'sparked' the user whose profile we're visiting
+    const { matched_users } = await User.findOne({
+      where: { id: req.session.user_id },
+      attributes: ['matched_users'],
+      raw: true,
+    });
+
+    const notMatched = matched_users.indexOf(req.params.id) === -1;
+
+    res.render('profile', {
+      username: req.session.username,
+      loggedIn: req.session.loggedIn,
+      userID: req.session.user_id,
+      user,
+      skills: user.skills,
+      notMatched,
+    });
+  } catch (error) {
+    const errMsg = {
+      message: 'Something went wrong with the database.',
+      error,
+    };
+    console.log(errMsg);
+    res.status(500).json(errMsg);
   }
-
-  const plainUserData = user.get({ plain: true });
-
-  // check if we've already 'sparked' the user whose profile we're visiting
-  const { matched_users } = await User.findOne({
-    where: { id: req.session.user_id },
-    attributes: ['matched_users'],
-    raw: true,
-  });
-
-  const notMatched = matched_users.indexOf(req.params.id) === -1;
-
-  res.render('profile', {
-    username: req.session.username,
-    loggedIn: req.session.loggedIn,
-    userID: req.session.user_id,
-    user: plainUserData,
-    skills: plainUserData.skills,
-    notMatched,
-  });
 });
 
 // server-side storage to reduce db calls
@@ -129,36 +166,44 @@ const userStore = {};
 router.get('/blocklist', withAuth, async (req, res) => {
   const id = req.session.user_id;
 
-  const { blocked_users } = await User.findOne({
-    // display everything except the user's hashed password
-    attributes: ['blocked_users'],
-    where: { id },
-    raw: true,
-  });
+  try {
+    const { blocked_users } = await User.findOne({
+      // display everything except the user's hashed password
+      attributes: ['blocked_users'],
+      where: { id },
+      raw: true,
+    });
 
-  const blockedUsersArr = blocked_users.split(';').filter((user) => {
-    console.log(user);
-    return user.length > 0;
-  });
+    const blockedUsersArr = blocked_users.split(';').filter((user) => {
+      return user.length > 0;
+    });
 
-  const newBlockedUsersArr = [];
+    const newBlockedUsersArr = [];
 
-  for (const userID of blockedUsersArr) {
-    if (!userStore[userID]) {
-      const blockedUser = await User.findByPk(userID, {
-        attributes: ['username'],
-        raw: true,
-      });
-      userStore[userID] = blockedUser.username;
+    for (const userID of blockedUsersArr) {
+      if (!userStore[userID]) {
+        const blockedUser = await User.findByPk(userID, {
+          attributes: ['username'],
+          raw: true,
+        });
+        userStore[userID] = blockedUser.username;
+      }
+      newBlockedUsersArr.push({ id: userID, username: userStore[userID] });
     }
-    newBlockedUsersArr.push({ id: userID, username: userStore[userID] });
-  }
 
-  res.render('blocklist', {
-    username: req.session.username,
-    loggedIn: req.session.loggedIn,
-    blockedUsers: newBlockedUsersArr,
-  });
+    res.render('blocklist', {
+      username: req.session.username,
+      loggedIn: req.session.loggedIn,
+      blockedUsers: newBlockedUsersArr,
+    });
+  } catch (error) {
+    const errMsg = {
+      message: 'Something went wrong with the database.',
+      error,
+    };
+    console.log(errMsg);
+    res.status(500).json(errMsg);
+  }
 });
 
 // GET /search
@@ -202,94 +247,103 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
   if (sexual_orientation) optionsArr.push({ sexual_orientation });
   console.log(optionsArr);
 
-  // grab the current user, we need their blocklist
-  const { blocked_users } = await User.findOne({
-    where: { id: req.session.user_id },
-    attributes: ['blocked_users'],
-    raw: true,
-  });
-  const blockedUsers = blocked_users.split(';');
-  blockedUsers.pop();
+  try {
+    // grab the current user, we need their blocklist
+    const { blocked_users } = await User.findOne({
+      where: { id: req.session.user_id },
+      attributes: ['blocked_users'],
+      raw: true,
+    });
+    const blockedUsers = blocked_users.split(';');
+    blockedUsers.pop();
 
-  // find users based on data extrapolated from query string
-  const users = await User.findAll({
-    attributes: {
-      exclude: [
-        'password',
-        'resetPasswordToken',
-        'resetPasswordExpires',
-        'blocked_users',
-      ],
-    },
-    where: {
-      [Op.and]: optionsArr,
-    },
-    include: [
-      {
-        model: Skill,
-        attributes: ['skill_name'],
-        required: skillsObjArr.length > 0 ? true : false,
+    // find users based on data extrapolated from query string
+    const users = await User.findAll({
+      attributes: {
+        exclude: [
+          'password',
+          'resetPasswordToken',
+          'resetPasswordExpires',
+          'blocked_users',
+        ],
       },
-    ],
-    nest: true,
-    order: sequelize.random(),
-  });
-
-  // if we found some users...
-  if (users) {
-    // convert results to array of plain data for easier parsing
-    const plainUsers = [];
-    users.forEach((user) => {
-      plainUsers.push(user.get({ plain: true }));
+      where: {
+        [Op.and]: optionsArr,
+      },
+      include: [
+        {
+          model: Skill,
+          attributes: ['skill_name'],
+          required: skillsObjArr.length > 0 ? true : false,
+        },
+      ],
+      nest: true,
+      order: sequelize.random(),
     });
 
-    // now filter out the users that don't match every specified skill
-    const resultingUsers = [];
-    plainUsers.forEach((user) => {
-      const userSkills = [];
-      user.skills.forEach((skill) => {
-        userSkills.push(skill.user_skill.skill_id);
+    // if we found some users...
+    if (users) {
+      // convert results to array of plain data for easier parsing
+      const plainUsers = [];
+      users.forEach((user) => {
+        plainUsers.push(user.get({ plain: true }));
       });
 
-      // start out assuming we will include the user in the final results
-      let includeUser = true;
-      skillsArr.forEach((skill) => {
-        // if the user is lacking one of the searched-for skills, cut the user out of inclusion
-        if (userSkills.indexOf(parseInt(skill)) === -1 && includeUser) {
-          includeUser = false;
+      // now filter out the users that don't match every specified skill
+      const resultingUsers = [];
+      plainUsers.forEach((user) => {
+        const userSkills = [];
+        user.skills.forEach((skill) => {
+          userSkills.push(skill.user_skill.skill_id);
+        });
+
+        // start out assuming we will include the user in the final results
+        let includeUser = true;
+        skillsArr.forEach((skill) => {
+          // if the user is lacking one of the searched-for skills, cut the user out of inclusion
+          if (userSkills.indexOf(parseInt(skill)) === -1) {
+            includeUser = false;
+          }
+        });
+        // otherwise, push the user to the resultingUsers arr
+        if (includeUser) {
+          resultingUsers.push(user);
         }
       });
-      // otherwise, push the user to the resultingUsers arr
-      if (includeUser) {
-        resultingUsers.push(user);
-      }
-    });
 
-    // the user transformations continue...
-    const penUltimateUsers =
-      resultingUsers.length !== 0 ? plainUsers : resultingUsers;
+      // the user transformations continue...
+      const penUltimateUsers =
+        resultingUsers.length === 0 ? plainUsers : resultingUsers;
 
-    // and one more for the road...
-    // filter out both the searching user and any users the searching user has already blocked
-    const finalUsers = penUltimateUsers.filter((user) => {
-      return (
-        user.id != req.session.user_id &&
-        blockedUsers.indexOf(user.id + '') === -1
-      );
-    });
+      // and one more for the road...
+      // filter out both the searching user and any users the searching user has already blocked
+      const finalUsers = penUltimateUsers.filter((user) => {
+        return (
+          user.id != req.session.user_id &&
+          blockedUsers.indexOf(user.id + '') === -1
+        );
+      });
 
-    res.render('results', {
-      loggedIn: req.session.loggedIn,
-      userID: req.session.user_id,
-      users: finalUsers,
-    });
-  } else {
-    // if we did not find users... shame...
-    res.render('results', {
-      loggedIn: req.session.loggedIn,
-      userID: req.session.user_id,
-      users: false,
-    });
+      res.render('results', {
+        loggedIn: req.session.loggedIn,
+        userID: req.session.user_id,
+        users: finalUsers,
+      });
+    } else {
+      // if we did not find users... shame...
+      res.render('results', {
+        loggedIn: req.session.loggedIn,
+        userID: req.session.user_id,
+        users: false,
+      });
+    }
+  } catch (error) {
+    const errMsg = {
+      message: 'Something went wrong with the database.',
+      error,
+    };
+    console.log(errMsg);
+    res.status(500).json(errMsg);
   }
 });
 

@@ -10,7 +10,7 @@ const OAuth2 = google.auth.OAuth2;
 
 let sequelize;
 
-// set up sequelize connection based on whether or not JawsDB is hooked up
+// set up sequelize connection based on whether or not Heroku/JawsDB is hooked up
 if (process.env.JAWSDB_URL) {
   sequelize = new Sequelize(process.env.JAWSDB_URL);
 } else {
@@ -32,13 +32,12 @@ if (process.env.JAWSDB_URL) {
 const limits = { fileSize: 1024 * 1024 };
 const upload = multer({
   storage: multer.diskStorage({}),
-  limits: limits,
+  limits,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
-    } else {
-      cb({ message: 'Unsupported file format' }, false);
+    if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png') {
+      req.invalidFile = true;
     }
+    cb(null, true);
   },
 });
 
