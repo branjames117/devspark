@@ -352,7 +352,7 @@ router.post('/logout', withAuth, (req, res) => {
 // DELETE /api/users/1
 router.delete('/:id', withAuth, async (req, res) => {
   const id = req.params.id;
-  const sessionId = res.session.user_id;
+  const sessionId = req.session.user_id;
 
   // check if id in param matches session id so auth'd users can only delete themselves via this route
   const validDelete = id == sessionId;
@@ -362,17 +362,26 @@ router.delete('/:id', withAuth, async (req, res) => {
       .status(403)
       .json({ message: 'You do not have authorization to delete this user' });
 
-  const deletedUser = await User.destroy({
+  // destroy their messages
+  await Message.destroy({
+    where: {
+      [Op.or]: [{ recipient_id: id }, { sender_id: id }],
+    },
+  });
+
+  // destroy their skills
+  await UserSkill.destroy({
+    where: {
+      user_id: id,
+    },
+  });
+
+  // destroy the user
+  await User.destroy({
     where: {
       id,
     },
   });
-
-  if (!deletedUser) {
-    res.status(404).json({ message: 'No user found with this id' });
-    return;
-  }
-  res.json(deletedUser);
 });
 
 module.exports = router;

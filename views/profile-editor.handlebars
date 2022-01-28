@@ -84,6 +84,12 @@ Current profile image:<br />
   <button type="submit">Upload Image</button>
 </form>
 
+<form id='deleteUserForm'>
+  <label for='username'>To delete your account, enter your username below and click 'Delete Account.' This action cannot be undone.</label>
+  <input type="text" name="username" id="username" placeholder='{{user.username}}' />
+  <button type="submit">Delete Account</button>
+</form>
+
 <script>
     // plug the sound enable/disable button into local storage
     let soundEnabled = localStorage.getItem("soundEnabled") || 0;
@@ -141,6 +147,30 @@ Current profile image:<br />
         } else {
         document.getElementById('err-msg').innerHTML =
             'Something went wrong. Are you sure the username and password are correct?<br />';
+        }
+    });
+
+    // delete user form handler
+    document.getElementById('deleteUserForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const deleteConfirmed = document.getElementById('username').value === '{{user.username}}';
+
+        if (deleteConfirmed) {
+            const response = await fetch(`/api/users/{{user.id}}`, {
+                method: 'delete',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (response.ok) {
+            document.location.replace(`/`);
+            } else {
+            document.getElementById('err-msg').innerHTML =
+                'Something went wrong. Please try again later.<br />';
+            }
+        } else {
+            document.getElementById('err-msg').innerHTML =
+                `If you're trying to delete your account, please enter your username exactly as it appears in the input field.'.<br />`;
         }
     });
 </script>
