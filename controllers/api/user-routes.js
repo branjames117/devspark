@@ -90,7 +90,7 @@ router.post('/unblock', withAuth, async (req, res) => {
     res.status(404).json({ message: 'No user found with this id' });
     return;
   } else {
-    res.redirect('/chat');
+    res.redirect('/blocklist');
   }
 });
 

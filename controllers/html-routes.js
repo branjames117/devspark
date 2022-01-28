@@ -122,6 +122,45 @@ router.get('/profile/:id', withAuth, async (req, res) => {
   });
 });
 
+// server-side storage to reduce db calls
+const userStore = {};
+
+// GET /blocklist
+router.get('/blocklist', withAuth, async (req, res) => {
+  const id = req.session.user_id;
+
+  const { blocked_users } = await User.findOne({
+    // display everything except the user's hashed password
+    attributes: ['blocked_users'],
+    where: { id },
+    raw: true,
+  });
+
+  const blockedUsersArr = blocked_users.split(';').filter((user) => {
+    console.log(user);
+    return user.length > 0;
+  });
+
+  const newBlockedUsersArr = [];
+
+  for (const userID of blockedUsersArr) {
+    if (!userStore[userID]) {
+      const blockedUser = await User.findByPk(userID, {
+        attributes: ['username'],
+        raw: true,
+      });
+      userStore[userID] = blockedUser.username;
+    }
+    newBlockedUsersArr.push({ id: userID, username: userStore[userID] });
+  }
+
+  res.render('blocklist', {
+    username: req.session.username,
+    loggedIn: req.session.loggedIn,
+    blockedUsers: newBlockedUsersArr,
+  });
+});
+
 // GET /search
 router.get('/search', withAuth, (req, res) => {
   res.render('search', {
