@@ -4,7 +4,7 @@
   padding: 0;
 }
 
-.nav {
+nav {
   display: flex;
   background-color: #000000;
   background: rgba(0, 0, 0, 0.5);
@@ -14,88 +14,9 @@
   padding: 8px 16px;
 }
 
-.hamburger {
-  display: none;
-}
 
-@media screen and (max-width: 750px) {
-  /* Mobile layout */
-  nav {
-    .nav {
-      /* The container for the actual navigation */
-      overflow: auto;
-      width: 100%;
-      margin: 0;
-      display: block;
-    }
-    .nav-list li {
-      /* The menu list items */
-      /* Unsetting the float, from the desktop layout */
-      float: none;
-      width: 100%;
-      margin-bottom: 4px;
-    }
-    .nav-top-accent {
-      /* The top accents for the menu links (for the desktop view) */
-      display: none;
-    }
-    a {
-      /* styles for the menu links */
-      text-align: center;
-      font-size: 24px;
-      padding: 0;
-    }
-    .nav-active {
-      /* The active menu link (the current page) */
-      background-color: #e11c84;
-    }
-    .nav-list {
-      /* The default display is none (inactive) */
-      display: none;
-    }
-    .nav-list.active {
-      /* When the menu becomes active, display the menu links */
-      display: block;
-      margin-top: 4px;
-    }
-    .hamburger {
-      /* The container for the hamburger button */
-      display: block;
-      float: right;
-      margin-right: 12px;
-      margin-top: 5px;
-      text-align: center;
-      cursor: pointer;
-    }
-    .hamburger.active #h-bar1 {
-      /* When the menu becomes active, rotate the top bar */
-      transform: translate(0, 250%) rotate(45deg);
-    }
-    .hamburger.active #h-bar2 {
-      /* When the menu becomes active, scale the bar in the x-direction to 0 */
-      transform-origin: 100% 50%;
-      transform: scaleX(0);
-    }
-    .hamburger.active #h-bar3 {
-      /* When the menu becomes active, rotate the bottom bar */
-      transform: translate(0, -250%) rotate(-45deg);
-    }
-    .hamburger-bar {
-      /* Styling for the individual bars for the hamburger */
-      width: 40px;
-      height: 4px;
-      background-color: white;
-      margin: 6px 0;
-      /* Animating the transistions */
-      transition: all ease-in-out 350ms;
-    }
-  }
-}
-@media print {
-  nav {
-    display: none;
-  }
-}
+
+
 
 .logo {
   height: 64px;
@@ -133,7 +54,21 @@ nav a {
   filter: alpha(opacity=100);
 }
 
+/* Hamburger Nav for Mobile Styles */
+.hamburger {
+  background-color: transparent;
+  border: 0;
+  display: none;
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+}
 
+.hamburger:focus {
+  outline: none;
+}
+
+/* Log In Styles */
 .log {
   float: right;
   text-align: center;
@@ -141,15 +76,10 @@ nav a {
   /* margin: 40px; */
 }
 
-/* .log button:hover {
-  opacity: 1;
-  filter: alpha(opacity=100);
-} */
-
 .btn {
   background-image: linear-gradient(45deg, #fd287c, #ff7654);
   border-radius: 50px;
-  box-shadow: #2b2d2f;
+  box-shadow: 0 6px 12px hsla(260, 50%, 30%, .2);
   width: 120px;
   height: 40px;
   font-size: 20px;
@@ -267,8 +197,8 @@ nav a {
   color: #fd287c;
 }
 
-button {
-  background: hsla(260, 50%, 40%, 1);
+.log-btn{
+  background: linear-gradient(45deg, #fd287c, #ff7654);
   box-shadow: 0 6px 12px hsla(260, 50%, 30%, .2);
   color: white;
   padding: 8px 16px;
@@ -276,8 +206,8 @@ button {
   border-radius: 24px;
 }
 
-button:hover {
-  background: hsla(260, 50%, 50%, 1);
+.log-btn:hover {
+  background: linear-gradient(45deg, #fd287c, #ff7654);
   transform: scale(1.02);
 }
 
@@ -402,5 +332,19 @@ input {
   #cell1, #cell2 {
     grid-column: auto;
     
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .nav-ul {
+    display: none;
+    width: 100%;
+  }
+
+  .nav-ul.show {
+    display: flex;
+  }
+  .hamburger {
+    display: block;
   }
 }
