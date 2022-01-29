@@ -1,24 +1,25 @@
 <div id="edit-wrapper">
 <form action='/api/users/profile' method='POST'>
     <legend>{{username}}'s Profile Editor</legend>
+    <br>
     <div>
-        <label for='birthday'>Birthday </label>
-        <input type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
+        <label for='birthday' class="form-label">Birthday </label>
+        <input class="form-field" type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
     </div>
     <div>
-        <label for="yearStartCoding">How many years have you been coding?</label>
-        <input type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
+        <label for="yearStartCoding" class="form-label">How many years have you been coding?</label>
+        <input class="form-field" type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
     </div>
     <div>
-        <label for='github'>GitHub username</label>
-        <input type='text' name='github' id='github' value='{{user.github}}'>
+        <label for='github' class="form-label">GitHub username</label>
+        <input class="form-field" type='text' name='github' id='github' value='{{user.github}}'>
     </div>
     <div>
-        <label for='portfolio'>Portfolio URL</label>
-        <input type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
+        <label for='portfolio' class="form-label">Portfolio URL</label>
+        <input class="form-field" type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
     </div>
     <div>
-        <label for='bio'>Add a user bio</label>
+        <label for='bio' class="form-label">Add a user bio</label>
         <textarea name='bio' id='bio'>{{user.bio}}</textarea>
     </div>
     <div>
@@ -42,7 +43,7 @@
         </select>
     </div>
 
-    <div class+="boxes"><br />
+    <div class="boxes"><br />
         Select your skills (do not check any boxes if you do not wish to update your entire skillset):<br />
         <input type="checkbox" id="skill1" name="skill1" value="JavaScript">
         <label for="skill1"> JavaScript</label><br>
@@ -99,9 +100,6 @@
         
     </div>
 
-    <div>
-        <input type='submit' value='Update Profile'>
-    </div>
 </form>
 <br /><br />
 Current profile image:<br />
@@ -111,6 +109,10 @@ Current profile image:<br />
   <input type="file" name="image" id="file-input" />
   <button type="submit">Upload Image</button>
 </form>
+
+<div>
+        <input type='submit' value='Update Profile'>
+    </div>
 </div>
 
 <script src='/js/profile.js'></script>
