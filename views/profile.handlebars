@@ -1,3 +1,5 @@
+<div id="profile-wrapper">
+  <div id="cell1" class="grid-cell">
 <h2>{{user.username}}'s Profile</h2>
 
 {{#if (ownProfile user.id userID)}}
@@ -28,12 +30,8 @@
 </ul>
 {{/if}}
 
-{{#if user.profile_image}}Profile Picture
-<img src='{{user.profile_image}}' />
-{{/if}}
-
 {{#if user.github}}
-<div id="containter">
+<div id="container">
     <div>
         <a href="https://github.com/users/" + {{user.github}}>
         <span id="githubusername">
@@ -46,6 +44,27 @@
     </div>
 </div>
   {{#if user.github}}
+</div>
+<div id="cell2" class="grid-cell">
+{{#if user.profile_image}}Profile Picture
+<img src='{{user.profile_image}}' />
+{{/if}}
+</div>
+{{!-- {{#if user.github}}
+<div id="container">
+    <div>
+        <a href="https://github.com/users/" + {{user.github}}>
+        <span id="githubusername">
+        {{user.github}}
+        </span>
+        </a>
+        <div id="repoContainerEl">
+
+        </div>
+    </div>
+</div>
+  {{#if user.github}} --}}
+  </div>
   <script src="/js/gitStarred.js"></script>
   {{/if}}
 {{/if}}

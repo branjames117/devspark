@@ -279,36 +279,17 @@ input {
   height: 2.5rem;
 }
 /* Profile Styles */
-/* .container {
-  height: 100vh;
-  width: 50%;
-  background-color: #AEE7E2;
-  position: center;
-  margin: 0 auto;
-  padding-top: 20px;
+#profile-wrapper {
+  display: grid; 
+  grid-template-columns: 1fr 1.5fr; 
+  gap: 0px 0px;
+  grid-template-areas: 'cell1 cell2';
 }
 
-.pic {
-  height: 100px;
-  width: 100px;
- object-fit: cover;
-  display: flex;
-	align-items: flex-end;
+.grid-cell {
+
 }
 
-.user{
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-  position: relative;
-}
-
-.age {
-  padding-left: 6px;
-  font-weight: 200;
-}
-
-/* profile */
-
-#profile-bio {
-  white-space: pre-line;
+#cell1 {
+  grid-area: cell1;
 }
