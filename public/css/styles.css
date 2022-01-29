@@ -69,7 +69,6 @@ nav a {
   outline: none;
 }
 
-/* Log In Styles */
 .log {
   float: right;
   text-align: center;
@@ -131,7 +130,7 @@ nav a {
   font-size: xx-large;
 }
 
-/* log in */
+/* Log In Styles */
 .log-wrapper {
   width: 380px;
   backdrop-filter: blur(10px);
@@ -278,20 +277,67 @@ input {
   cursor: pointer;
   font-family: "Varela Round";
 }
-  /* Footer styles*/
-.footer {
-  display: flex;
-  background-color: #000000;
-  background: rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  text-align: center;
-  justify-content: center;
-  padding: 8px 16px;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 2.5rem;
+
+/* Profile Editor Styles */
+#edit-wrapper {
+  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+
 }
+.boxes {
+  margin-left: 25px;
+  padding: 50px;
+  background: #484848;
+}
+
+input[type="checkbox"] { display: none; }
+
+input[type="checkbox"] + label {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 20px;
+  color: #ddd;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+input[type="checkbox"] + label:last-child { margin-bottom: 0; }
+
+input[type="checkbox"] + label:before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: .6;
+  -webkit-transition: all .12s, border-color .08s;
+  transition: all .12s, border-color .08s;
+}
+
+input[type="checkbox"]:checked + label:before {
+  width: 10px;
+  top: -5px;
+  left: 5px;
+  border-radius: 0;
+  opacity: 1;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
 /* Profile Styles */
 #profile-wrapper {
   display: grid; 
@@ -343,6 +389,21 @@ input {
   }
 } */
 
+
+/* Footer styles*/
+.footer {
+  display: flex;
+  background-color: #000000;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  text-align: center;
+  justify-content: center;
+  padding: 8px 16px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;
+}
 @media screen and (max-width: 767px) {
   .nav-ul {
     display: none;

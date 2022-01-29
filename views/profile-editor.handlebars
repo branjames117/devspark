@@ -1,3 +1,4 @@
+<div id="edit-wrapper">
 <form action='/api/users/profile' method='POST'>
     <legend>{{username}}'s Profile Editor</legend>
     <div>
@@ -41,7 +42,7 @@
         </select>
     </div>
 
-    <div><br />
+    <div class+="boxes"><br />
         Select your skills (do not check any boxes if you do not wish to update your entire skillset):<br />
         <input type="checkbox" id="skill1" name="skill1" value="JavaScript">
         <label for="skill1"> JavaScript</label><br>
@@ -104,11 +105,12 @@
 </form>
 <br /><br />
 Current profile image:<br />
-<img src="{{user.profile_image}}" />
+<img src="{{user.profile_image}}" height="200px" width="200px" />
 
 <form id='image-form' name='image-form' action='/api/images/upload' enctype="multipart/form-data" method='post'>
   <input type="file" name="image" id="file-input" />
   <button type="submit">Upload Image</button>
 </form>
+</div>
 
 <script src='/js/profile.js'></script>
