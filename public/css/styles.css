@@ -173,7 +173,6 @@ nav a {
 }
 
 .log-wrapper form .field {
-
   width: 100%;
   margin: 20px 0;
   position: relative;
@@ -191,15 +190,6 @@ nav a {
   border-radius: 24px;
 }
 
-.field label{
-  position: absolute;
-  top: 24%;
-  left: 20px;
-  color: #999999;
-  font-weight: 400;
-  font-size: 17px;
-  user-select: none;
-}
 
 .log-btn {
   /* need to center */
@@ -348,10 +338,18 @@ input {
   color: black;
 } */
 
+.boxes {
+  display: grid;
+  grid-column: 3;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  
+
+}
+
 input[type="checkbox"] { display: none; }
 
 input[type="checkbox"] + label {
-  display: block;
   position: relative;
   padding-left: 35px;
   margin-bottom: 10px;
@@ -366,7 +364,6 @@ input[type="checkbox"] + label:last-child { margin-bottom: 0; }
 
 input[type="checkbox"] + label:before {
   content: '';
-  display: block;
   width: 20px;
   height: 20px;
   border: 1px solid black;
