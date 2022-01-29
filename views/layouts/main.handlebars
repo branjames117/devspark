@@ -48,6 +48,7 @@
             <li><a id='logout'>Logout</a></li>
           </ul>
           </nav>
+      </header>
     {{else}}
       <header class="header-one">
         <nav>
@@ -56,9 +57,10 @@
             <li><a href="#about">About</a></li>
             {{!-- <a href='/login'>Login</a>  --}}
             <button class="log-btn" href="/login">Log In</button>
+          </ul>
+        </nav>
+      </header>
     {{/if}}
-    </nav>
-      
 
       <main>
         {{{body}}}
