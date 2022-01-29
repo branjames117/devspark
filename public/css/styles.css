@@ -2,8 +2,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  /* scrollbar-color: #fd287c;
-    scrollbar-width: thin; */
 }
 
 body::-webkit-scrollbar {
@@ -193,7 +191,7 @@ font-family: "Varela Round";
 
 .log-btn {
   /* need to center */
-  text-align: center;
+  /* text-align: center; */
 }
 
 .log-wrapper a {
@@ -201,13 +199,17 @@ font-family: "Varela Round";
   color: #fd287c;
 }
 
-.log-btn{
+.log-btn {
   background: linear-gradient(45deg, #fd287c, #ff7654);
   box-shadow: 0 6px 12px hsla(260, 50%, 30%, .2);
   color: white;
-  padding: 8px 16px;
+  padding: 5px 10px 5px 10px;
   border: none;
   border-radius: 24px;
+  width: 85px;
+  height: 30px;
+  font-size: 16px;
+  font-family: "Varela Round";
 }
 
 .log-btn:hover {
