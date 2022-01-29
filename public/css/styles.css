@@ -14,6 +14,89 @@
   padding: 8px 16px;
 }
 
+.hamburger {
+  display: none;
+}
+
+@media screen and (max-width: 750px) {
+  /* Mobile layout */
+  nav {
+    .nav {
+      /* The container for the actual navigation */
+      overflow: auto;
+      width: 100%;
+      margin: 0;
+      display: block;
+    }
+    .nav-list li {
+      /* The menu list items */
+      /* Unsetting the float, from the desktop layout */
+      float: none;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+    .nav-top-accent {
+      /* The top accents for the menu links (for the desktop view) */
+      display: none;
+    }
+    a {
+      /* styles for the menu links */
+      text-align: center;
+      font-size: 24px;
+      padding: 0;
+    }
+    .nav-active {
+      /* The active menu link (the current page) */
+      background-color: #e11c84;
+    }
+    .nav-list {
+      /* The default display is none (inactive) */
+      display: none;
+    }
+    .nav-list.active {
+      /* When the menu becomes active, display the menu links */
+      display: block;
+      margin-top: 4px;
+    }
+    .hamburger {
+      /* The container for the hamburger button */
+      display: block;
+      float: right;
+      margin-right: 12px;
+      margin-top: 5px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .hamburger.active #h-bar1 {
+      /* When the menu becomes active, rotate the top bar */
+      transform: translate(0, 250%) rotate(45deg);
+    }
+    .hamburger.active #h-bar2 {
+      /* When the menu becomes active, scale the bar in the x-direction to 0 */
+      transform-origin: 100% 50%;
+      transform: scaleX(0);
+    }
+    .hamburger.active #h-bar3 {
+      /* When the menu becomes active, rotate the bottom bar */
+      transform: translate(0, -250%) rotate(-45deg);
+    }
+    .hamburger-bar {
+      /* Styling for the individual bars for the hamburger */
+      width: 40px;
+      height: 4px;
+      background-color: white;
+      margin: 6px 0;
+      /* Animating the transistions */
+      transition: all ease-in-out 350ms;
+    }
+  }
+}
+@media print {
+  nav {
+    display: none;
+  }
+}
+
 .logo {
   height: 64px;
   width: 128px;
@@ -308,4 +391,16 @@ input {
 
 .img-cell img {
   border-radius: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  #profile-wrapper {
+      grid-template-columns: 1fr 1fr;
+      
+   }
+
+  #cell1, #cell2 {
+    grid-column: auto;
+    
+  }
 }

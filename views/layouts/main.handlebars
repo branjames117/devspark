@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel='stylesheet' href='/css/styles.css' />
+    <script src="https://use.fontawesome.com/7ed79bbb65.js"></script>
     <link
       rel='apple-touch-icon'
       sizes='180x180'
@@ -33,7 +34,14 @@
   <body>
     {{#if loggedIn}}
       <header class="header-two">
-        <nav class="nav">
+        <nav>
+{{!--hamburger bar for mobile --}}
+        <div class="hamburger" id="hamburger" onclick="hamburgerNav()">
+      <div class="hamburger-bar" id="h-bar1"></div>
+      <div class="hamburger-bar" id="h-bar2"></div>
+      <div class="hamburger-bar" id="h-bar3"></div>
+    </div>
+    <div class="nav">
           <img class="logo" src="../img/Asset 5.svg" alt="">
           <ul>
             <li><a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a></li>
@@ -50,6 +58,7 @@
             {{!-- <a href='/login'>Login</a>  --}}
             <button class="log btn" href="/login">Log In</button>
     {{/if}}
+    </div>
     </nav>
       
 
@@ -65,6 +74,8 @@
     {{#if loggedIn}}
       <script src='/js/logout.js'></script>
     {{/if}}
+
+
 
   </body>
 
