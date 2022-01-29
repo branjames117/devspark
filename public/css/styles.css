@@ -156,7 +156,7 @@ nav a {
 }
 
 .log-wrapper .title {
-/*   font-family: "Varela Round"; */
+font-family: "Varela Round"; 
   font-size: 25px;
   text-align: center;
   line-height: 70px;
@@ -211,6 +211,77 @@ nav a {
 }
 
 .log-btn:hover {
+  background: linear-gradient(45deg, #fd287c, #ff7654);
+  transform: scale(1.02);
+}
+
+/* Sign Up Styles */
+.sign-wrapper {
+  width: 380px;
+  backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+  margin: 0 auto;
+  padding-top: 40px;
+}
+
+.sign-wrapper .title {
+font-family: "Varela Round"; 
+  font-size: 25px;
+  text-align: center;
+  line-height: 70px;
+  color: white;
+  border-radius: 15px 15px 0 0;
+  background-image: linear-gradient(45deg, #fd287c, #ff7654);
+}
+
+.sign-wrapper form{
+  padding: 10px 30px 50px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sign-wrapper form .field {
+  width: 100%;
+  margin: 20px 0;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.field input{
+  width: 100%;
+  outline: none;
+  font-size: 17px;
+  padding: 8px 16px;
+  border: 1px solid lightgrey;
+  border-radius: 24px;
+}
+
+
+.sign-btn {
+  /* need to center */
+  text-align: center;
+}
+
+.sign-wrapper a {
+  text-decoration: none;
+  color: #fd287c;
+}
+
+.sign-btn{
+  background: linear-gradient(45deg, #fd287c, #ff7654);
+  box-shadow: 0 6px 12px hsla(260, 50%, 30%, .2);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 24px;
+}
+
+.sign-btn:hover {
   background: linear-gradient(45deg, #fd287c, #ff7654);
   transform: scale(1.02);
 }
@@ -444,15 +515,19 @@ input[type="checkbox"]:checked + label:before {
   display: flex;
   background-color: #000000;
   background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-family: "Varela Round";
   overflow: hidden;
   text-align: center;
   justify-content: center;
   padding: 8px 16px;
-  position: relative;
+  position: absolute;
   bottom: 0;
   width: 100%;
-  height: 2.5rem;
+  height: 50px;
+  margin-top: -50px
 }
+
 @media screen and (max-width: 767px) {
   .nav-ul {
     display: none;
