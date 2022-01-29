@@ -284,12 +284,14 @@ input {
   grid-template-columns: 2fr .5fr; 
   gap: 0px 0px;
   grid-template-areas: 'cell1 cell2';
-  /* backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); */
-    background-color: gray;
+  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     padding: 20px;
     font-family: Arial, Helvetica, sans-serif;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .grid-cell {
@@ -302,4 +304,8 @@ input {
 
 #cell2 {
   grid-area: cell2;
+}
+
+.img-cell img {
+  border-radius: 10px;
 }
