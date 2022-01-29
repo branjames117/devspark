@@ -46,24 +46,10 @@
   {{#if user.github}}
 </div>
 <div id="cell2" class="grid-cell">
-{{#if user.profile_image}}Profile Picture
-<img src='{{user.profile_image}}' />
+{{#if user.profile_image}}
+<img src='{{user.profile_image}}' width="500px" height="500px"/>
 {{/if}}
 </div>
-{{!-- {{#if user.github}}
-<div id="container">
-    <div>
-        <a href="https://github.com/users/" + {{user.github}}>
-        <span id="githubusername">
-        {{user.github}}
-        </span>
-        </a>
-        <div id="repoContainerEl">
-
-        </div>
-    </div>
-</div>
-  {{#if user.github}} --}}
   </div>
   <script src="/js/gitStarred.js"></script>
   {{/if}}
