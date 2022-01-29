@@ -2,25 +2,20 @@
   <div id="cell1" class="grid-cell">
 <h2>{{user.username}}</h2>
 
-{{#if (ownProfile user.id userID)}}
+{{#if (ownProfile user.id userID)}} 
+{{#if user.city}}<p><i class="fas fa-globe"></i> {{user.city}}</p>{{/if}} {{#if user.state}}<p>,{{user.state}}</p>{{/if}}
+{{#if user.github}}<p><i class="fab fa-github"></i> <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
+{{#if user.education}}<p><i class="fas fa-university"></i> {{user.education}}</p>{{/if}}
 <br />
-<p><a href="/profile/editor/">Edit your profile.</a></p>
-<br />
-{{else}}
-<br />
-<p><a href="/chat/{{user.id}}">Chat with this user.</a></p>
-<br />
-{{/if}}
 
-{{#if user.bio}}<p id="profile-bio">Bio: {{user.bio}}</p>{{/if}}
+{{#if user.bio}}<p id="profile-bio"> {{user.bio}}</p>{{/if}}
+<br>
 {{#if user.portfolio}}<p>Portfolio: <a href="{{user.portfolio}}" target="new">{{user.portfolio}}</a></p>{{/if}}
-{{#if user.github}}<p>Github: <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
+<br>
 {{#if user.birthday}}<p>Birthday: {{user.birthday}}</p>{{/if}}
+<br>
 {{#if user.yearStartCoding}}<p>Years Coding: {{user.yearStartCoding}}</p>{{/if}}
-{{#if user.city}}<p>City: {{user.city}}</p>{{/if}}
-{{#if user.state}}<p>State: {{user.state}}</p>{{/if}}
-{{#if user.education}}<p>Highest Education: {{user.education}}</p>{{/if}}
-<br />
+<br>
 
 {{#if skills}}
 <ul>
@@ -28,6 +23,14 @@
     <li>{{this.skill_name}}</li>
   {{/each}}
 </ul>
+{{/if}}
+<br>
+<p><a href="/profile/editor/">Edit your profile</a></p>
+<br />
+{{else}}
+<br />
+<p><a href="/chat/{{user.id}}">Chat with this user.</a></p>
+<br />
 {{/if}}
 
 {{#if user.github}}

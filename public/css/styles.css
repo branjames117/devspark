@@ -306,7 +306,11 @@ input {
     margin-top: 30px;
     margin-left: 20px;
     margin-right: 20px;
-    text-decoration: none;
+}
+
+#profile-wrapper a {
+  text-decoration: none;
+  color:#ff7654;
 }
 
 .grid-cell {
@@ -315,6 +319,8 @@ input {
 
 #cell1 {
   grid-area: cell1;
+  padding-right: 20px;
+  padding-left: 10px;
 }
 
 #cell2 {
