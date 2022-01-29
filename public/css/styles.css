@@ -6,6 +6,7 @@
 
 nav {
   display: flex;
+  flex-wrap: wrap;
   background-color: #000000;
   background: rgba(0, 0, 0, 0.5);
   overflow: hidden;
@@ -305,6 +306,7 @@ input {
     margin-top: 30px;
     margin-left: 20px;
     margin-right: 20px;
+    text-decoration: none;
 }
 
 .grid-cell {
@@ -323,7 +325,7 @@ input {
   border-radius: 10px;
 }
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
   #profile-wrapper {
       grid-template-columns: 1fr 1fr;
       
@@ -333,18 +335,24 @@ input {
     grid-column: auto;
     
   }
-}
+} */
 
 @media screen and (max-width: 767px) {
   .nav-ul {
     display: none;
+    flex-direction: column;
     width: 100%;
   }
-
   .nav-ul.show {
     display: flex;
   }
   .hamburger {
     display: block;
+  }
+
+  #profile-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+
   }
 }
