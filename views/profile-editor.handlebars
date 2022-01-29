@@ -19,13 +19,13 @@
         <input class="form-field" type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
     </div>
     <div>
-        <label for='bio' class="form-label">Add a user bio</label>
-        <textarea name='bio' id='bio'>{{user.bio}}</textarea>
+        <label for='bio' >Add a user bio</label>
+        <textarea class"bio-text" name='bio' id='bio'>{{user.bio}}</textarea>
     </div>
     <div>
         <p>Where are you located?</p>
-        <label for='city'>City</label>
-        <input type='text' name='city' id='city' value='{{user.city}}'>
+        <label for='city'>City:</label>
+        <input class="city-text" type='text' name='city' id='city' value='{{user.city}}'>
         <div>
             <label for="state">State:</label>
             {{> states-dropdown}}
