@@ -26,6 +26,7 @@ a {
   text-decoration: none;
 }
 
+
 nav {
   display: flex;
   flex-wrap: wrap;
@@ -82,7 +83,7 @@ nav a {
   background-color: transparent;
   border: 0;
   display: none;
-  color: white;
+  color: #ccc;
   cursor: pointer;
   font-size: 20px;
 }
@@ -105,7 +106,7 @@ nav a {
   width: 120px;
   height: 40px;
   font-size: 20px;
-  color: white;
+  color: #ccc;
   border: none;
   outline: none;
   cursor: pointer;
@@ -170,7 +171,7 @@ nav a {
   /* position:fixed; */
   padding-top: 300px;
   padding-left: 40px;
-  color: white;
+  color: #ccc;
   font-size: xx-large;
 }
 
@@ -201,7 +202,7 @@ nav a {
   font-size: 25px;
   text-align: center;
   line-height: 70px;
-  color: white;
+  color: #ccc;
   border-radius: 15px 15px 0 0;
   background-image: linear-gradient(45deg, #fd287c, #ff7654);
 }
@@ -244,7 +245,7 @@ nav a {
 .log-btn {
   background: linear-gradient(45deg, #fd287c, #ff7654);
   box-shadow: 0 6px 12px hsla(260, 50%, 30%, 0.2);
-  color: white;
+  color: #ccc;
   padding: 5px 10px 5px 10px;
   border: none;
   border-radius: 24px;
@@ -294,7 +295,7 @@ nav a {
 .sign-btn {
   background: linear-gradient(45deg, #fd287c, #ff7654);
   box-shadow: 0 6px 12px hsla(260, 50%, 30%, 0.2);
-  color: white;
+  color: #ccc;
   padding: 8px 16px;
   border: none;
   border-radius: 24px;
@@ -316,7 +317,7 @@ input {
   width: 85px;
   height: 25px;
   font-size: 20px;
-  color: white;
+  color: #ccc;
   background-image: linear-gradient(45deg, #fd287c, #ff7654);
   border: none;
   outline: none;
@@ -621,7 +622,8 @@ input[type='checkbox']:checked + label:before {
   width: 800px;
   height: 800px;
   background-color: #ffffff;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(67, 70, 75, 0.9);
+  color: #ccc;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -630,7 +632,7 @@ input[type='checkbox']:checked + label:before {
   overflow: hidden;
   border-radius: 5px;
   box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.75);
-  padding-top: 30px;
+  padding-top: 20px;
   margin: auto;
   width: 500px;
 	max-width: 100%;
@@ -660,11 +662,33 @@ input[type='checkbox']:checked + label:before {
   padding: 10px;
 }
 
-.skills {
+.info{
   text-align: center;
 }
 
-.skills ul {
+.interact {
+  border: 1px solid #ff7654;
+  border-radius: 2px; 
+  display: inline-block;
+  font-size: 12px;
+	padding: 7px;
+  margin: 0;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.bio {
+  padding: 20px 40px 20px 40px;
+	text-align: justify;
+}
+
+.skills {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.skills  ul {
   list-style-type:none;
   margin: 0;
   padding: 0;
@@ -884,7 +908,7 @@ footer {
   background-color: #000000;
   background: rgba(0, 0, 0, 0.5);
   gap: 10px;
-  color: white;
+  color: #ccc;
   font-family: 'Montserrat', sans-serif;
   overflow: hidden;
   text-align: center;
