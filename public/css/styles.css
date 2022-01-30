@@ -804,17 +804,21 @@ input[type='checkbox']:checked + label:before {
 
 #textbox-and-btn {
   display: flex;
+  height: 4rem;
+}
+
+#textbox-and-btn > textarea {
+  height: 4rem;
+  margin: 0 !important;
 }
 
 #message {
   background-color: rgb(230, 230, 230);
   border-radius: 10px;
   font-size: 1.2rem;
-  height: 4rem;
   margin-bottom: 10px;
   margin-right: 6px;
   padding: 4px 8px;
-  resize: vertical;
   width: 100%;
 }
 
@@ -828,6 +832,8 @@ input[type='checkbox']:checked + label:before {
   margin-bottom: 10px;
   font-size: 1.2rem;
   padding: 0 20px;
+  margin-left: 5px;
+  height: 100%;
   text-align: center;
 }
 
