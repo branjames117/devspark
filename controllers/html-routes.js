@@ -125,28 +125,28 @@ router.get('/profile/:id', withAuth, async (req, res) => {
           attributes: ['id', 'skill_name'],
         },
       ],
-      raw: true,
     });
-
     if (!user) {
       return res.status(404).json({ message: 'User with this id not found! ' });
     }
-
+    const plainUser = user.get({ plain: true });
     // check if we've already 'sparked' the user whose profile we're visiting
     const { matched_users } = await User.findOne({
       where: { id: req.session.user_id },
       attributes: ['matched_users'],
       raw: true,
     });
+    console.log(plainUser)
+    console.log(plainUser.skills)
 
     const notMatched = matched_users.indexOf(req.params.id) === -1;
-
+    console.log(user);
     res.render('profile', {
       username: req.session.username,
       loggedIn: req.session.loggedIn,
       userID: req.session.user_id,
-      user,
-      skills: user.skills,
+      user: plainUser,
+      skills: plainUser.skills,
       notMatched,
     });
   } catch (error) {

@@ -3,35 +3,43 @@
     <legend>{{username}}'s Profile Editor</legend>
     <br>
     <div>
-        <label for='birthday' class="form-label">Birthday </label>
-        <input class="form-field" type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
+        <label for='first_name' class="form-label">First name</label>
+        <input class="form-field profile-input" type='text' name='first_name' id='first_name' value='{{user.first_name}}'>
     </div>
     <div>
-        <label for="yearStartCoding" class="form-label">How many years have you been coding?</label>
-        <input class="form-field" type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
+        <label for='last_name' class="form-label">Last name</label>
+        <input class="form-field profile-input" type='text' name='last_name' id='last_name' value='{{user.last_name}}'>
+    </div>
+    <div>
+        <label for='birthday' class="form-label">Birthday </label>
+        <input class="form-field profile-input" type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
+    </div>
+    <div>
+        <label for="years_coding" class="form-label">How many years have you been coding?</label>
+        <input class="form-field profile-input" type='number' name='years_coding' id='years_coding' value='{{user.years_coding}}'>
     </div>
     <div>
         <label for='github' class="form-label">GitHub username</label>
-        <input class="form-field" type='text' name='github' id='github' value='{{user.github}}'>
+        <input class="form-field profile-input" type='text' name='github' id='github' value='{{user.github}}'>
     </div>
     <div>
         <label for='portfolio' class="form-label">Portfolio URL</label>
-        <input class="form-field" type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
+        <input class="form-field profile-input" type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
     </div>
     <div>
         <label for='bio' >Add a user bio</label>
-        <textarea class"bio-text" name='bio' id='bio'>{{user.bio}}</textarea>
+        <textarea class"bio-text profile-input" name='bio' id='bio'>{{user.bio}}</textarea>
     </div>
     <div>
         <p>Where are you located?</p>
         <label for='city'>City:</label>
-        <input class="city-text" type='text' name='city' id='city' value='{{user.city}}'>
+        <input class="city-text profile-input" type='text' name='city' id='city' value='{{user.city}}'>
         <label for="state">State:</label>
             {{> states-dropdown}}
     </div>
     <div>
         <label for='bio'>What is your highest level of education?</label>
-        <select name='education' id='education' value="{{user.education}}">
+        <select class='profile-input' name='education' id='education' value="{{user.education}}">
             <option value=''>Prefer not to say</option>
             <option value='Boot Camp Certification'>Boot Camp Certification</option>
             <option value='High School'>High School</option>
@@ -41,94 +49,82 @@
             <option value='Doctoral Degree'>Doctoral Degree</option>
         </select>
     </div>
-
+    <div>
+      <div>
+        <label for='gender_identity'>What is your gender identity?</label>
+        {{> genders-dropdown }}
+    </div>
+    <div>
+        <label for='sexual_orientation'>What is your sexual orientation</label>
+        {{> sexuality-dropdown }}
+    </div>
     <p>What are your skills?</p>
     <div class="boxes">
         
         {{> skills-checkboxes }}
         
     </div>
-
     <div>
         <button type='submit'>Update Profile</button>
     </div>
-
     <div id="err-msg"></div>
 </form>
-
 <button id='mute-sound-btn'></button>
-
 <br /><br />
 Current profile image:<br />
 <img src="{{user.profile_image}}" height="200px" width="200px" />
-
 <form id='image-form' name='image-form' action='/api/images/upload' enctype="multipart/form-data" method='post'>
   <input type="file" name="image" id="file-input" />
   <button type="submit">Upload Image</button>
 </form>
-
 <p>
   <a href="/blocklist">Edit my blocklist.</a>
 </p>
-
 <form id='deleteUserForm'>
   <label for='username'>To delete your account, enter your username below and click 'Delete Account.' This action cannot be undone.</label>
   <input type="text" name="username" id="username" placeholder='{{user.username}}' />
   <button type="submit">Delete Account</button>
 </form>
-
 <script>
     // plug the sound enable/disable button into local storage
     let soundEnabled = localStorage.getItem("soundEnabled") || 0;
-
     document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
-
     document.getElementById('mute-sound-btn').addEventListener('click', () => {
       soundEnabled = soundEnabled == 0 ? 1 : 0;
       localStorage.setItem("soundEnabled", soundEnabled);
       document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
     });
-
     // fill out user's previous information - a tricky feat with the dropdown lists
     const userPrevGender = '{{user.gender_identity}}';
     const userPrevSexuality = '{{user.sexual_orientation}}';
     const userPrevState = '{{user.state}}';
     const userPrevEducation = '{{user.education}}';
-
     if (userPrevGender) document.querySelector(`option[value='${userPrevGender}']`).selected = true;
     if (userPrevSexuality) document.querySelector(`option[value='${userPrevSexuality}']`).selected = true;
     if (userPrevState) document.querySelector(`option[value='${userPrevState}']`).selected = true;
     if (userPrevEducation) document.querySelector(`option[value='${userPrevEducation}']`).selected = true;
-
     // update profile form handler
     document.getElementById('editorForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const userInfo = {};
-
         const [...profileInputs] = document.getElementsByClassName('profile-input');
-
         profileInputs.forEach(input => {
             userInfo[input.name] = input.value;
         })
-
         const [...skillInputs] = document.getElementsByClassName('skill-input');
-
         skillInputs.forEach(skill => {
             if (skill.checked) userInfo[skill.name] = true;
         })
-
         if (userInfo.github && userInfo.github.includes('github.com')) {
             document.getElementById('err-msg').innerHTML +=
             '<p>Your Github username should only be your username, not the URL to your GitHub profile.</p><br />';
             return;
         }
-
         const response = await fetch('/api/users/profile', {
             method: 'post',
             body: JSON.stringify(userInfo),
             headers: { 'Content-Type': 'application/json' },
         });
-
         if (response.ok) {
         document.location.replace(`/profile/editor/`);
         } else {
@@ -136,19 +132,15 @@ Current profile image:<br />
             'Something went wrong. Are you sure the username and password are correct?<br />';
         }
     });
-
     // delete user form handler
     document.getElementById('deleteUserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const deleteConfirmed = document.getElementById('username').value === '{{user.username}}';
-
         if (deleteConfirmed) {
             const response = await fetch(`/api/users/{{user.id}}`, {
                 method: 'delete',
                 headers: { 'Content-Type': 'application/json' },
             });
-
             if (response.ok) {
             document.location.replace(`/`);
             } else {

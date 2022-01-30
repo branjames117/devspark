@@ -11,9 +11,47 @@ function deSpark() {
 </script>
 
 <div id="profile-wrapper">
-  <div id="cell1" class="grid-cell">
-<h2>{{user.username}}</h2>
 
+  <div class="selfie-container">
+{{#if user.profile_image}}
+<img class="selfie" src='{{user.profile_image}}' />
+{{/if}}
+</div>
+
+  <div class="profile">
+<h2>{{user.username}}</h2>
+{{#if notMatched }}
+  <p><a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'>Light a spark...</a></p>
+  {{else}}
+  <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark...</a></p>
+{{/if}}
+
+
+{{#if user.city}}<p><i class="fas fa-globe"></i> {{user.city}}</p>{{/if}} <span>{{#if user.state}}<p>,{{user.state}}</p>{{/if}}</span>
+{{#if user.github}}<p><i class="fab fa-github"></i> <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
+{{#if user.education}}<p><i class="fas fa-university"></i> {{user.education}}</p>{{/if}}
+<br />
+
+{{#if user.first_name}}<p>First name: {{user.first_name}}</p>{{/if}}
+{{#if user.last_name}}<p>Last name: {{user.last_name}}</p>{{/if}}
+{{#if user.bio}}<p id="profile-bio"> {{user.bio}}</p>{{/if}}
+{{#if user.portfolio}}<p>Portfolio: <a href="{{user.portfolio}}" target="new">{{user.portfolio}}</a></p>{{/if}}
+{{#if user.github}}<p>Github: <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
+{{#if user.gender_identity}}<p>Gender identity: {{user.gender_identity}}</p>{{/if}}
+{{#if user.sexual_orientation}}<p>Sexual orientation: {{user.sexual_orientation}}</p>{{/if}}
+{{#if user.birthday}}<p>Birthday: {{user.birthday}}</p>{{/if}}
+{{#if user.years_coding}}<p>Years Coding: {{user.years_coding}}</p>{{/if}}
+{{#if user.city}}<p>City: {{user.city}}</p>{{/if}}
+{{#if user.state}}<p>State: {{user.state}}</p>{{/if}}
+<br />
+
+{{#if skills}}
+<ul>
+  {{#each skills}}
+    <li>{{this.skill_name}}</li>
+  {{/each}}
+</ul>
+{{/if}}
 
 {{#if (ownProfile user.id userID)}} 
 <br>
@@ -24,46 +62,7 @@ function deSpark() {
 <p><a href="/chat/{{user.id}}">Chat with this user.</a></p>
 <br />
 {{/if}}
-
-{{#if user.city}}<p><i class="fas fa-globe"></i> {{user.city}}</p>{{/if}} {{#if user.state}}<p>,{{user.state}}</p>{{/if}}
-{{#if user.github}}<p><i class="fab fa-github"></i> <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
-{{#if user.education}}<p><i class="fas fa-university"></i> {{user.education}}</p>{{/if}}
-<br />
-{{#if notMatched }}
-  <p><a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'>Light a spark...</a></p>
-  {{else}}
-  <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark...</a></p>
-{{/if}}
-
-{{#if user.first_name}}<p>First name: {{user.first_name}}</p>{{/if}}
-{{#if user.last_name}}<p>Last name: {{user.last_name}}</p>{{/if}}
-{{#if user.bio}}<p id="profile-bio">Bio: {{user.bio}}</p>{{/if}}
-{{#if user.portfolio}}<p>Portfolio: <a href="{{user.portfolio}}" target="new">{{user.portfolio}}</a></p>{{/if}}
-{{#if user.github}}<p>Github: <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
-{{#if user.gender_identity}}<p>Gender identity: {{user.gender_identity}}</p>{{/if}}
-{{#if user.sexual_orientation}}<p>Sexual orientation: {{user.sexual_orientation}}</p>{{/if}}
-{{#if user.birthday}}<p>Birthday: {{user.birthday}}</p>{{/if}}
-{{#if user.years_coding}}<p>Years Coding: {{user.years_coding}}</p>{{/if}}
-{{#if user.city}}<p>City: {{user.city}}</p>{{/if}}
-{{#if user.state}}<p>State: {{user.state}}</p>{{/if}}
-{{#if user.education}}<p>Highest Education: {{user.education}}</p>{{/if}}
-<br />
-
-{{#if skills}}
-<ul>
-  {{#each skills}}
-    <li>{{this.skill_name}}</li>
-  {{/each}}
-  {{fontAwesome}}
-</ul>
-{{/if}}
-
-<div id="cell2" class="grid-cell img-cell">
-{{#if user.profile_image}}
-<img src='{{user.profile_image}}' width="500px" height="500px"/>
-{{/if}}
 </div>
-  </div>
 
 {{#if user.github}}
 <div id="container">
