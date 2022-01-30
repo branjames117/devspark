@@ -708,7 +708,6 @@ input[type='checkbox']:checked + label:before {
   height: -moz-fit-content;
   height: -webkit-fit-content;
   height: fit-content;
-
 }
 
 #profile-wrapper a {
@@ -741,10 +740,8 @@ input[type='checkbox']:checked + label:before {
   justify-content: space-around;
   border: 5px solid #ff7654;
   padding: 10px;
-  
-
 }
-  /* display: grid;
+/* display: grid;
   grid-template-columns: 2fr 0.5fr;
   gap: 0px 0px;
   grid-template-areas: 'cell1 cell2';
@@ -758,10 +755,8 @@ input[type='checkbox']:checked + label:before {
   margin-right: 20px;
   margin-bottom: 70px;*/
 
-
 /* .grid-cell {
-  /* padding goes here */
-}
+  padding goes here */
 
 /* #cell1 {
   grid-area: cell1;
@@ -775,7 +770,8 @@ input[type='checkbox']:checked + label:before {
 
 .img-cell img {
   border-radius: 10px;
-} */ */
+} */
+*/
 
 /* Chat styles */
 #chat-container {
