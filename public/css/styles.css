@@ -249,6 +249,14 @@ nav a {
   transform: scale(1.02);
 }
 
+.error-text {
+  margin-bottom: 20px;
+}
+
+.log-link {
+  margin-top: 20px;
+}
+
 /* Sign Up Styles */
 .sign-wrapper {
   width: 380px;

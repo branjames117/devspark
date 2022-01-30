@@ -5,7 +5,7 @@
   </div>
   <form class="signup-form">
     <div class="field">
-    <input type="address" id="login" placeholder="What is Your Email Address?">
+    <input type="address" id="email-signup" placeholder="What is Your Email Address?">
     </div>
     <div class="field">
     <input type="text" id="username-login" placeholder="Create a Username!">
@@ -16,11 +16,15 @@
      <div class="field">
     <input type="text" id="confirm-signup" placeholder="Please Confirm Your Password">
     </div>
-
-      <button class="btn sign-btn" type='submit'>Log In!</button>
-    </div>
+    <p class="error-text"></p>
+    <button class="btn sign-btn" type='submit'>Sign up!</button>
+    <br />
     <small class="log-link">
 Already have an account? <a href='/login'>Log in Here</a>
     </small>
+    </div>
+
   </form>
 </div>
+
+<script src='/js/signup.js'></script>
