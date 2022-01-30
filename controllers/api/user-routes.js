@@ -140,6 +140,52 @@ router.post('/delete-conversation', withAuth, async (req, res) => {
 router.post('/profile', withAuth, async (req, res) => {
   const id = req.session.user_id;
 
+  if (req.body.first_name && req.body.first_name.length > 20) {
+    return res
+      .status(500)
+      .json({ message: 'First name cannot be longer than 20 characters.' });
+  }
+
+  if (req.body.last_name && req.body.last_name.length > 20) {
+    return res
+      .status(500)
+      .json({ message: 'Last name cannot be longer than 20 characters.' });
+  }
+
+  if (req.body.city && req.body.city.length > 20) {
+    return res
+      .status(500)
+      .json({ message: 'City name cannot be longer than 20 characters.' });
+  }
+
+  if (req.body.github && req.body.github.includes('github.com')) {
+    return res
+      .status(500)
+      .json({
+        message: 'GitHub should be your username, not the URL to your profile.',
+      });
+  }
+
+  if (req.body.github && req.body.github.length > 20) {
+    return res
+      .status(500)
+      .json({
+        message: 'Github username cannot be longer than 20 characters.',
+      });
+  }
+
+  if (req.body.portfolio && req.body.portfolio.length > 50) {
+    return res
+      .status(500)
+      .json({ message: 'Portfolio URL cannot be longer than 50 characters.' });
+  }
+
+  if (req.body.bio && req.body.bio.length > 2000) {
+    return res
+      .status(500)
+      .json({ message: 'Bio cannot be longer than 2,000 characters.' });
+  }
+
   try {
     // update the user with the new info
     const updatedUser = await User.update(req.body, {
