@@ -1,13 +1,16 @@
-<h2>Your Blocklist</h2>
-
+<div id="chat-wrapper">
+  <h2>Your Blocklist</h2>
 {{#if blockedUsers}}
+  <div id="block-list">
   {{#each blockedUsers}}
-    <form action='/api/users/unblock' method='post'>
-      <label for='unblockedID'>{{this.username}}</label>
+    <form class="blocked-user" action='/api/users/unblock' method='post'>
+      <label for='unblockedID'><a href="/profile/{{this.id}}">{{this.username}}</a></label>
       <input type='hidden' name='unblockedID' id='unblockedID' value='{{this.id}}' />
-      <button type='submit'>Unblock</button>
+      <button class='btn' type='submit'>Unblock</button>
     </form>
   {{/each}}
+  </div>
 {{else}}
 Your blocklist is empty.
 {{/if}}
+</div>

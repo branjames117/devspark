@@ -9,6 +9,31 @@ function ownProfile(id1, id2) {
   return id1 === id2;
 }
 
+// returns a formatted location string for the search results view
+function locationFormatter(city, state) {
+  if (city && state) {
+    return `${city}, ${state}`;
+  } else if (city && !state) {
+    return `${city}`;
+  } else if (!city && state) {
+    return `${state}`;
+  } else {
+    return;
+  }
+}
+
+function interestFormatter(sexual_orientation, gender_identity) {
+  if (sexual_orientation && gender_identity) {
+    return `${sexual_orientation} ${gender_identity}`;
+  } else if (sexual_orientation && !gender_identity) {
+    return `${sexual_orientation}`;
+  } else if (!sexual_orientation && gender_identity) {
+    return `${gender_identity}`;
+  } else {
+    return;
+  }
+}
+
 // return a user's number of unread messages
 async function notificationCount(userID) {
   return await Message.count({
@@ -100,4 +125,10 @@ async function chatList(userID) {
   return newActiveChatMessages;
 }
 
-module.exports = { notificationCount, chatList, ownProfile };
+module.exports = {
+  notificationCount,
+  chatList,
+  ownProfile,
+  locationFormatter,
+  interestFormatter,
+};
