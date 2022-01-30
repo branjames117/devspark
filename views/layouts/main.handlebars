@@ -45,7 +45,7 @@
             <li><a href='/profile/{{userID}}'>My Profile</a></li>
             <li><a href='/chat'>My Chats (<span id="notif-count"></span>)</a></li>
             <li><a href='/search'>Find Devs</a></li>
-            <li><a id='logout'>Logout</a></li>
+            <li><a id='logout' class="logout-btn">Logout</a></li>
           </ul>
           </nav>
     {{else}}
@@ -53,7 +53,8 @@
         <nav>
           <img class="logo" src="../img/Asset 5.svg" alt="">
           <ul>
-            <a href="/login"><button class="log-btn">Log In</button></a>
+            <li><a href='views/about.handlebars'>About</a></li>
+            <a href="/login"><button class="login-btn">Log In</button></a>
           </ul>
         </nav>
     {{/if}}

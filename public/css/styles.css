@@ -47,6 +47,17 @@ nav {
   cursor: pointer;
 }
 
+.logout-btn {
+  border: 1px solid #ff7654;
+  color: #ff7654;
+  background: transparent;
+  border-radius: 2px; 
+  font-size: 20px;
+	padding: 7px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+}
+
 nav ul {
   display: flex;
   gap: 32px;
@@ -83,7 +94,7 @@ nav a {
   background-color: transparent;
   border: 0;
   display: none;
-  color: #ccc;
+  color: white;
   cursor: pointer;
   font-size: 20px;
 }
@@ -92,23 +103,26 @@ nav a {
   outline: none;
 }
 
-.log {
-  float: right;
-  text-align: center;
-  vertical-align: middle;
-  /* margin: 40px; */
+.login-btn {
+  border: 1px solid #ff7654;
+  color: #ff7654;
+  background: transparent;
+  border-radius: 2px; 
+  font-size: 20px;
+	padding: 7px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .btn {
-  background-image: linear-gradient(45deg, #fd287c, #ff7654);
-  border-radius: 50px;
-  box-shadow: 0 6px 12px hsla(260, 50%, 30%, 0.2);
-  width: 120px;
-  height: 40px;
+  border: 2px solid #fd287c;
+  color: #fd287c;
+  background: transparent;
+  border-radius: 2px; 
+  display: inline-block;
   font-size: 20px;
-  color: #ccc;
-  border: none;
-  outline: none;
+  font-weight: bold;
+	padding: 7px;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
 }
@@ -171,7 +185,7 @@ nav a {
   /* position:fixed; */
   padding-top: 300px;
   padding-left: 40px;
-  color: #ccc;
+  color: white;
   font-size: xx-large;
 }
 
@@ -202,7 +216,7 @@ nav a {
   font-size: 25px;
   text-align: center;
   line-height: 70px;
-  color: #ccc;
+  color: white;
   border-radius: 15px 15px 0 0;
   background-image: linear-gradient(45deg, #fd287c, #ff7654);
 }
@@ -245,7 +259,7 @@ nav a {
 .log-btn {
   background: linear-gradient(45deg, #fd287c, #ff7654);
   box-shadow: 0 6px 12px hsla(260, 50%, 30%, 0.2);
-  color: #ccc;
+  color: white;
   padding: 5px 10px 5px 10px;
   border: none;
   border-radius: 24px;
@@ -295,7 +309,8 @@ nav a {
 .sign-btn {
   background: linear-gradient(45deg, #fd287c, #ff7654);
   box-shadow: 0 6px 12px hsla(260, 50%, 30%, 0.2);
-  color: #ccc;
+  font-size: 20px;
+  color: white;
   padding: 8px 16px;
   border: none;
   border-radius: 24px;
@@ -317,7 +332,7 @@ input {
   width: 85px;
   height: 25px;
   font-size: 20px;
-  color: #ccc;
+  color: white;
   background-image: linear-gradient(45deg, #fd287c, #ff7654);
   border: none;
   outline: none;
@@ -492,7 +507,11 @@ input[type='file'] {
 }
 
 .upload-btn {
-  width: 100%;
+  border: 1px solid #fd287c;
+  border-radius: 2px; 
+  display: inline-block;
+  font-size: 12px;
+	padding: 7px;;
 }
 
 #deleteUserForm {
@@ -512,7 +531,7 @@ input[type='file'] {
 /* Search Styles */
 #wrapper {
   background-color: #ffffff;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 20px;
   padding: 20px;
   font-family: 'Montserrat', sans-serif;
