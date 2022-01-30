@@ -10,10 +10,17 @@ function deSpark() {
 
 </script>
 
-<h2>{{user.username}}'s Profile</h2>
+<div id="profile-wrapper">
+  <div id="cell1" class="grid-cell">
+<h2>{{user.username}}</h2>
 
-{{#if (ownProfile user.id userID)}}
+
+{{#if (ownProfile user.id userID)}} 
+{{#if user.city}}<p><i class="fas fa-globe"></i> {{user.city}}</p>{{/if}} {{#if user.state}}<p>,{{user.state}}</p>{{/if}}
+{{#if user.github}}<p><i class="fab fa-github"></i> <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
+{{#if user.education}}<p><i class="fas fa-university"></i> {{user.education}}</p>{{/if}}
 <br />
+
 <p><a href="/profile/editor/">Edit your profile.</a></p>
 <br />
 {{else}}
@@ -46,15 +53,27 @@ function deSpark() {
   {{#each skills}}
     <li>{{this.skill_name}}</li>
   {{/each}}
+  {{fontAwesome}}
 </ul>
 {{/if}}
-
-{{#if user.profile_image}}Profile Picture
-<img src='{{user.profile_image}}' />
+<br>
+<p><a href="/profile/editor/">Edit your profile</a></p>
+<br />
+{{else}}
+<br />
+<p><a href="/chat/{{user.id}}">Chat with this user.</a></p>
+<br />
 {{/if}}
 
+<div id="cell2" class="grid-cell img-cell">
+{{#if user.profile_image}}
+<img src='{{user.profile_image}}' width="500px" height="500px"/>
+{{/if}}
+</div>
+  </div>
+
 {{#if user.github}}
-<div id="containter">
+<div id="container">
     <div>
         <a href="https://github.com/{{user.github}}">
         <span id="githubusername">
@@ -67,4 +86,5 @@ function deSpark() {
     </div>
 </div>
 <script src="/js/gitStarred.js"></script>
+{{/if}}
 {{/if}}

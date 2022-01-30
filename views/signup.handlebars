@@ -1,27 +1,26 @@
-<form class='signup-form'>
-  <div>
-    <label for='email-signup'>email:</label>
-    <input type='email' id='email-signup' />
+{{!-- new form --}}
+<div class="sign-wrapper">
+  <div class="title">
+    Sign up to find your Spark!
   </div>
-    <div>
-    <label for='username-login'>username:</label>
-    <input type='text' id='username-login'>
-  </div>
-  <div>
-    <label for='password-signup'>password:</label>
-    <input type='password' id='password-signup' />
-  </div>
-  <div>
-    <label for='confirm-signup'>confirm password:</label>
-    <input type='password' id='confirm-signup' />
-  </div>
-  <div>
-    <button type='submit'>signup</button>
-  </div>
-</form>
+  <form class="signup-form">
+    <div class="field">
+    <input type="address" id="login" placeholder="What is Your Email Address?">
+    </div>
+    <div class="field">
+    <input type="text" id="username-login" placeholder="Create a Username!">
+    </div>
+     <div class="field">
+    <input type="text" id="password-signup" placeholder="Create a Unique Password">
+    </div>
+     <div class="field">
+    <input type="text" id="confirm-signup" placeholder="Please Confirm Your Password">
+    </div>
 
-<p class='error-text'></p>
-
-<p>Already have an account? <a href='/login'>Login</a> instead.</p>
-
-<script src='/js/signup.js'></script>
+      <button class="btn sign-btn" type='submit'>Log In!</button>
+    </div>
+    <small class="log-link">
+Already have an account? <a href='/login'>Log in Here</a>
+    </small>
+  </form>
+</div>

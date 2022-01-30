@@ -4,8 +4,86 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//fonts.googleapis.com/css?family=Varela+Round"
+    />
+    <link
+    href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+    rel="stylesheet"
+  />
     <link rel="stylesheet" href="../css/styles.css" />
+
+    <title>devSpark</title>
   </head>
-  <body></body>
+  <body class= "bg-slate-500">
+      <!-- Messenger and Profile Page -->
+        <nav class= "nav">
+          <img class="logo" src="../img/Asset 5.svg" alt="">
+          <ul>
+            <li><a href="">My Profile</a></li>
+            <li><a href="">My Messages</a></li>
+            <button class="logout btn">Log Out</button>
+      </nav>
+
+<div class="content">
+<!--this is where profile or messenger appears  -->
+</div>
+<div class="footer">
+  <!-- add license, copyright, team name etc -->
+</div>
+
+<!-- Messenger -->
+<div class="messenger-container">
+  <ol class="messages">
+      <li class="mine">Hi there!</li>
+      <li class="mine">I was wondering if you are free Friday?</li>
+      <li>Yes! What would you like to do?</li>
+      <li class="mine">Maybe we could get a drink and then go for a walk?</li>
+      <li>I would love that.</li>
+      <li class="mine">Great! I'm so excited to meet you.</li>
+      <li>Same!</li>
+      <li>Where and what time?</li>
+    </ol>
+         <div class="new-chat">
+              <textarea type="text" id="message"> </textarea>
+              <button id="send" class="send-btn">Send</button>
+          </div>
+  </div>
+
+<!-- Profile with Tailwind -->
+
+
+
+
+      <!-- Profile -->
+      <!-- <div class="container">
+        <div class="pic">
+          <img class="selfie" src="../img/selfie_3.png" alt="selfie" />
+        </div>
+        <div class="user">
+          <h2>Olivia,<span class="age">35</span></h2>
+          <p>9 miles away</p>
+        </div>
+          <div class="info">
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Architecto
+              numquam, nam illo eveniet recusandae eligendi natus unde deleniti
+              nihil voluptatibus, quaerat nobis hic. Sunt molestias tempore
+              doloribus, error exercitationem nesciunt.
+            </p>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Architecto
+            </p>
+            <div class="actions">
+              <button class="msg-btn">Message</button>
+            </div>
+          </div>
+      
+        </div> -->
+    
+
+    </div>
+  </body>
 </html>

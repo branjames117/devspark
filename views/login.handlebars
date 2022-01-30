@@ -1,20 +1,28 @@
-<form class='login-form'>
-  <div>
-    <label for='login'>username or email:</label>
-    <input type='text' id='login' />
-  </div>
-  <div>
-    <label for='password'>password:</label>
-    <input type='password' id='password' />
-  </div>
-  <div>
-    <button type='submit'>login</button>
-  </div>
-</form>
 
-<p class='error-text'></p>
+      {{!-- new form --}}
+<div class="log-wrapper">
+  <div class="title">
+    Welcome Back!
+  </div>
+  <form class="login-form">
+    <div class="field">
+    
+    <input type="address" id="login" placeholder="Enter Your Email Address">
+    </div>
+    <div class="field">
+    
+    <input type="text" id="password" placeholder="Enter Your Password">
+    </div>
 
-<p>Don't have an account? <a href='/signup'>Sign up</a> now.</p>
-<p>Forgot your password? <a href='/forgot'>Click here</a> to request a reset token be sent to your email address.</p>
+    <div class="field">
+          <div class="forgot-link">
+      <a href='/forgot'>Forgot Password?</a>
+    </div>
+      <button class="btn log-btn" type='submit'>Log In!</button>
+    </div>
+    <small class="sign-link">
+Not a member? <a href='/signup'>Sign up now</a>
+    </small>
+  </form>
+</div>
 
-<script src='/js/login.js'></script>

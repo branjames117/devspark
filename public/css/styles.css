@@ -1,153 +1,551 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
-  background-color: white;
-  min-height: 100%;
-  font-family: 'Roboto', sans-serif;
+body::-webkit-scrollbar {
+  width: 1em;
+}
+ 
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: transparent;
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: #fd287c;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #000000;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+
+
+
+
+.logo {
+  height: 64px;
+  width: 128px;
+}
+
+nav ul {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  list-style: none;
   position: relative;
-}
-
-a {
-  color: green;
+  font-family: "Varela Round";
+  text-align: center;
+  font-size: 1em;
   text-decoration: none;
+  letter-spacing: 0.5px;
 }
 
-.wrapper {
-  width: 95%;
-  max-width: 1400px;
-  margin: 0 auto;
+nav ul:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
 }
 
-/* Header/Navbar Styles */
-
-header {
-  background-color: white;
-  display: flex;
-  height: 50px;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  width: 100%;
-  z-index: 1;
+nav ul li {
+  display: inline-block;
 }
 
-header nav {
-  display: flex;
-  gap: 20px;
-}
-
-#logout {
-  cursor: pointer;
-}
-
-#chat-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 90%;
-  min-height: 90%;
-}
-
-/* Active Chats styles */
-
-#active-chats-container {
-  margin: 20px auto;
-  width: 100%;
-}
-
-#active-chats-container > div {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px auto;
-  width: 90%;
-  border-bottom: 1px solid black;
-}
-
-#active-chats-container div a,
-#blocked-chats-container div a {
-  display: flex;
-  flex-direction: column;
+nav a {
+  color: #fff;
+  font-size: 20px;
+  line-height: 60px;
   text-decoration: none;
+  opacity: 1;
+  filter: alpha(opacity=100);
 }
 
-#active-chats-container > div > div {
-  display: flex;
-  gap: 20px;
-}
-
-#active-chats-container form button {
-  background-color: white;
-  color: green;
+/* Hamburger Nav for Mobile Styles */
+.hamburger {
+  background-color: transparent;
   border: 0;
+  display: none;
+  color: white;
   cursor: pointer;
+  font-size: 20px;
 }
 
-/* Chat styles */
+.hamburger:focus {
+  outline: none;
+}
 
-#message-container {
-  font-size: 1.2rem;
-  margin: 20px auto;
-  max-width: 800px;
+.log {
+  float: right;
+  text-align: center;
+  vertical-align: middle;
+  /* margin: 40px; */
+}
+
+.btn {
+  background-image: linear-gradient(45deg, #fd287c, #ff7654);
+  border-radius: 50px;
+  box-shadow: 0 6px 12px hsla(260, 50%, 30%, .2);
+  width: 120px;
+  height: 40px;
+  font-size: 20px;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-family: "Varela Round";
+}
+
+.header-one {
+  height: 600px;
   width: 100%;
+  background-image: url("../img/couple.jpg");
+  position:relative; 
+  top: 0;
+  left: 0; 
+	
+  /* Preserve aspect ratio */
+  min-width: 100%;
+  min-height: 100%;
+  background-size: cover;
+  background-position: center;
 }
 
-#message-container div {
-  border-radius: 20px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  padding: 10px 10px;
-  white-space: pre-line;
+.header-two {
+  background-image: url("../img/bg-image.jpg");
+  background-repeat: repeat-y;
+  position:absolute; 
+  top: 0;
+  left: 0; 
+	
+  /* Preserve aspect ratio */
+  min-width: 100%;
+  min-height: 100%;
+  background-size: cover;
+  background-position: center;
 }
 
-.sentMsg {
-  background-color: rgb(170, 170, 255);
+.hero-text {
+  text-align: left;
+  font-family: Arial, Helvetica, sans-serif;
+  /* position:fixed; */
+  padding-top: 300px;
+  padding-left: 40px;
+  color: white;
+  font-size: xx-large;
 }
 
-.recdMsg {
-  background-color: rgb(169, 169, 173);
+/* Log In Styles */
+.log-wrapper {
+  width: 380px;
+  backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+  margin: 0 auto;
+  padding-top: 40px;
 }
 
-#chat-textbox-container {
-  background-color: white;
-  margin: 20px auto 0px;
-  max-width: 800px;
-  position: sticky;
-  bottom: 0;
-  width: 100%;
+.log-wrapper .title {
+font-family: "Varela Round"; 
+  font-size: 25px;
+  text-align: center;
+  line-height: 70px;
+  color: white;
+  border-radius: 15px 15px 0 0;
+  background-image: linear-gradient(45deg, #fd287c, #ff7654);
 }
 
-#textbox-and-btn {
+.log-wrapper form{
+  padding: 10px 30px 50px 30px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#message {
-  border-radius: 10px;
-  font-size: 1.2rem;
-  height: 4rem;
-  margin-bottom: 10px;
-  margin-right: 6px;
-  padding: 4px 8px;
-  resize: vertical;
+.log-wrapper form .field {
   width: 100%;
+  margin: 20px 0;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#message:focus {
-  background-color: rgb(170, 170, 255);
+.field input{
+  width: 100%;
+  outline: none;
+  font-size: 17px;
+  padding: 8px 16px;
+  border: 1px solid lightgrey;
+  border-radius: 24px;
 }
 
-#chat-submit-btn {
-  background-color: rgb(170, 170, 255);
-  border-radius: 10px;
-  margin-bottom: 10px;
-  font-size: 1.2rem;
+
+.log-btn {
+  /* need to center */
+  /* text-align: center; */
+}
+
+.log-wrapper a {
+  text-decoration: none;
+  color: #fd287c;
+}
+
+.log-btn {
+  background: linear-gradient(45deg, #fd287c, #ff7654);
+  box-shadow: 0 6px 12px hsla(260, 50%, 30%, .2);
+  color: white;
+  padding: 5px 10px 5px 10px;
+  border: none;
+  border-radius: 24px;
+  width: 85px;
+  height: 30px;
+  font-size: 16px;
+  font-family: "Varela Round";
+}
+
+.log-btn:hover {
+  background: linear-gradient(45deg, #fd287c, #ff7654);
+  transform: scale(1.02);
+}
+
+/* Sign Up Styles */
+.sign-wrapper {
+  width: 380px;
+  backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+  margin: 0 auto;
+  padding-top: 40px;
+}
+
+.sign-wrapper .title {
+font-family: "Varela Round"; 
+  font-size: 25px;
+  text-align: center;
+  line-height: 70px;
+  color: white;
+  border-radius: 15px 15px 0 0;
+  background-image: linear-gradient(45deg, #fd287c, #ff7654);
+}
+
+.sign-wrapper form{
+  padding: 10px 30px 50px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sign-wrapper form .field {
+  width: 100%;
+  margin: 20px 0;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.field input{
+  width: 100%;
+  outline: none;
+  font-size: 17px;
+  padding: 8px 16px;
+  border: 1px solid lightgrey;
+  border-radius: 24px;
+}
+
+
+.sign-btn {
+  /* need to center */
   text-align: center;
 }
 
-/* profile */
+.sign-wrapper a {
+  text-decoration: none;
+  color: #fd287c;
+}
 
-#profile-bio {
-  white-space: pre-line;
+.sign-btn{
+  background: linear-gradient(45deg, #fd287c, #ff7654);
+  box-shadow: 0 6px 12px hsla(260, 50%, 30%, .2);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 24px;
+}
+
+.sign-btn:hover {
+  background: linear-gradient(45deg, #fd287c, #ff7654);
+  transform: scale(1.02);
+}
+
+
+
+/* Messenger Styles */
+.messenger-container {
+  display: none;
+  height: 100vh;
+  width: 50%;
+  background-color: #AEE7E2;
+  position: center;
+  margin: 0 auto;
+}
+
+.messages {
+  padding: 2px;
+  margin: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: white;
+  overflow: auto;
+  font-family: "Varela Round";
+}
+
+.messages li {
+  list-style-type: none;
+  margin: 2px 8px 2px 0;
+  float: left;
+  border-radius: 8px;
+  padding: 8px;
+  color: black;
+  position: relative;
+  z-index: 1;
+  background: #eee;
+}
+
+.messages li.mine {
+  margin: 2px 0 2px 8px;
+  align-self: flex-end;
+  z-index: 0;
+  background: linear-gradient(45deg, #fd287c, #ff7654);
+  color: white;
+}
+
+.new-chat {
+  position: absolute;
+}
+
+input {
+  width: 100%;
+}
+
+.send-btn {
+  float: right;
+  border-radius: 50px;
+  box-shadow: #2b2d2f;
+  width: 85px;
+  height: 25px;
+  font-size: 20px;
+  color: white;
+  background-image: linear-gradient(45deg, #fd287c, #ff7654);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-family: "Varela Round";
+}
+
+/* Profile Editor Styles */
+#edit-wrapper {
+  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    /* font-weight: 200; */
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+
+}
+#edit-wrapper textarea {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  resize: none;
+}
+
+.city-text {
+  border-radius: 5px;
+  outline: none;
+}
+
+.form-field {
+  font-family: inherit;
+  width: 100%;
+  outline: 0;
+  border: 0;
+  border-bottom: 2px solid black;
+  background: transparent;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.form-field:focus {
+  padding-bottom: 6px; 
+  border-width: 3px;
+  border-image:  linear-gradient(45deg, #fd287c, #ff7654);
+  border-image-slice: 1;
+  cursor: text;
+}
+
+/* .form-label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  color: black;
+} */
+
+.boxes {
+  display: grid;
+  grid-column: 3;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  
+
+}
+
+input[type="checkbox"] { display: none; }
+
+input[type="checkbox"] + label {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 10px;
+  color: #ddd;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+input[type="checkbox"] + label:last-child { margin-bottom: 0; }
+
+input[type="checkbox"] + label:before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: .6;
+  -webkit-transition: all .12s, border-color .08s;
+  transition: all .12s, border-color .08s;
+}
+
+input[type="checkbox"]:checked + label:before {
+  width: 10px;
+  top: -5px;
+  left: 5px;
+  border-radius: 0;
+  opacity: 1;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/* Profile Styles */
+#profile-wrapper {
+  display: grid; 
+  grid-template-columns: 2fr .5fr; 
+  gap: 0px 0px;
+  grid-template-areas: 'cell1 cell2';
+  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#profile-wrapper a {
+  text-decoration: none;
+  color:#ff7654;
+}
+
+.grid-cell {
+/* padding goes here */
+}
+
+#cell1 {
+  grid-area: cell1;
+  padding-right: 20px;
+  padding-left: 10px;
+}
+
+#cell2 {
+  grid-area: cell2;
+}
+
+.img-cell img {
+  border-radius: 10px;
+}
+
+/* @media screen and (max-width: 768px) {
+  #profile-wrapper {
+      grid-template-columns: 1fr 1fr;
+      
+   }
+
+  #cell1, #cell2 {
+    grid-column: auto;
+    
+  }
+} */
+
+
+/* Footer styles*/
+.footer {
+  display: flex;
+  background-color: #000000;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-family: "Varela Round";
+  overflow: hidden;
+  text-align: center;
+  justify-content: center;
+  padding: 8px 16px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  margin-top: -50px
+}
+
+@media screen and (max-width: 767px) {
+  .nav-ul {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+  .nav-ul.show {
+    display: flex;
+  }
+  .hamburger {
+    display: block;
+  }
+
+  #profile-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+
+  }
 }

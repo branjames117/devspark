@@ -1,51 +1,33 @@
+<div id="edit-wrapper">
 <form id="editorForm">
     <legend>{{username}}'s Profile Editor</legend>
-    <p>All fields are optional. Don't share any information you do not wish to be made publicly available to other users.</p>
-
+    <br>
     <div>
-        <label for='first_name'>First name</label>
-        <input class='profile-input' type='text' name='first_name' id='first_name' value='{{user.first_name}}'>
+        <label for='birthday' class="form-label">Birthday </label>
+        <input class="form-field" type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
     </div>
     <div>
-        <label for='last_name'>First name</label>
-        <input class='profile-input' type='text' name='last_name' id='last_name' value='{{user.last_name}}'>
+        <label for="yearStartCoding" class="form-label">How many years have you been coding?</label>
+        <input class="form-field" type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
     </div>
     <div>
-        <label for='birthday'>Birthday </label>
-        <input class='profile-input' type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
+        <label for='github' class="form-label">GitHub username</label>
+        <input class="form-field" type='text' name='github' id='github' value='{{user.github}}'>
     </div>
     <div>
-        <label for="gender_identity">Gender identity </label>
-        {{> genders-dropdown }}
+        <label for='portfolio' class="form-label">Portfolio URL</label>
+        <input class="form-field" type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
     </div>
     <div>
-        <label for="sexual_orientation">Sexual Orientation </label>
-        {{> sexuality-dropdown }}
-    </div>
-    <div>
-        <label for="years_coding">How many years have you been coding?</label>
-        <input class='profile-input' type='number' name='years_coding' id='years_coding' value='{{user.years_coding}}'>
-    </div>
-    <div>
-        <label for='github'>GitHub username</label>
-        <input class='profile-input' type='text' name='github' id='github' value='{{user.github}}'>
-    </div>
-    <div>
-        <label for='portfolio'>Portfolio URL</label>
-        <input class='profile-input' type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
-    </div>
-    <div>
-        <label for='bio'>Add a user bio</label>
-        <textarea class='profile-input' name='bio' id='bio'>{{user.bio}}</textarea>
+        <label for='bio' >Add a user bio</label>
+        <textarea class"bio-text" name='bio' id='bio'>{{user.bio}}</textarea>
     </div>
     <div>
         <p>Where are you located?</p>
-        <label for='city'>City</label>
-        <input class='profile-input' type='text' name='city' id='city' value='{{user.city}}'>
-        <div>
-            <label for="state">State:</label>
+        <label for='city'>City:</label>
+        <input class="city-text" type='text' name='city' id='city' value='{{user.city}}'>
+        <label for="state">State:</label>
             {{> states-dropdown}}
-        </div>
     </div>
     <div>
         <label for='bio'>What is your highest level of education?</label>
@@ -77,7 +59,7 @@
 
 <br /><br />
 Current profile image:<br />
-<img src="{{user.profile_image}}" />
+<img src="{{user.profile_image}}" height="200px" width="200px" />
 
 <form id='image-form' name='image-form' action='/api/images/upload' enctype="multipart/form-data" method='post'>
   <input type="file" name="image" id="file-input" />

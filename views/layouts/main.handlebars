@@ -3,10 +3,12 @@
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <title>devSpark - ready to commit?</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel='stylesheet' href='/css/styles.css' />
+    
     <link
       rel='apple-touch-icon'
       sizes='180x180'
@@ -31,38 +33,50 @@
   {{#if loggedIn}}<script src='/js/notifications.js'></script>{{/if}}
 
   <body>
-    <div class='wrapper'>
-      
-      {{#if loggedIn}}
-      <header>
-        <h1>
-          <a href='/'>devspark</a><br />
-        </h1>
+    {{#if loggedIn}}
+      <header class="header-two">
         <nav>
-            <a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a>
-            <a href='/chat'>My Conversations (<span id="notif-count"></span>)</a>
-            <a href='/search'>Find Developers</a>
-            <a id='logout'>Logout</a>
-          {{else}}
-            <a href='/login'>Login</a>
-          {{/if}}
+          <img class="logo" src="../img/Asset 5.svg" alt="">
+          {{!--hamburger bar for mobile --}}
+        <button class="hamburger" id="hamburger">
+          <i class="fas fa-bars"></i>
+        </button>
+          <ul class="nav-ul" id="nav-ul">
+            <li><a href='/profile/{{userID}}'>My Profile (ID: {{userID}})</a></li>
+            <li><a href='/chat'>My Conversations (<span id="notif-count"></span>)</a></li>
+            <li><a href='/search'>Find Developers</a></li>
+            <li><a id='logout'>Logout</a></li>
+          </ul>
+          </nav>
+      </header>
+    {{else}}
+      <header class="header-one">
+        <nav>
+          <img class="logo" src="../img/Asset 5.svg" alt="">
+          <ul>
+            <li><a href="#about">About</a></li>
+            {{!-- <a href='/login'>Login</a>  --}}
+            <button class="log-btn" href="/login">Log In</button>
+          </ul>
         </nav>
       </header>
+    {{/if}}
 
       <main>
         {{{body}}}
       </main>
 
-      {{! <footer>
-        placeholder
-      </footer> }}
+      <footer class="footer">
+        <span>Copyright <i class="far fa-copyright"></i> 2022 All Rights Reserved</span>
+      </footer> 
 
-    </div>
 
     {{#if loggedIn}}
       <script src='/js/logout.js'></script>
     {{/if}}
 
+
+<script src="/js/ham.js"></script>
   </body>
 
 </html>
