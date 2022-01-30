@@ -159,19 +159,15 @@ router.post('/profile', withAuth, async (req, res) => {
   }
 
   if (req.body.github && req.body.github.includes('github.com')) {
-    return res
-      .status(500)
-      .json({
-        message: 'GitHub should be your username, not the URL to your profile.',
-      });
+    return res.status(500).json({
+      message: 'GitHub should be your username, not the URL to your profile.',
+    });
   }
 
   if (req.body.github && req.body.github.length > 20) {
-    return res
-      .status(500)
-      .json({
-        message: 'Github username cannot be longer than 20 characters.',
-      });
+    return res.status(500).json({
+      message: 'Github username cannot be longer than 20 characters.',
+    });
   }
 
   if (req.body.portfolio && req.body.portfolio.length > 50) {
@@ -246,7 +242,7 @@ router.post('/forgot', async (req, res) => {
     if (user) {
       var mailOptions = {
         to: req.body.email,
-        from: 'devspark003@gmail.com',
+        from: process.env.APP_EMAIL,
         subject: 'DevSpark Password Reset',
         text: `You are receiving this email because you have requested a password reset for your devSpark account ${req.body.email}. Paste the following link into your browser to reset your password: https://devsparkio.herokuapp.com/reset/${token}. If you did not request a password reset, please ignore this email.`,
         html: `
@@ -261,9 +257,8 @@ router.post('/forgot', async (req, res) => {
         let emailTransporter = await createTransporter();
         await emailTransporter.sendMail(emailOptions);
       };
-      console.log('sending email');
+
       await sendEmail(mailOptions);
-      console.log('email not sent');
 
       res.status(200).json({ status: 'success', message: 'message sent' });
     }
