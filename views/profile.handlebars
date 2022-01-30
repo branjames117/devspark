@@ -23,17 +23,17 @@ function deSpark() {
 <br />
 <p><a href="/chat/{{user.id}}">Chat with this user.</a></p>
 <br />
+{{#if notMatched }}
+  <p><a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'>Light a spark...</a></p>
+  {{else}}
+  <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark...</a></p>
+{{/if}}
 {{/if}}
 
 {{#if user.city}}<p><i class="fas fa-globe"></i> {{user.city}}</p>{{/if}} {{#if user.state}}<p>,{{user.state}}</p>{{/if}}
 {{#if user.github}}<p><i class="fab fa-github"></i> <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
 {{#if user.education}}<p><i class="fas fa-university"></i> {{user.education}}</p>{{/if}}
 <br />
-{{#if notMatched }}
-  <p><a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'>Light a spark...</a></p>
-  {{else}}
-  <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark...</a></p>
-{{/if}}
 
 {{#if user.first_name}}<p>First name: {{user.first_name}}</p>{{/if}}
 {{#if user.last_name}}<p>Last name: {{user.last_name}}</p>{{/if}}
@@ -54,7 +54,6 @@ function deSpark() {
   {{#each skills}}
     <li>{{this.skill_name}}</li>
   {{/each}}
-  {{fontAwesome}}
 </ul>
 {{/if}}
 

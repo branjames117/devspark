@@ -1,80 +1,106 @@
 <div id="edit-wrapper">
-<form id="editorForm">
-    <legend>{{username}}'s Profile Editor</legend>
-    <br>
+    <div id='edit-h2'>
+        <h2>{{username}}'s Profile Editor</h2>
+        <button class='btn long-btn' id='mute-sound-btn'></button>
+    </div>
+<form autoComplete="off" id="editorForm">
     <div>
-        <label for='birthday' class="form-label">Birthday </label>
-        <input class="form-field" type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
+        <label for='first_name' class="form-label">First name</label>
+        <input autocomplete="none" class="form-field profile-input" type='text' name='first_name' id='first_name' value='{{user.first_name}}'>
     </div>
     <div>
-        <label for="yearStartCoding" class="form-label">How many years have you been coding?</label>
-        <input class="form-field" type='number' name='yearStartCoding' id='yearStartCoding' value='{{user.yearStartCoding}}'>
+        <label for='last_name' class="form-label">Last name</label>
+        <input autocomplete="none" class="form-field profile-input" type='text' name='last_name' id='last_name' value='{{user.last_name}}'>
+    </div>
+    <div>
+        <label for='city' class="form-label">City</label>
+        <input autocomplete="none" class="form-field  profile-input" type='text' name='city' id='city' value='{{user.city}}'>
+    </div>
+    <div class="dropdown">
+        <label for="state" class="form-label">State:</label>
+        <div class="form-field">
+            {{> states-dropdown}}
+        </div>
+    </div>
+    <div>
+        <label for='birthday' class="form-label">Birthday </label>
+        <input class="form-field profile-input" type='date' name='birthday' id='birthday' value='{{user.birthday}}'>
+    </div>
+    <div>
+        <label for="years_coding" class="form-label">How many years have you been coding?</label>
+        <input class="form-field profile-input" type='number' name='years_coding' id='years_coding' value='{{user.years_coding}}'>
     </div>
     <div>
         <label for='github' class="form-label">GitHub username</label>
-        <input class="form-field" type='text' name='github' id='github' value='{{user.github}}'>
+        <input class="form-field profile-input" type='text' name='github' id='github' value='{{user.github}}'>
     </div>
     <div>
         <label for='portfolio' class="form-label">Portfolio URL</label>
-        <input class="form-field" type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
+        <input class="form-field profile-input" type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
     </div>
-    <div>
-        <label for='bio' >Add a user bio</label>
-        <textarea class"bio-text" name='bio' id='bio'>{{user.bio}}</textarea>
+    <div class="dropdown">
+        <label for='bio' class="form-label">What is your highest level of education?</label>
+        <div class="form-field">
+            <select class='profile-input' name='education' id='education' value="{{user.education}}">
+                <option value=''>Prefer not to say</option>
+                <option value='Boot Camp Certification'>Boot Camp Certification</option>
+                <option value='High School'>High School</option>
+                <option value='Associate\'s Degree'>Associate's Degree</option>
+                <option value='Bachelor\'s Degree'>Bachelor's Degree</option>
+                <option value='Master\'s Degree'>Master's Degree</option>
+                <option value='Doctoral Degree'>Doctoral Degree</option>
+            </select>
+        </div>
     </div>
-    <div>
-        <p>Where are you located?</p>
-        <label for='city'>City:</label>
-        <input class="city-text" type='text' name='city' id='city' value='{{user.city}}'>
-        <label for="state">State:</label>
-            {{> states-dropdown}}
+    <div class="dropdown">
+        <label for='gender_identity' class="form-label">What is your gender identity?</label>
+        <div class="form-field">
+        {{> genders-dropdown }}
+        </div>
     </div>
+    <div class="dropdown">
+        <label for='sexual_orientation' class="form-label">What is your sexual orientation</label>
+        <div class="form-field">
+        {{> sexuality-dropdown }}
+        </div>
+    </div>  
     <div>
-        <label for='bio'>What is your highest level of education?</label>
-        <select name='education' id='education' value="{{user.education}}">
-            <option value=''>Prefer not to say</option>
-            <option value='Boot Camp Certification'>Boot Camp Certification</option>
-            <option value='High School'>High School</option>
-            <option value='Associate\'s Degree'>Associate's Degree</option>
-            <option value='Bachelor\'s Degree'>Bachelor's Degree</option>
-            <option value='Master\'s Degree'>Master's Degree</option>
-            <option value='Doctoral Degree'>Doctoral Degree</option>
-        </select>
+        <label for='bio' class='form-label'>Add a user bio</label>
+        <textarea class"bio-text profile-input form-field" name='bio' id='bio'>{{user.bio}}</textarea>
     </div>
 
-    <p>What are your skills?</p>
-    <div class="boxes">
-        
-        {{> skills-checkboxes }}
-        
+    <div id="skill-list">
+        <p>What are your skills?</p>
+        <div class="boxes">
+            {{> skills-checkboxes }}
+        </div>
     </div>
 
     <div>
-        <button type='submit'>Update Profile</button>
+        <button class='btn editor-btn' type='submit'>Update</button>
     </div>
 
     <div id="err-msg"></div>
 </form>
 
-<button id='mute-sound-btn'></button>
+<div id='img-editor-container'>
+    <img src="{{user.profile_image}}" width="200px" />
 
-<br /><br />
-Current profile image:<br />
-<img src="{{user.profile_image}}" height="200px" width="200px" />
-
-<form id='image-form' name='image-form' action='/api/images/upload' enctype="multipart/form-data" method='post'>
-  <input type="file" name="image" id="file-input" />
-  <button type="submit">Upload Image</button>
-</form>
+    <form id='image-form' name='image-form' action='/api/images/upload' enctype="multipart/form-data" method='post'>
+        <label for="file-input" class="custom-file-upload"><i class="fas fa-cloud-upload-alt"></i> Choose a file</label>
+        <input type="file" name="image" id="file-input" />
+        <button class='btn long-btn upload-btn' type="submit">Upload Image</button>
+    </form>
+</div>
 
 <p>
-  <a href="/blocklist">Edit my blocklist.</a>
+  <a href="/blocklist"><button class='btn long-btn upload-btn'>Edit My Blocklist</button></a>
 </p>
 
 <form id='deleteUserForm'>
   <label for='username'>To delete your account, enter your username below and click 'Delete Account.' This action cannot be undone.</label>
   <input type="text" name="username" id="username" placeholder='{{user.username}}' />
-  <button type="submit">Delete Account</button>
+  <button type="submit" class='btn long-btn upload-btn'>Delete Account</button>
 </form>
 
 <script>
@@ -83,9 +109,12 @@ Current profile image:<br />
 
     document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
 
+    const soundDemo = new Audio('/sounds/msg_sent.wav')
+
     document.getElementById('mute-sound-btn').addEventListener('click', () => {
       soundEnabled = soundEnabled == 0 ? 1 : 0;
       localStorage.setItem("soundEnabled", soundEnabled);
+      if (!soundEnabled) soundDemo.play();
       document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
     });
 

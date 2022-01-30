@@ -1,25 +1,35 @@
-Search Results:<br />
-<br />
+<div id="chat-wrapper">
+
+<h2>Search Results</h2>
+
 {{#if users}}
+<div class="results">
 {{#each users}}
-  <div>
-    {{#if this.profile_image}}<img src="{{this.profile_image}}" width="100px" height="100px" />{{/if}}
-    <p>Username: {{this.username}}</p>
-    {{#if this.github}}<p>Github: {{this.github}}</p>{{/if}}
-    {{#if this.city}}<p>City: {{this.city}}</p>{{/if}}
-    {{#if this.state}}<p>State: {{this.state}}</p>{{/if}}
-    {{#if this.skills}}
-      <p>Skills: 
-        {{#each this.skills}}
-        <span>{{this.skill_name}}</span>
-        {{/each}}
-      </p>
+  <div class="result">
+    <a href="/profile/{{this.id}}">
+    {{#if this.profile_image}}
+    <div class="result-img" style="background-image: url('{{this.profile_image}}')"></div>
+    {{else}}
+    <div class="result-img" style="background-image: url('https://picsum.photos/200')"></div>
     {{/if}}
-    <p><a href="/chat/{{this.id}}">Start a conversation...</a></p>
-    <p><a href="/profile/{{this.id}}">Visit their profile...</a></p>
+    </a>
+
+    <div class="result-info">
+      <p><a href="/profile/{{this.id}}">{{this.username}}</a></p>
+
+      {{#if this.github}}<p><a href="https://github.com/{{this.github}}" target="new">https://github.com/{{this.github}}</a></p>{{/if}}
+
+      <p>{{locationFormatter this.city this.state}}</p>
+
+      <p>{{interestFormatter this.sexual_orientation this.gender_identity}}</p>
+
+      <p><a href="/chat/{{this.id}}">Start a conversation...</a></p>
+    </div>
   </div>
-  <br />
 {{/each}}
+</div>
 {{else}}
 <p>Sorry, no users found! <a href="/search">Try another search.</a></p>
 {{/if}}
+
+</div>
