@@ -101,6 +101,7 @@ nav a {
   outline: none;
   cursor: pointer;
   font-family: "Varela Round";
+  margin-bottom: 200px;
 }
 
 .header-one {
@@ -110,12 +111,18 @@ nav a {
   position:relative; 
   top: 0;
   left: 0; 
+  
 	
   /* Preserve aspect ratio */
   min-width: 100%;
   min-height: 100%;
   background-size: cover;
   background-position: center;
+}
+
+.about {
+  color:white;
+
 }
 
 .header-two {
@@ -141,6 +148,16 @@ nav a {
   color: white;
   font-size: xx-large;
 }
+
+/* About Section Styles */
+.divider {
+  
+  padding:0.2em;
+  border-left:none;
+  border-right:none;
+  border-top:2px solid #fd287c;
+  border-bottom:2px solid #fd287c;
+ }
 
 /* Log In Styles */
 .log-wrapper {
@@ -290,7 +307,7 @@ font-family: "Varela Round";
 
 
 
-/* Messenger Styles */
+/* Messenger Styles
 .messenger-container {
   display: none;
   height: 100vh;
@@ -338,7 +355,7 @@ font-family: "Varela Round";
 
 input {
   width: 100%;
-}
+} */
 
 .send-btn {
   float: right;
@@ -498,18 +515,6 @@ input[type="checkbox"]:checked + label:before {
 .img-cell img {
   border-radius: 10px;
 }
-
-/* @media screen and (max-width: 768px) {
-  #profile-wrapper {
-      grid-template-columns: 1fr 1fr;
-      
-   }
-
-  #cell1, #cell2 {
-    grid-column: auto;
-    
-  }
-} */
 
 
 /* Footer styles*/
