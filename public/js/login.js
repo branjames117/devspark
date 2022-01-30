@@ -10,18 +10,19 @@ async function loginFormHandler(event) {
   if (!login) {
     document.querySelector('#login').style.borderColor = 'red';
     errMessageEl.innerHTML +=
-      'Must enter either your username or your email address.<br />';
+      '<li>Must enter either your username or your email address.</li>';
   }
 
   if (!password) {
     document.querySelector('#password').style.borderColor = 'red';
-    errMessageEl.innerHTML += 'Password field must not be blank.<br />';
+    errMessageEl.innerHTML += '<li>Password field must not be blank.</li>';
     return;
   }
 
   if (password.length < 8) {
     document.querySelector('#password').style.borderColor = 'red';
-    errMessageEl.innerHTML += 'Password must be 8 characters or longer.<br />';
+    errMessageEl.innerHTML +=
+      '<li>Password must be 8 characters or longer.</li>';
     return;
   }
 
@@ -40,7 +41,7 @@ async function loginFormHandler(event) {
       document.location.replace(`/chat/`);
     } else {
       errMessageEl.innerHTML =
-        'Something went wrong. Are you sure the username and password are correct?<br />';
+        '<li>Something went wrong. Are you sure the username and password are correct?</li>';
     }
   }
 }
@@ -51,12 +52,12 @@ document
 
 const errMessageEl = document.querySelector('.error-text');
 
-document.querySelector('#login').addEventListener('input', () => {
-  document.querySelector('#login').style.borderColor = '#ccc';
-  errMessageEl.textContent = '';
+document.getElementById('login').addEventListener('input', () => {
+  document.getElementById('login').style.borderColor = '#ccc';
+  errMessageEl.innerHTML = '';
 });
 
 document.querySelector('#password').addEventListener('input', () => {
   document.querySelector('#password').style.borderColor = '#ccc';
-  errMessageEl.textContent = '';
+  errMessageEl.innerHTML = '';
 });

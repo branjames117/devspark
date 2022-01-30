@@ -1,4 +1,4 @@
-<div id="edit-wrapper">
+<div id="wrapper">
     <div id='edit-h2'>
         <h2>{{username}}'s Profile Editor</h2>
         <button class='btn long-btn' id='mute-sound-btn'></button>
@@ -79,7 +79,7 @@
     <div>
         <button class='btn editor-btn' type='submit'>Update</button>
     </div>
-    <div id="err-msg"></div>
+    <ul class='error-text' id="err-msg"></ul>
 </form>
 
 <div id='img-editor-container'>
@@ -95,9 +95,9 @@
 <p>
   <a href="/blocklist"><button class='btn long-btn upload-btn'>Edit My Blocklist</button></a>
 </p>
-<form id='deleteUserForm'>
+<form autocomplete="none" id='deleteUserForm'>
   <label for='username'>To delete your account, enter your username below and click 'Delete Account.' This action cannot be undone.</label>
-  <input type="text" name="username" id="username" placeholder='{{user.username}}' />
+  <input autocomplete="off" class="form-field" type="text" name="username" id="username" placeholder='{{user.username}}' />
   <button type="submit" class='btn long-btn upload-btn'>Delete Account</button>
 </form>
 <script>
@@ -125,32 +125,75 @@
     // update profile form handler
     document.getElementById('editorForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const userInfo = {};
+
         const [...profileInputs] = document.getElementsByClassName('profile-input');
         profileInputs.forEach(input => {
             userInfo[input.name] = input.value;
         })
+
         const [...skillInputs] = document.getElementsByClassName('skill-input');
         skillInputs.forEach(skill => {
             if (skill.checked) userInfo[skill.name] = true;
         })
-        if (userInfo.github && userInfo.github.includes('github.com')) {
+
+        if (userInfo.first_name && userInfo.first_name.length > 20) {
             document.getElementById('err-msg').innerHTML +=
-            '<p>Your Github username should only be your username, not the URL to your GitHub profile.</p><br />';
+            '<li>Your first name cannot be longer than 20 characters.</li>';
             return;
         }
+
+        if (userInfo.last_name && userInfo.last_name.length > 20) {
+            document.getElementById('err-msg').innerHTML +=
+            '<li>Your last name cannot be longer than 20 characters.</li>';
+            return;
+        }
+
+        if (userInfo.city && userInfo.city.length > 20) {
+            document.getElementById('err-msg').innerHTML +=
+            '<li>Your city name cannot be longer than 20 characters. Try using abbreviations.</li>';
+            return;
+        }
+
+        if (userInfo.github && userInfo.github.includes('github.com')) {
+            document.getElementById('err-msg').innerHTML +=
+            '<li>Your Github username should only be your username, not the URL to your GitHub profile.</li>';
+            return;
+        }
+    
+        if (userInfo.github && userInfo.github.length > 20) {
+            document.getElementById('err-msg').innerHTML +=
+            '<li>Your Github username should not be longer than 20 characters.</li>';
+            return;
+        }
+
+        if (userInfo.portfolio && userInfo.portfolio.length > 50) {
+            document.getElementById('err-msg').innerHTML +=
+            '<li>Your portfolio URL should not be longer than 50 characters.</li>';
+            return;
+        }
+
+        if (userInfo.bio && userInfo.bio.length > 2000) {
+            document.getElementById('err-msg').innerHTML +=
+            '<li>Your bio should not be longer than 2,000 characters.</li>';
+            return;
+        }
+
         const response = await fetch('/api/users/profile', {
             method: 'post',
             body: JSON.stringify(userInfo),
             headers: { 'Content-Type': 'application/json' },
         });
+
         if (response.ok) {
-        document.location.replace(`/profile/editor/`);
+            document.location.replace(`/profile/{{user.id}}/`);
         } else {
-        document.getElementById('err-msg').innerHTML =
-            'Something went wrong. Are you sure the username and password are correct?<br />';
+            document.getElementById('err-msg').innerHTML =
+                '<li>Something went wrong. Are you sure the username and password are correct?</li>';
         }
     });
+    
     // delete user form handler
     document.getElementById('deleteUserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -164,11 +207,11 @@
             document.location.replace(`/`);
             } else {
             document.getElementById('err-msg').innerHTML =
-                'Something went wrong. Please try again later.<br />';
+                '<li>Something went wrong. Please try again later.</li>';
             }
         } else {
             document.getElementById('err-msg').innerHTML =
-                `If you're trying to delete your account, please enter your username exactly as it appears in the input field.'.<br />`;
+                `<li>If you're trying to delete your account, please enter your username exactly as it appears in the input field.'</li>`;
         }
     });
 </script>

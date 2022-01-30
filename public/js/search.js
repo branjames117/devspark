@@ -12,8 +12,6 @@ async function searchFormHandler(event) {
     if (document.getElementById('skill' + i).checked) skills += i + ';';
   }
 
-  console.log(skills);
-
   let queryStr = '?';
   if (city) {
     queryStr += `city=${city}&`;

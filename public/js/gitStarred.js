@@ -3,7 +3,7 @@ async function githubStarred() {
   // user will be userID for github
   const user = document.querySelector('#githubusername').textContent.trim();
   const repoContainerEl = document.querySelector('#repoContainerEl');
-  console.log(user);
+
   const apiUrl = `https://api.github.com/users/${user}/starred?`;
   // grab users public github repo data
   const response = await fetch(apiUrl);

@@ -319,6 +319,24 @@ router.post('/', async (req, res) => {
     });
   }
 
+  if (req.body.username.length > 14) {
+    return res.status(500).json({
+      message: 'Username cannot be longer than 14 characters!',
+    });
+  }
+
+  if (req.body.email.length > 40) {
+    return res.status(500).json({
+      message: 'Email address cannot be longer than 40 characters!',
+    });
+  }
+
+  if (req.body.password.length > 40) {
+    return res.status(500).json({
+      message: 'Password cannot be longer than 40 characters!',
+    });
+  }
+
   try {
     // check if user already exists with either that email or that username
     const userExists = await User.findOne({

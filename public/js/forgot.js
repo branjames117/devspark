@@ -1,6 +1,5 @@
 async function forgotPasswordFormHandler(e) {
   e.preventDefault();
-  console.log('form submitted');
 
   const email = document.querySelector('#email').value.trim();
   // user validation

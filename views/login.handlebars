@@ -1,28 +1,23 @@
-
-      {{!-- new form --}}
 <div class="log-wrapper">
   <div class="title">
     Welcome Back!
   </div>
-  <form class="login-form">
+  <form autocomplete="none" class="login-form">
     <div class="field">
-    
-    <input type="text" id="login" placeholder="Enter Your Username or Email">
+      <input autocomplete="off" type="text" id="login" placeholder="Enter Your Username or Email">
     </div>
     <div class="field">
-    
-    <input type="password" id="password" placeholder="Enter Your Password">
+      <input type="password" id="password" placeholder="Enter Your Password">
     </div>
-
     <div class="field">
-          <div class="forgot-link">
-      <a href='/forgot'>Forgot Password?</a>
-    </div>
+      <div class="forgot-link">
+        <a href='/forgot'>Forgot Password?</a>
+      </div>
       <button class="btn log-btn" type='submit'>Log In!</button>
     </div>
-    <p class='error-text'></p>
+    <ul class='error-text'></ul>
     <small class="sign-link">
-Not a member? <a href='/signup'>Sign up now</a>
+      Not a member? <a href='/signup'>Sign up now</a>
     </small>
   </form>
 </div>

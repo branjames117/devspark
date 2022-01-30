@@ -20,11 +20,6 @@ function deSpark() {
 
   <div class="profile">
 <h2>{{user.username}}</h2>
-{{#if notMatched }}
-  <p><a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'>Light a spark...</a></p>
-  {{else}}
-  <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark...</a></p>
-{{/if}}
 
 {{#if user.city}}<p><i class="fas fa-globe"></i> {{user.city}}</p>{{/if}} <span>{{#if user.state}}<p>,{{user.state}}</p>{{/if}}</span>
 {{#if user.github}}<p><i class="fab fa-github"></i> <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
@@ -57,6 +52,11 @@ function deSpark() {
 <p><a href="/profile/editor/">Edit your profile</a></p>
 <br />
 {{else}}
+{{#if notMatched }}
+  <p><a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'>Light a spark...</a></p>
+  {{else}}
+  <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark...</a></p>
+{{/if}}
 <br />
 <p><a href="/chat/{{user.id}}">Chat with this user.</a></p>
 <br />

@@ -124,7 +124,6 @@ User.init(
       },
       // before updating user in db, hash the password
       async beforeUpdate(updatedUserData) {
-        console.log('hashing password');
         updatedUserData.password = await bcrypt.hash(
           updatedUserData.password,
           10

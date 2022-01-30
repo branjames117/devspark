@@ -141,12 +141,20 @@ io.on('connection', (socket) => {
       msg.createdAt = new Date();
 
       // ... then create the messages in the database
-      await Message.create(msg);
+      try {
+        await Message.create(msg);
+      } catch (error) {
+        console.log(error);
+      }
 
       msg.sender_id = idToMatch;
       msg.recipient_id = id;
 
-      await Message.create(msg);
+      try {
+        await Message.create(msg);
+      } catch (error) {
+        console.log(error);
+      }
 
       // send a notification to each user
       const myCount = await notificationCount(id);
@@ -280,7 +288,11 @@ io.on('connection', (socket) => {
       msg.createdAt = new Date();
 
       // ... then create the message in the database
-      await Message.create(msg);
+      try {
+        await Message.create(msg);
+      } catch (error) {
+        console.log(error);
+      }
 
       // ... then, emit the message to the clientside chatroom
       io.to(room).emit('newmsg', msg);
@@ -309,7 +321,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: true }).then(async () => {
+sequelize.sync({ force: false }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database

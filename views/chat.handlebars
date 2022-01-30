@@ -19,7 +19,11 @@
     const soundEnabled = localStorage.getItem("soundEnabled");
     if (soundEnabled == 1) msgSentSound.play();
     var msg = document.getElementById('message').value;
-    if(msg.trim()) { 
+    if(msg.trim()) {
+      if (msg.trim().length > 255) {
+        document.getElementById('error-container').innerHTML = 'Message cannot be longer than 255 characters.';
+        return;
+      }
       socket.emit('msg', { body: msg, sender_id: {{ senderId }}, recipient_id: {{ recipientId }} });
       document.getElementById('message').setSelectionRange(0,0);
       document.getElementById('message').value = '';
@@ -47,7 +51,7 @@
   });
 </script>
 
-<div id="chat-wrapper">
+<div id="wrapper">
 
   <h2>Conversation with <a href="/profile/{{recipientId}}">{{recipient_name}}</a></h2>
   
@@ -69,6 +73,10 @@
     document.getElementById('textbox-and-btn').addEventListener('submit', (e) => {
       e.preventDefault();
       sendMessage();
+    });
+
+    document.getElementById('message').addEventListener('input', (e) => {
+      document.getElementById('error-container').innerHTML = '';
     });
 
     document.getElementById('message').addEventListener('keyup', (e) => {

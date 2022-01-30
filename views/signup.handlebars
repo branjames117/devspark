@@ -1,28 +1,25 @@
-{{!-- new form --}}
-<div class="sign-wrapper">
+<div class="log-wrapper">
   <div class="title">
     Sign up to find your Spark!
   </div>
-  <form class="signup-form">
+  <form autocomplete="none" id="signup-form" class="login-form">
     <div class="field">
-    <input type="address" id="email-signup" placeholder="What is Your Email Address?">
+    <input autocomplete="off" type="email" id="email" placeholder="What is Your Email Address?">
     </div>
     <div class="field">
-    <input type="text" id="username-login" placeholder="Create a Username!">
+    <input autocomplete="off" type="text" id="username" placeholder="Create a Username!">
     </div>
      <div class="field">
-    <input type="text" id="password-signup" placeholder="Create a Unique Password">
+    <input type="password" id="password" placeholder="Create a Unique Password">
     </div>
-     <div class="field">
-    <input type="text" id="confirm-signup" placeholder="Please Confirm Your Password">
+    <div class="field">
+    <input type="password" id="confirm" placeholder="Please Confirm Your Password">
     </div>
-    <p class="error-text"></p>
-    <button class="btn sign-btn" type='submit'>Sign up!</button>
+      <button class="btn sign-btn" type='submit'>Sign up!</button>
+    <ul class="error-text"></ul>
     <small class="log-link">
 Already have an account? <a href='/login'>Log in Here</a>
     </small>
-    </div>
-
   </form>
 </div>
 

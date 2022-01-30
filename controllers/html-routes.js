@@ -245,7 +245,6 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
   if (state) optionsArr.push({ state });
   if (gender_identity) optionsArr.push({ gender_identity });
   if (sexual_orientation) optionsArr.push({ sexual_orientation });
-  console.log(optionsArr);
 
   try {
     // grab the current user, we need their blocklist
@@ -313,7 +312,7 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
 
       // the user transformations continue...
       const penUltimateUsers =
-        resultingUsers.length === 0 ? plainUsers : resultingUsers;
+        resultingUsers.length === 0 ? resultingUsers : plainUsers;
 
       // and one more for the road...
       // filter out both the searching user and any users the searching user has already blocked
