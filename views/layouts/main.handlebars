@@ -36,7 +36,7 @@
     {{#if loggedIn}}
       <header class="header-two">
         <nav>
-          <img class="logo" src="../img/Asset 5.svg" alt="">
+          <img class="logo" src="/img/Asset 5.svg" alt="">
           {{!--hamburger bar for mobile --}}
         <button class="hamburger" id="hamburger">
           <i class="fas fa-bars"></i>
@@ -53,13 +53,10 @@
         <nav>
           <img class="logo" src="../img/Asset 5.svg" alt="">
           <ul>
-            
-            <button class="log-btn" href="/login">Log In</button>
+            <a href="/login"><button class="log-btn">Log In</button></a>
+          </ul>
+        </nav>
     {{/if}}
-    </nav>
-      
-
-
       <main>
         {{{body}}}
       </main>
@@ -72,10 +69,10 @@
 
     {{#if loggedIn}}
       <script src='/js/logout.js'></script>
+      <script src="/js/ham.js"></script>
     {{/if}}
 
 
-<script src="/js/ham.js"></script>
   </body>
 
 </html>

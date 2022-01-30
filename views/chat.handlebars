@@ -47,7 +47,7 @@
 </script>
 
 <div id='chat-container'>
-  <h2>Conversation with {{recipient_name}}</h2>
+  <h2>Conversation with <a href="/profile/{{recipientId}}">{{recipient_name}}</a></h2>
   <div id='message-container'></div>
 
   <div id="chat-textbox-container">
@@ -57,22 +57,10 @@
       <button type='submit' name='button' id="chat-submit-btn">>>></button>
     </form>
   </div>
-  <button id='mute-sound-btn'></button>
 </div>
 
 
 <script>
-  console.log(localStorage.getItem("soundEnabled"));
-    let soundEnabled = localStorage.getItem("soundEnabled") || 0;
-
-    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
-
-    document.getElementById('mute-sound-btn').addEventListener('click', () => {
-      soundEnabled = soundEnabled == 0 ? 1 : 0;
-      localStorage.setItem("soundEnabled", soundEnabled);
-      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'enable sound' : 'disable sound';
-    });
-
     document.getElementById('textbox-and-btn').addEventListener('submit', (e) => {
       e.preventDefault();
       sendMessage();
