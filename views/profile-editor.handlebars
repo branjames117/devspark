@@ -38,8 +38,9 @@
         <label for='portfolio' class="form-label">Portfolio URL</label>
         <input class="form-field profile-input" type='url' name='portfolio' id='portfolio' value='{{user.portfolio}}'>
     </div>
+
     <div class="dropdown">
-        <label for='bio' class="form-label">What is your highest level of education?</label>
+        <label for='education' class="form-label">What is your highest level of education?</label>
         <div class="form-field">
             <select class='profile-input' name='education' id='education' value="{{user.education}}">
                 <option value=''>Prefer not to say</option>
@@ -75,11 +76,9 @@
             {{> skills-checkboxes }}
         </div>
     </div>
-
     <div>
         <button class='btn editor-btn' type='submit'>Update</button>
     </div>
-
     <div id="err-msg"></div>
 </form>
 
@@ -96,17 +95,14 @@
 <p>
   <a href="/blocklist"><button class='btn long-btn upload-btn'>Edit My Blocklist</button></a>
 </p>
-
 <form id='deleteUserForm'>
   <label for='username'>To delete your account, enter your username below and click 'Delete Account.' This action cannot be undone.</label>
   <input type="text" name="username" id="username" placeholder='{{user.username}}' />
   <button type="submit" class='btn long-btn upload-btn'>Delete Account</button>
 </form>
-
 <script>
     // plug the sound enable/disable button into local storage
     let soundEnabled = localStorage.getItem("soundEnabled") || 0;
-
     document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
 
     const soundDemo = new Audio('/sounds/msg_sent.wav')
@@ -117,47 +113,37 @@
       if (!soundEnabled) soundDemo.play();
       document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
     });
-
     // fill out user's previous information - a tricky feat with the dropdown lists
     const userPrevGender = '{{user.gender_identity}}';
     const userPrevSexuality = '{{user.sexual_orientation}}';
     const userPrevState = '{{user.state}}';
     const userPrevEducation = '{{user.education}}';
-
     if (userPrevGender) document.querySelector(`option[value='${userPrevGender}']`).selected = true;
     if (userPrevSexuality) document.querySelector(`option[value='${userPrevSexuality}']`).selected = true;
     if (userPrevState) document.querySelector(`option[value='${userPrevState}']`).selected = true;
     if (userPrevEducation) document.querySelector(`option[value='${userPrevEducation}']`).selected = true;
-
     // update profile form handler
     document.getElementById('editorForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const userInfo = {};
-
         const [...profileInputs] = document.getElementsByClassName('profile-input');
-
         profileInputs.forEach(input => {
             userInfo[input.name] = input.value;
         })
-
         const [...skillInputs] = document.getElementsByClassName('skill-input');
-
         skillInputs.forEach(skill => {
             if (skill.checked) userInfo[skill.name] = true;
         })
-
         if (userInfo.github && userInfo.github.includes('github.com')) {
             document.getElementById('err-msg').innerHTML +=
             '<p>Your Github username should only be your username, not the URL to your GitHub profile.</p><br />';
             return;
         }
-
         const response = await fetch('/api/users/profile', {
             method: 'post',
             body: JSON.stringify(userInfo),
             headers: { 'Content-Type': 'application/json' },
         });
-
         if (response.ok) {
         document.location.replace(`/profile/editor/`);
         } else {
@@ -165,19 +151,15 @@
             'Something went wrong. Are you sure the username and password are correct?<br />';
         }
     });
-
     // delete user form handler
     document.getElementById('deleteUserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const deleteConfirmed = document.getElementById('username').value === '{{user.username}}';
-
         if (deleteConfirmed) {
             const response = await fetch(`/api/users/{{user.id}}`, {
                 method: 'delete',
                 headers: { 'Content-Type': 'application/json' },
             });
-
             if (response.ok) {
             document.location.replace(`/`);
             } else {

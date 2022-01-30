@@ -126,7 +126,6 @@ router.get('/profile/:id', withAuth, async (req, res) => {
         },
       ],
     });
-
     if (!user) {
       return res.status(404).json({ message: 'User with this id not found! ' });
     }
@@ -142,7 +141,6 @@ router.get('/profile/:id', withAuth, async (req, res) => {
 
     const notMatched = matched_users.indexOf(req.params.id) === -1;
 
-    console.log(user);
     res.render('profile', {
       username: req.session.username,
       loggedIn: req.session.loggedIn,

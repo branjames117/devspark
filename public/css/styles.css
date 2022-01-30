@@ -691,7 +691,60 @@ input[type='checkbox']:checked + label:before {
 
 /* Profile Styles */
 #profile-wrapper {
-  display: grid;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 800px;
+  height: 800px;
+  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding-top: 20px;
+  margin: auto;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+  height: fit-content;
+
+}
+
+#profile-wrapper a {
+  text-decoration: none;
+  color: #ff7654;
+}
+
+.profile {
+  text-align: center;
+  /* width: 88%;
+  height: 55vh; */
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center;
+  align-items: center; */
+  position: relative;
+  border-radius: 2rem;
+}
+
+.selfie-container {
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.selfie {
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  justify-content: space-around;
+  border: 5px solid #ff7654;
+  padding: 10px;
+  
+
+}
+  /* display: grid;
   grid-template-columns: 2fr 0.5fr;
   gap: 0px 0px;
   grid-template-areas: 'cell1 cell2';
@@ -703,19 +756,14 @@ input[type='checkbox']:checked + label:before {
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 20px;
-  margin-bottom: 70px;
-}
+  margin-bottom: 70px;*/
 
-#profile-wrapper a {
-  text-decoration: none;
-  color: #ff7654;
-}
 
-.grid-cell {
+/* .grid-cell {
   /* padding goes here */
 }
 
-#cell1 {
+/* #cell1 {
   grid-area: cell1;
   padding-right: 20px;
   padding-left: 10px;
@@ -727,7 +775,7 @@ input[type='checkbox']:checked + label:before {
 
 .img-cell img {
   border-radius: 10px;
-}
+} */ */
 
 /* Chat styles */
 #chat-container {
