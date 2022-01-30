@@ -13,21 +13,31 @@
       return dateStr;
     }
 
+  function generateActiveChat(chat) {
+    return `
+        <div class="active-chat" id="chat-${chat.sender || chat.sender_id}">
+          <a class="active-chat-info" href='/chat/${chat.sender || chat.sender_id}'>
+            <span class="sender-id">${chat.username || chat.user.username}</span>
+            <span class="message-body">${chat.message || chat.body}</span>
+            <span class="read-status">${chat.read ? '' : 'Unread'}</span>
+            <span class="timestamp">${convertDate(chat.createdAt)}</span>
+          </a>
+          <div class="active-chat-btns">
+            <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
+              <input type="hidden" name="deletedID" id="deleted-id" value=${chat.sender} />
+              <button class="btn" type="submit">Delete</button>
+            </form>
+            <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
+              <input type="hidden" name="blockedID" id="blocked-id" value=${chat.sender} />
+              <button class="btn" type="submit">Block</button>
+            </form>
+          </div>
+        </div>`;
+  }
+
   socket.on('populate-list', data => {
     data.forEach(chat => {
-      document.getElementById('active-chats-container').innerHTML += `<div id="chat-${chat.sender}">
-    <a class="active-chat-btn" href='/chat/${chat.sender}'><span class="sender-id">${chat.username}</span><span class="message-body">${chat.message}</span><span class="read-status">${chat.read ? 'read' : 'unread'}</span>${convertDate(chat.createdAt)}</a>
-    <div>
-      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
-      <input type="hidden" name="deletedID" id="deleted-id" value=${chat.sender} />
-      <button type="submit">Delete Conversation</button>
-      </form>
-      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
-      <input type="hidden" name="blockedID" id="blocked-id" value=${chat.sender} />
-      <button type="submit">Block User</button>
-      </form>
-    </div>
-  </div>`;
+      document.getElementById('active-chats-container').innerHTML += generateActiveChat(chat);
     })
     if (!document.getElementById('active-chats-container').firstChild) { 
       document.getElementById('no-chats-notification').textContent = 'You have no active chats at this time.';
@@ -45,21 +55,17 @@
 
     const newDiv = document.createElement('div');
     newDiv.id = 'chat-' + data.sender_id;
-    newDiv.innerHTML = `<a class="active-chat-btn" href='/chat/${data.sender_id}'><span class="sender-id">${data.user.username}</span><span class="message-body">${data.body}</span><span class="read-status">${data.read ? 'read' : 'unread'}</span>${data.createdAt}</a>
-    <div>
-      <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
-      <input type="hidden" name="deletedID" id="deleted-id" value=${data.sender_id} />
-      <button type="submit">Delete Conversation</button>
-      </form>
-      <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
-      <input type="hidden" name="blockedID" id="blocked-id" value=${data.sender_id} />
-      <button type="submit">Block User</button>
-      </form>
-    </div>`;
+    newDiv.innerHTML = generateActiveChat(data);
 
     document.getElementById('active-chats-container').prepend(newDiv);
   })
 </script>
 
+<div id="search-wrapper">
+  <div id="cell1" class="grid-cell">
+
 <p id='no-chats-notification'></p>
 <div id="active-chats-container"></div>
+
+  </div>
+</div>
