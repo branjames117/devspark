@@ -29,7 +29,7 @@
 
   function renderMessage(message) {
     document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> <span class="msg-timestamp">(${convertDate(message.createdAt)})</span>
-    ${message.body} </div>`;
+    ${message.body.replaceAll(':)', '🙂').replaceAll(':(', '🙁').replaceAll(':D', '😀').replaceAll('8)', '😎').replaceAll(":'(", '😢').replaceAll('>:(', '😠')} </div>`;
   }
   
   socket.on('newmsg', function(data) {
