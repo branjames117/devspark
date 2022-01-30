@@ -28,7 +28,8 @@
   }
 
   function renderMessage(message) {
-    document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> (${convertDate(message.createdAt)})<br /> ${message.body} </div>`;
+    document.getElementById('message-container').innerHTML += `<div class='${message.sender_id === {{senderId}} ? 'sentMsg' : 'recdMsg'}'><b>${message.user.username}</b> <span class="msg-timestamp">(${convertDate(message.createdAt)})</span>
+    ${message.body} </div>`;
   }
   
   socket.on('newmsg', function(data) {
@@ -46,17 +47,21 @@
   });
 </script>
 
-<div id='chat-container'>
+<div id="chat-wrapper">
+
   <h2>Conversation with <a href="/profile/{{recipientId}}">{{recipient_name}}</a></h2>
+  
   <div id='message-container'></div>
 
   <div id="chat-textbox-container">
     <div id='error-container'></div>
     <form id="textbox-and-btn">
       <textarea id='message'></textarea>
-      <button type='submit' name='button' id="chat-submit-btn">>>></button>
+      <button type='submit' name='button' id="chat-submit-btn"><i class="fas fa-paper-plane"></i></button>
     </form>
   </div>
+</div>
+
 </div>
 
 
