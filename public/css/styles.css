@@ -569,8 +569,12 @@ input[type='checkbox']:checked + label:before {
   position: relative;
   overflow: hidden;
   border-radius: 20px;
-  padding-top: 120px;
+  padding-top: 20px;
   margin: auto;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+  height: fit-content;
+
 }
 
 #profile-wrapper a {
@@ -593,6 +597,7 @@ input[type='checkbox']:checked + label:before {
 .selfie-container {
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .selfie {
