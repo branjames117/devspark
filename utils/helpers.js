@@ -21,6 +21,7 @@ function locationFormatter(city, state) {
     return;
   }
 }
+
 function interestFormatter(sexual_orientation, gender_identity) {
   if (sexual_orientation && gender_identity) {
     return `${sexual_orientation} ${gender_identity}`;
@@ -123,7 +124,6 @@ async function chatList(userID) {
 
   return newActiveChatMessages;
 }
-
 
 module.exports = {
   notificationCount,

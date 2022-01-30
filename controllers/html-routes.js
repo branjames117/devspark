@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { Op } = require('sequelize');
 const { sequelize } = require('../config/connection');
-const { User, Skill } = require('../models');
+const { User, Skill, UserSkill } = require('../models');
 const withAuth = require('../utils/auth');
 
 // GET / (root route - will eventually be the landing page)
@@ -129,18 +129,18 @@ router.get('/profile/:id', withAuth, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User with this id not found! ' });
     }
+
     const plainUser = user.get({ plain: true });
+
     // check if we've already 'sparked' the user whose profile we're visiting
     const { matched_users } = await User.findOne({
       where: { id: req.session.user_id },
       attributes: ['matched_users'],
       raw: true,
     });
-    console.log(plainUser)
-    console.log(plainUser.skills)
 
     const notMatched = matched_users.indexOf(req.params.id) === -1;
-    console.log(user);
+
     res.render('profile', {
       username: req.session.username,
       loggedIn: req.session.loggedIn,

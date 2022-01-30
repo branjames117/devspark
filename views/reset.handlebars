@@ -1,15 +1,17 @@
-
-<div>
-    <h1>Reset password for {{ email }} </h1>
+<div class="log-wrapper">
+  <div class="title">
+    Reset Your Password
+  </div>
     <form action='/api/users/reset/{{token}}' class='reset-password' method='POST'>
-        <div>
-            <label for='password'>Password</label>
+        <div class='field'>
             <input type='password' name='password' id='password' placeholder="New Password">
-            <br>
-            <label for='confirm'>Confirm Password</label>
+        </div>
+        <div class='field'>
             <input type='password' id='confirm-password' name='confirm' placeholder='Confirm Password'>
-            <br>
-            <input type='submit' value='reset password'>
+        </div>
+        <p class='error-text'></p>
+        <div>
+            <button class="btn long-btn" type='submit'>Reset Password</button>
         </div>
     </form>
 </div>

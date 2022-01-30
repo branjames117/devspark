@@ -12,7 +12,7 @@ function deSpark() {
 
 <div id="profile-wrapper">
 
-  <div class="selfie-container">
+ <div class="selfie-container">
 {{#if user.profile_image}}
 <img class="selfie" src='{{user.profile_image}}' />
 {{/if}}
@@ -25,7 +25,6 @@ function deSpark() {
   {{else}}
   <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark...</a></p>
 {{/if}}
-
 
 {{#if user.city}}<p><i class="fas fa-globe"></i> {{user.city}}</p>{{/if}} <span>{{#if user.state}}<p>,{{user.state}}</p>{{/if}}</span>
 {{#if user.github}}<p><i class="fab fa-github"></i> <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
