@@ -60,19 +60,10 @@ function deSpark() {
 </div>
 
 
-{{!-- Sorry but no --}}
 {{#if user.github}}
-<div id="container">
-    <div>
-        <a href="https://github.com/{{user.github}}">
-        <span id="githubusername">
-        {{user.github}}
-        </span>
-        </a>
-        <div id="repoContainerEl">
-
-        </div>
-    </div>
+<div id="github-container" class="github">
+  <h3>My Starred Repos</h3>
+  <div id="repoContainerEl"></div>
 </div>
 <script src="/js/gitStarred.js"></script>
 {{/if}}

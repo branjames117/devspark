@@ -1,7 +1,7 @@
 // function to asynchronously find all users github repos with issues and display on homepage
 async function githubStarred() {
   // user will be userID for github
-  const user = document.querySelector('#githubusername').textContent.trim();
+  const user = document.getElementById('github').textContent.trim();
   const repoContainerEl = document.querySelector('#repoContainerEl');
 
   const apiUrl = `https://api.github.com/users/${user}/starred?`;
@@ -15,8 +15,6 @@ async function githubStarred() {
         const repoName = repos[i].name;
 
         var repoEl = document.createElement('a');
-        repoEl.classList =
-          'list-item flex-row justify-space-between align-center';
         repoEl.setAttribute(
           'href',
           'https://github.com/' + user + '/' + repoName
@@ -28,7 +26,6 @@ async function githubStarred() {
         repoEl.appendChild(titleEl);
 
         var statusEl = document.createElement('span');
-        statusEl.classList = 'flex-row align-center';
 
         statusEl.innerHTML =
           "<p class='fas fa-t[mes status-icon icon-danger'>Number of Open Issues: " +
