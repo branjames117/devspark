@@ -67,7 +67,7 @@
     </div>  
     <div>
         <label for='bio' class='form-label'>Add a user bio</label>
-        <textarea class"bio-text profile-input form-field" name='bio' id='bio'>{{user.bio}}</textarea>
+        <textarea class"profile-input bio-text form-field" name='bio' id='bio'>{{user.bio}}</textarea>
     </div>
 
     <div id="skill-list">
@@ -133,6 +133,9 @@
             userInfo[input.name] = input.value;
         })
 
+        if (bio) userInfo.bio = bio.value;
+        
+
         const [...skillInputs] = document.getElementsByClassName('skill-input');
         skillInputs.forEach(skill => {
             if (skill.checked) userInfo[skill.name] = true;
@@ -190,7 +193,7 @@
             document.location.replace(`/profile/{{user.id}}/`);
         } else {
             document.getElementById('err-msg').innerHTML =
-                '<li>Something went wrong. Are you sure the username and password are correct?</li>';
+                '<li>Something went wrong. Are you sure the //username and password are correct?</li>';
         }
     });
     

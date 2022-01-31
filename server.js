@@ -321,7 +321,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: true }).then(async () => {
+sequelize.sync({ force: false }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database
