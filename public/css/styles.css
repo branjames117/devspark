@@ -21,8 +21,9 @@ body::-webkit-scrollbar-thumb {
   background-color: #fd287c;
 }
 
+
 a {
-  color: #8f0101;
+  color: #fd287c;
   text-decoration: none;
 }
 
@@ -750,7 +751,7 @@ input[type='checkbox']:checked + label:before {
 }
 
 .sender-id {
-  color: #8f0101;
+  color: #ff7654;
   font-size: 1.4rem;
   margin-bottom: 7px;
 }
@@ -800,16 +801,20 @@ input[type='checkbox']:checked + label:before {
   overflow: hidden;
 }
 
+#chat-textbox-container textarea {
+  resize: none;
+}
+
 .msg-timestamp {
   font-size: 0.9rem;
 }
 
 .sentMsg {
-  background-color: rgb(223, 115, 101);
+  background-image: linear-gradient(45deg, #fd287c, #ff7654);
 }
 
 .recdMsg {
-  background-color: rgb(192, 128, 113);
+  background-image:white;
 }
 
 #chat-container {
@@ -842,19 +847,19 @@ input[type='checkbox']:checked + label:before {
   width: 100%;
 }
 
-#message:focus {
-  background-color: rgb(223, 115, 101);
-}
-
 #chat-submit-btn {
-  background-color: rgb(223, 115, 101);
-  border-radius: 10px;
+  border: 1px solid #fd287c;
+  border-radius: 50px; 
+  background-image: url("/img/send.svg");
+  background-color: transparent;
+  background-repeat: no-repeat;
   margin-bottom: 10px;
-  font-size: 1.2rem;
-  padding: 0 20px;
+  padding: 32px;
   margin-left: 5px;
   height: 100%;
   text-align: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 /* Blocklist styles */
@@ -907,7 +912,10 @@ input[type='checkbox']:checked + label:before {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 150px auto;
-  border-radius: 20px;
+  border-radius: 50%;
+  justify-content: space-around;
+  border: 5px solid #fd287c;
+  padding: 10px;
   width: 150px;
   height: 150px;
 }
