@@ -22,7 +22,7 @@ First, clone the repository to your local machine with `git clone <url>`. Then, 
 
 ## Usage
 
-Configure all applicable environment variables in an .env file in the root directory: DB_NAME, DB_USER, and DB_PW for Sequelize credentials, SECRET for session middleware, CLOUD_NAME, API_KEY, and API_SECRET for the Cloudinary API, GMAILPW, CLIENT_SECRET, CLIENT_ID, and REFRESH_TOKEN for the Nodemailer Gmail account configuration. Run the application with `node server`.
+Configure all applicable environment variables in an .env file in the root directory: DB_NAME, DB_USER, and DB_PW for Sequelize credentials, SECRET for session middleware, CLOUD_NAME, API_KEY, and API_SECRET for the Cloudinary API, and APP_EMAIL and APP_PASSWORD for the Nodemailer Gmail account configuration. Run the application with `node server`.
 
 ## Demonstration
 

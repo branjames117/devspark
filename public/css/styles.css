@@ -181,8 +181,8 @@ nav a {
   text-align: left;
   font-family: Arial, Helvetica, sans-serif;
   /* position:fixed; */
-  padding-top: 300px;
-  padding-left: 40px;
+  padding-top: 160px;
+  padding-left: 16%;
   color: white;
   margin-bottom: 80px;
   font-size: xx-large;
@@ -1005,6 +1005,11 @@ footer {
 }
 
 @media screen and (max-width: 767px) {
+  .hero-text {
+    font-size: x-large;
+    padding-left: 4%;
+  }
+
   .blocked-user {
     flex: 50%;
     margin: 0 auto;
