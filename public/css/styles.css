@@ -7,6 +7,7 @@
 body {
   overflow-x: hidden;
   height: 100%;
+  font-family: 'Montserrat', sans-serif;
 }
 
 body::-webkit-scrollbar {
@@ -129,7 +130,7 @@ nav a {
 
 .header-one {
   width: 100%;
-  background-image: url('../img/couple.jpg');
+  background-image: url('../img/developers.jpg');
   position: relative;
   top: 0;
   left: 0;
@@ -181,11 +182,11 @@ nav a {
   text-align: left;
   font-family: Arial, Helvetica, sans-serif;
   /* position:fixed; */
-  padding-top: 160px;
-  padding-left: 16%;
+  padding-top: 300px;
+  padding-left: 40px;
   color: white;
   margin-bottom: 80px;
-  font-size: xx-large;
+  font-size: xxx-large;
 }
 
 /* About Section Styles */
@@ -276,12 +277,13 @@ nav a {
   gap: 5px;
 }
 
-#error-container {
-  margin-bottom: 20px;
+.log-link {
+  color: white;
+  font-size: 1.2rem;
 }
 
-.log-link {
-  margin-top: 20px;
+#error-container {
+  margin-bottom: 20px;
 }
 
 /* Sign Up Styles */
@@ -632,8 +634,7 @@ input[type='checkbox']:checked + label:before {
   width: 800px;
   height: 800px;
   background-color: #ffffff;
-  background: rgba(67, 70, 75, 0.9);
-  color: #ccc;
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -642,7 +643,7 @@ input[type='checkbox']:checked + label:before {
   overflow: hidden;
   border-radius: 5px;
   box-shadow: 0px 10px 20px -10px rgba(0, 0, 0, 0.75);
-  padding-top: 20px;
+  padding: 20px;
   margin-bottom: 40px;
   margin-top: 40px;
   margin-left: auto;
@@ -659,13 +660,6 @@ input[type='checkbox']:checked + label:before {
   color: #fd287c;
 }
 
-#profile-flexbox {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  min-height: 350px;
-}
-
 .selfie-container {
   flex: 50%;
   background-color: black;
@@ -673,9 +667,10 @@ input[type='checkbox']:checked + label:before {
   background-position: center;
   background-size: cover;
   margin: 30px 0;
-  border-radius: 10px;
+  border-radius: 20px;
   border: 3px solid #fd287c;
   min-height: 500px;
+  width: 100%;
 }
 
 .profile {
@@ -683,6 +678,7 @@ input[type='checkbox']:checked + label:before {
   margin-top: 20px;
   padding: 0 40px;
   flex: 50%;
+  text-align: center;
 }
 
 #profile-btn {
@@ -707,23 +703,24 @@ input[type='checkbox']:checked + label:before {
 }
 
 .bio {
-  padding: 20px 40px 20px 40px;
+  overflow-x: hidden;
   text-align: justify;
+  white-space: pre-line;
 }
 
 .skills {
+  margin-top: 40px;
   text-align: center;
-  padding: 20px 0;
 }
 
 .skills ul {
+  margin-top: 20px;
   list-style-type: none;
-  margin: 0;
   padding: 0;
 }
 
 .skills ul li {
-  border: 1px solid #fd287c;
+  border: 1px solid black;
   border-radius: 2px;
   display: inline-block;
   font-size: 1.3rem;
@@ -732,23 +729,30 @@ input[type='checkbox']:checked + label:before {
 }
 
 #github-container {
+  font-family: 'Montserrat', sans-serif;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   gap: 25px;
   text-align: center;
-  padding: 25px 0;
+  padding: 25px 20px;
 }
 
 #repoContainerEl {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 25px;
+}
+
+#repoContainerEl > a > span:first-child {
+  font-size: 1.3rem;
 }
 
 #repoContainerEl > a {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  flex: 33%;
 }
 
 /* Chat styles */
@@ -982,6 +986,11 @@ footer {
 }
 
 @media screen and (max-width: 1024px) {
+  .hero-text {
+    font-size: x-large;
+    padding-left: 4%;
+  }
+
   .result {
     flex: 100%;
   }
@@ -1005,11 +1014,6 @@ footer {
 }
 
 @media screen and (max-width: 767px) {
-  .hero-text {
-    font-size: x-large;
-    padding-left: 4%;
-  }
-
   .blocked-user {
     flex: 50%;
     margin: 0 auto;

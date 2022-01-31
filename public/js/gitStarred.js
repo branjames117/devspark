@@ -28,9 +28,7 @@ async function githubStarred() {
         var statusEl = document.createElement('span');
 
         statusEl.innerHTML =
-          "<p class='fas fa-t[mes status-icon icon-danger'>Number of Open Issues: " +
-          repos[i].open_issues_count +
-          '</p>';
+          '<p>Open Issues ' + repos[i].open_issues_count + '</p>';
 
         repoEl.appendChild(statusEl);
         repoContainerEl.appendChild(repoEl);
