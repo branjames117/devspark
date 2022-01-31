@@ -10,45 +10,52 @@ function deSpark() {
 
 </script>
 
-<div id="profile-wrapper">
+<div id="wrapper">
 
-<div class="selfie-container">
-{{#if user.profile_image}}
-<img class="selfie" src='{{user.profile_image}}' />
-{{/if}}
-</div>
-
-<div class="profile">
-<section class="info">
-<h2>{{user.username}}</h2>
-{{#if user.first_name}} {{user.first_name}} {{/if}} {{#if user.last_name}} {{user.last_name}} {{/if}}
-  {{interestFormatter user.sexual_orientation user.gender_identity}}
-<br>
-<i class="fas fa-globe"></i>  {{locationFormatter user.city user.state}}
-{{#if user.github}}<p><i class="fab fa-github"></i>  <a href="https://github.com/{{user.github}}" target="new">{{user.github}}</a></p>{{/if}}
-{{#if user.portfolio}}<p>Portfolio: <a href="{{user.portfolio}}" target="new">{{user.portfolio}}</a></p>{{/if}}
-{{#if user.education}}<p></i> {{user.education}}</p>{{/if}}
-{{#if user.birthday}}<p>Birthday: {{user.birthday}}</p>{{/if}}
-{{#if user.years_coding}}<p>Years Coding: {{user.years_coding}}</p>{{/if}}
-<br>
-<div class="interact">
-{{#if (ownProfile user.id userID)}} 
-<p><a href="/profile/editor/">Edit your profile</a></p>
-{{else}}
-{{#if notMatched }}
-  <p><a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'>Light a spark</a></p>
+<div id="profile-flexbox">
+  {{#if user.profile_image}}
+  <div class="selfie-container" style="background-image: url('{{user.profile_image}}')"></div>
   {{else}}
-  <p><a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'>Extinguish the spark</a></p>
-{{/if}}
-<p><a href="/chat/{{user.id}}">Message</a></p>
-{{/if}}
-</div>
-</section>
+  <div></div>
+  {{/if}}
+
+  <div class="profile">
+    <section class="info">
+    <h2>{{user.username}}</h2>
+    <p>{{#if user.first_name}} {{user.first_name}} {{/if}} {{#if user.last_name}} {{user.last_name}} {{/if}}</p>
+    
+    <p>{{interestFormatter user.sexual_orientation user.gender_identity}}</p>
+
+    <p>{{locationFormatter user.city user.state}}</p>
+    {{#if user.github}}<p><i class="fab fa-github"></i> <a href="https://github.com/{{user.github}}" id="github" target="new">{{user.github}}</a></p>{{/if}}
+    {{#if user.portfolio}}<p><a href="{{user.portfolio}}" target="new">Visit my portfolio</a></p>{{/if}}
+    {{#if user.education}}<p></i> {{user.education}}</p>{{/if}}
+    {{#if user.birthday}}<p>Birthday: {{user.birthday}}</p>{{/if}}
+    {{#if user.years_coding}}<p>Years Coding: {{user.years_coding}}</p>{{/if}}
+    </section>
+  </div>
 </div>
 
-{{#if user.bio}}<p id="profile-bio" class="bio"> {{user.bio}}</p>{{/if}}
+    {{#if (ownProfile user.id userID)}}
+    <div id='profile-btn'>
+      <a href="/profile/editor/"><button class="btn editor-btn">Edit your profile</button></a>
+    </div>
 
-<br>
+    {{else}}
+
+    <div id='profile-btns'>
+      {{#if notMatched }}
+      <a id="match-btn" href="/profile/{{user.id}}" onclick='sendSpark()'><button class="btn editor-btn">Light a spark</button></a>
+      {{else}}
+      <a id="unmatch-btn" href="/profile/{{user.id}}" onclick='deSpark()'><button class="btn editor-btn">Extinguish a spark</button></a>
+      {{/if}}
+      <a href="/chat/{{user.id}}"><button class="btn editor-btn">Send a message</button></a>
+    </div>
+    {{/if}}
+
+
+{{#if user.bio}}<p id="profile-bio" class="bio">{{user.bio}}</p>{{/if}}
+
 <div class="skills">
 {{#if skills}}
 <ul>
@@ -62,17 +69,9 @@ function deSpark() {
 
 {{!-- Sorry but no --}}
 {{#if user.github}}
-<div id="container">
-    <div>
-        <a href="https://github.com/{{user.github}}">
-        <span id="githubusername">
-        {{user.github}}
-        </span>
-        </a>
-        <div id="repoContainerEl">
-
-        </div>
-    </div>
+<div id="github-container">
+  <h3>My Starred Repos</h3>
+  <div id="repoContainerEl"></div>
 </div>
 <script src="/js/gitStarred.js"></script>
 {{/if}}

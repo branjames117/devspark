@@ -51,9 +51,9 @@ nav {
   border: 1px solid #ff7654;
   color: #ff7654;
   background: transparent;
-  border-radius: 2px; 
+  border-radius: 2px;
   font-size: 20px;
-	padding: 7px;
+  padding: 7px;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
 }
@@ -107,9 +107,9 @@ nav a {
   border: 1px solid #ff7654;
   color: #ff7654;
   background: transparent;
-  border-radius: 2px; 
+  border-radius: 2px;
   font-size: 20px;
-	padding: 7px;
+  padding: 7px;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
 }
@@ -118,18 +118,16 @@ nav a {
   border: 2px solid #fd287c;
   color: #fd287c;
   background: transparent;
-  border-radius: 2px; 
+  border-radius: 2px;
   display: inline-block;
   font-size: 20px;
   font-weight: bold;
-	padding: 7px;
+  padding: 7px;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
 }
 
 .header-one {
-  height: 800px;
-  padding-bottom: 20px;
   width: 100%;
   background-image: url('../img/couple.jpg');
   position: relative;
@@ -186,6 +184,7 @@ nav a {
   padding-top: 300px;
   padding-left: 40px;
   color: white;
+  margin-bottom: 80px;
   font-size: xx-large;
 }
 
@@ -464,7 +463,7 @@ input[type='checkbox']:checked + label:before {
 }
 
 .editor-btn {
-  margin-top: 20px;
+  margin: 20px auto 0;
   width: 100%;
 }
 
@@ -504,10 +503,10 @@ input[type='file'] {
 
 .upload-btn {
   border: 1px solid #fd287c;
-  border-radius: 2px; 
+  border-radius: 2px;
   display: inline-block;
   font-size: 12px;
-	padding: 7px;;
+  padding: 7px;
 }
 
 #deleteUserForm {
@@ -527,7 +526,7 @@ input[type='file'] {
 /* Search Styles */
 #wrapper {
   background-color: #ffffff;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 20px;
   padding: 20px;
   font-family: 'Montserrat', sans-serif;
@@ -542,10 +541,6 @@ input[type='file'] {
 
 #search-form {
   padding: 30px 30px 0;
-}
-
-#search-btn {
-  transform: translateY(-20px);
 }
 
 #search-form-container {
@@ -646,14 +641,14 @@ input[type='checkbox']:checked + label:before {
   position: relative;
   overflow: hidden;
   border-radius: 5px;
-  box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.75);
+  box-shadow: 0px 10px 20px -10px rgba(0, 0, 0, 0.75);
   padding-top: 20px;
   margin-bottom: 40px;
   margin-top: 40px;
   margin-left: auto;
   margin-right: auto;
   width: 500px;
-	max-width: 100%;
+  max-width: 100%;
   height: -moz-fit-content;
   height: -webkit-fit-content;
   height: fit-content;
@@ -661,66 +656,100 @@ input[type='checkbox']:checked + label:before {
 
 #profile-wrapper a {
   text-decoration: none;
-  color: #ff7654;
+  color: #fd287c;
 }
 
+#profile-flexbox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  min-height: 350px;
+}
 
 .selfie-container {
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+  flex: 50%;
+  background-color: black;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  margin: 30px 0;
+  border-radius: 10px;
+  border: 3px solid #fd287c;
+  min-height: 500px;
 }
 
-.selfie {
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  justify-content: space-around;
-  border: 5px solid #ff7654;
-  padding: 10px;
+.profile {
+  line-height: 1.5;
+  margin-top: 20px;
+  padding: 0 40px;
+  flex: 50%;
 }
 
-.info{
-  text-align: center;
+#profile-btn {
+  display: block;
+  flex-direction: row;
+  margin: 0 auto 25px;
+  width: 50%;
 }
 
-.interact {
-  border: 1px solid #ff7654;
-  border-radius: 2px; 
-  display: inline-block;
-  font-size: 12px;
-	padding: 7px;
-  margin: 0;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
+#profile-btns {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 40px;
+  gap: 40px;
+  flex-direction: row;
+  margin: 0 auto 25px;
+  width: 100%;
+}
+
+#profile-btns a {
+  flex: 40%;
 }
 
 .bio {
   padding: 20px 40px 20px 40px;
-	text-align: justify;
+  text-align: justify;
 }
 
 .skills {
   text-align: center;
-  padding-bottom: 20px;
+  padding: 20px 0;
 }
 
-.skills  ul {
-  list-style-type:none;
+.skills ul {
+  list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
 .skills ul li {
-  border: 1px solid #ccc;
-  border-radius: 2px; 
+  border: 1px solid #fd287c;
+  border-radius: 2px;
   display: inline-block;
-  font-size: 12px;
+  font-size: 1.3rem;
   margin: 0 7px 7px 0;
-	padding: 7px;
+  padding: 7px;
 }
 
+#github-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  text-align: center;
+  padding: 25px 0;
+}
+
+#repoContainerEl {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+#repoContainerEl > a {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
 /* Chat styles */
 #chat-container {
@@ -816,7 +845,7 @@ input[type='checkbox']:checked + label:before {
 }
 
 .recdMsg {
-  background-image:white;
+  background-image: white;
 }
 
 #chat-container {
@@ -851,8 +880,8 @@ input[type='checkbox']:checked + label:before {
 
 #chat-submit-btn {
   border: 1px solid #fd287c;
-  border-radius: 50px; 
-  background-image: url("/img/send.svg");
+  border-radius: 50px;
+  background-image: url('/img/send.svg');
   background-color: transparent;
   background-repeat: no-repeat;
   margin-bottom: 10px;
@@ -929,6 +958,8 @@ input[type='checkbox']:checked + label:before {
 /* Footer styles*/
 footer {
   display: flex;
+  flex-direction: column;
+  gap: 5px;
   background-color: #000000;
   background: rgba(0, 0, 0, 0.5);
   color: #ccc;
@@ -961,6 +992,16 @@ footer {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto 1fr;
   }
+
+  .selfie-container {
+    flex: 100%;
+  }
+
+  .profile {
+    flex: 100%;
+    padding-bottom: 25px;
+    text-align: center;
+  }
 }
 
 @media screen and (max-width: 767px) {
@@ -971,13 +1012,6 @@ footer {
 
   #search-form {
     padding: 30px 0;
-  }
-
-  #search-btn {
-    margin-top: 30px;
-    margin: 30px auto 0;
-    width: 100%;
-    transform: translateY(0px);
   }
 
   #search-form-container {
@@ -1010,5 +1044,16 @@ footer {
 
   #profile-wrapper {
     display: flex;
+  }
+
+  #profile-flexbox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-height: 350px;
+  }
+
+  #profile-btns a {
+    flex: 100%;
   }
 }

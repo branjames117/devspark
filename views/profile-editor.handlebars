@@ -83,27 +83,27 @@
 </form>
 
 <div id='img-editor-container'>
-    <img src="{{user.profile_image}}" width="200px" />
+    {{#if user.profile_image}}<img src="{{user.profile_image}}" width="200px" />{{/if}}
 
     <form id='image-form' name='image-form' action='/api/images/upload' enctype="multipart/form-data" method='post'>
         <label for="file-input" class="custom-file-upload"><i class="fas fa-cloud-upload-alt"></i> Choose a file</label>
         <input type="file" name="image" id="file-input" />
-        <button class='btn long-btn upload-btn' type="submit">Upload Image</button>
+        <button class='btn editor-btn' type="submit">Upload Image</button>
     </form>
 </div>
 
 <p>
-  <a href="/blocklist"><button class='btn long-btn upload-btn'>Edit My Blocklist</button></a>
+  <a href="/blocklist"><button class='btn editor-btn'>Edit My Blocklist</button></a>
 </p>
 <form autocomplete="none" id='deleteUserForm'>
   <label for='username'>To delete your account, enter your username below and click 'Delete Account.' This action cannot be undone.</label>
   <input autocomplete="off" class="form-field" type="text" name="username" id="username" placeholder='{{user.username}}' />
-  <button type="submit" class='btn long-btn upload-btn'>Delete Account</button>
+  <button type="submit" class='btn editor-btn'>Delete Account</button>
 </form>
 <script>
     // plug the sound enable/disable button into local storage
     let soundEnabled = localStorage.getItem("soundEnabled") || 0;
-    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
+    document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable SFX' : 'Mute SFX';
 
     const soundDemo = new Audio('/sounds/msg_sent.wav')
 
@@ -111,7 +111,7 @@
       soundEnabled = soundEnabled == 0 ? 1 : 0;
       localStorage.setItem("soundEnabled", soundEnabled);
       if (!soundEnabled) soundDemo.play();
-      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
+      document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable SFX' : 'Mute SFX';
     });
     // fill out user's previous information - a tricky feat with the dropdown lists
     const userPrevGender = '{{user.gender_identity}}';

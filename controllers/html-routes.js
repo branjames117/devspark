@@ -312,7 +312,7 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
 
       // the user transformations continue...
       const penUltimateUsers =
-        resultingUsers.length === 0 ? resultingUsers : plainUsers;
+        resultingUsers.length === 0 ? plainUsers : resultingUsers;
 
       // and one more for the road...
       // filter out both the searching user and any users the searching user has already blocked
