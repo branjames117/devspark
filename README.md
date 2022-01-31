@@ -28,7 +28,7 @@ Configure all applicable environment variables in an .env file in the root direc
 
 A live demonstration of the project is hosted on Heroku [here](https://devsparkio.herokuapp.com/).
 
-![Screenshot](./public/img/screenshot.jpg)
+![Screenshot](./public/img/devspark.jpg)
 
 ## License
 
