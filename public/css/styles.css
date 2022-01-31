@@ -246,11 +246,6 @@ nav a {
   border-radius: 24px;
 }
 
-.log-btn {
-  /* need to center */
-  /* text-align: center; */
-}
-
 .log-wrapper a {
   text-decoration: none;
   color: #fd287c;
@@ -314,6 +309,7 @@ nav a {
   padding: 8px 16px;
   border: none;
   border-radius: 24px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .sign-btn:hover {
