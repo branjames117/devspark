@@ -28,6 +28,8 @@ Configure all applicable environment variables in an .env file in the root direc
 
 A live demonstration of the project is hosted on Heroku [here](https://devsparkio.herokuapp.com/).
 
+![Screenshot](./public/img/screenshot.jpg)
+
 ## License
 
 [The MIT License](https://mit-license.org/)
@@ -50,4 +52,4 @@ This repository was created and is maintained by [branjames117](https://github.c
 
 ## Questions
 
-With any questions email the repository owner at [branjames117@gmail.com](mailto:branjames117@gmail.com) or his collaborators: [codyjunier@gmail.com](mailto:codyjunier@gmail.com), [ravenclaw946@gmail.com](mailto:ravenclaw946@gmail.com), need Eric's email address.
+With any questions email the repository owner at [branjames117@gmail.com](mailto:branjames117@gmail.com) or his collaborators: [codyjunier@gmail.com](mailto:codyjunier@gmail.com), [ravenclaw946@gmail.com](mailto:ravenclaw946@gmail.com), and [ericc97](https://github.com/ericc97).
