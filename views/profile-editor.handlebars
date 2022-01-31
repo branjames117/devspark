@@ -46,10 +46,10 @@
                 <option value=''>Prefer not to say</option>
                 <option value='Boot Camp Certification'>Boot Camp Certification</option>
                 <option value='High School'>High School</option>
-                <option value='Associate\'s Degree'>Associate's Degree</option>
-                <option value='Bachelor\'s Degree'>Bachelor's Degree</option>
-                <option value='Master\'s Degree'>Master's Degree</option>
-                <option value='Doctoral Degree'>Doctoral Degree</option>
+                <option value="2-Year College">2-Year College</option>
+                <option value="4-Year College">4-Year College</option>
+                <option value="Graduate School">Graduate School</option>
+                <option value='PhD'>PhD</option>
             </select>
         </div>
     </div>
@@ -101,6 +101,7 @@
   <button type="submit" class='btn long-btn upload-btn'>Delete Account</button>
 </form>
 <script>
+    console.log('here');
     // plug the sound enable/disable button into local storage
     let soundEnabled = localStorage.getItem("soundEnabled") || 0;
     document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
@@ -114,10 +115,12 @@
       document.getElementById('mute-sound-btn').textContent = soundEnabled == 0 ? 'Enable Chat Sounds' : 'Disable Chat Sounds';
     });
     // fill out user's previous information - a tricky feat with the dropdown lists
+    console.log('here');
     const userPrevGender = '{{user.gender_identity}}';
     const userPrevSexuality = '{{user.sexual_orientation}}';
     const userPrevState = '{{user.state}}';
     const userPrevEducation = '{{user.education}}';
+    console.log(userPrevEducation);
     if (userPrevGender) document.querySelector(`option[value='${userPrevGender}']`).selected = true;
     if (userPrevSexuality) document.querySelector(`option[value='${userPrevSexuality}']`).selected = true;
     if (userPrevState) document.querySelector(`option[value='${userPrevState}']`).selected = true;

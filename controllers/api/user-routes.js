@@ -140,6 +140,8 @@ router.post('/delete-conversation', withAuth, async (req, res) => {
 router.post('/profile', withAuth, async (req, res) => {
   const id = req.session.user_id;
 
+  console.log(req.body);
+
   if (req.body.first_name && req.body.first_name.length > 20) {
     return res
       .status(500)
