@@ -140,8 +140,6 @@ io.on('connection', (socket) => {
       msg.user.username = 'devSpark';
       msg.createdAt = new Date();
 
-      console.log(msg.room);
-
       // ... then create the messages in the database
       try {
         await Message.create(msg);
