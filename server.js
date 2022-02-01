@@ -140,6 +140,8 @@ io.on('connection', (socket) => {
       msg.user.username = 'devSpark';
       msg.createdAt = new Date();
 
+      console.log(msg.room);
+
       // ... then create the messages in the database
       try {
         await Message.create(msg);
@@ -210,7 +212,7 @@ io.on('connection', (socket) => {
 
     // format the room name based on which user ID is the lowest
     const room =
-      sender < receiver ? `${sender}x${receiver}` : `${receiver}x${sender}`;
+      sender > receiver ? `${sender}x${receiver}` : `${receiver}x${sender}`;
 
     // update list of "active" chat users with what room they're in
     users[sender] = room;
@@ -219,6 +221,8 @@ io.on('connection', (socket) => {
     // now check that user2 exists before proceeding
     const receivingUser = await User.findByPk(receiver);
     if (!receivingUser) return;
+
+    console.log('joining room ', room);
 
     // join the unique private room
     socket.join(room);
@@ -321,7 +325,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: false }).then(async () => {
+sequelize.sync({ force: true }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database

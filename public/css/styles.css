@@ -808,6 +808,10 @@ input[type='checkbox']:checked + label:before {
   width: fit-content;
 }
 
+#no-chats-notification {
+  margin-top: 20px;
+}
+
 /* Chat styles */
 
 #message-container {
@@ -837,7 +841,7 @@ input[type='checkbox']:checked + label:before {
 }
 
 .recdMsg {
-  background-image: white;
+  background-color: rgb(184, 184, 184);
 }
 
 #chat-container {
