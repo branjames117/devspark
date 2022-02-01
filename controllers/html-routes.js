@@ -264,6 +264,7 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
           'reset_password_token',
           'reset_password_expires',
           'blocked_users',
+          'matched_users',
         ],
       },
       where: {
@@ -289,7 +290,7 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
       });
 
       // now filter out the users that don't match every specified skill
-      const resultingUsers = [];
+      const filteredUsers = [];
       plainUsers.forEach((user) => {
         const userSkills = [];
         user.skills.forEach((skill) => {
@@ -298,42 +299,35 @@ router.get('/results/:queryStr', withAuth, async (req, res) => {
 
         // start out assuming we will include the user in the final results
         let includeUser = true;
+        // then for each queried skill, check if the user has that skill
         skillsArr.forEach((skill) => {
-          // if the user is lacking one of the searched-for skills, cut the user out of inclusion
+          // if the user is lacking the skill, cut the user out of inclusion
           if (userSkills.indexOf(parseInt(skill)) === -1) {
             includeUser = false;
           }
         });
-        // otherwise, push the user to the resultingUsers arr
-        if (includeUser) {
-          resultingUsers.push(user);
-        }
-      });
-
-      // the user transformations continue...
-      const penUltimateUsers =
-        resultingUsers.length === 0 ? plainUsers : resultingUsers;
-
-      // and one more for the road...
-      // filter out both the searching user and any users the searching user has already blocked
-      const finalUsers = penUltimateUsers.filter((user) => {
-        return (
-          user.id != req.session.user_id &&
+        // otherwise, push the user to the filteredUsers arr
+        // but only if they are not the user themselves or on that user's blocklist
+        if (
+          includeUser &&
+          user.id !== req.session.user_id &&
           blockedUsers.indexOf(user.id + '') === -1
-        );
+        ) {
+          filteredUsers.push(user);
+        }
       });
 
       res.render('results', {
         loggedIn: req.session.loggedIn,
         userID: req.session.user_id,
-        users: finalUsers,
+        users: filteredUsers,
       });
     } else {
       // if we did not find users... shame...
       res.render('results', {
         loggedIn: req.session.loggedIn,
         userID: req.session.user_id,
-        users: false,
+        users: [],
       });
     }
   } catch (error) {
