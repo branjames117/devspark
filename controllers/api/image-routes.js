@@ -6,6 +6,8 @@ const User = require('../../models/User');
 router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
   const id = req.session.user_id;
 
+  console.log('here we are');
+
   try {
     if (req.invalidFile) {
       return res.redirect('/profile/editor');
@@ -41,10 +43,7 @@ router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
       message: 'Something went wrong with your image upload.',
       error,
     });
-    res.status(500).json({
-      message: 'Something went wrong with your image upload.',
-      error,
-    });
+    return res.redirect('/profile/editor');
   }
 });
 

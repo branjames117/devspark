@@ -255,6 +255,7 @@ nav a {
   background: linear-gradient(45deg, #fd287c, #ff7654);
   box-shadow: 0 6px 12px hsla(260, 50%, 30%, 0.2);
   color: white;
+  cursor: pointer;
   padding: 5px 10px 5px 10px;
   border: none;
   border-radius: 24px;
@@ -297,19 +298,16 @@ nav a {
 }
 
 .sign-btn {
-  /* need to center */
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.sign-btn {
   background: linear-gradient(45deg, #fd287c, #ff7654);
   box-shadow: 0 6px 12px hsla(260, 50%, 30%, 0.2);
   font-size: 20px;
   color: white;
+  cursor: pointer;
   padding: 8px 16px;
   border: none;
   border-radius: 24px;
+  margin-bottom: 20px;
+  text-align: center;
   font-family: 'Montserrat', sans-serif;
 }
 
