@@ -631,25 +631,18 @@ input[type='checkbox']:checked + label:before {
 /* Profile Styles */
 #profile-wrapper {
   font-family: 'Montserrat', sans-serif;
-  width: 800px;
-  height: 800px;
   background-color: #ffffff;
   background: rgba(255, 255, 255, 0.8);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 25px;
   box-shadow: 0px 10px 20px -10px rgba(0, 0, 0, 0.75);
-  padding: 20px;
-  margin-bottom: 40px;
-  margin-top: 40px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 500px;
-  max-width: 100%;
+  padding: 20px 30px 60px;
+  margin: 40px auto;
+  max-width: 500px;
   height: -moz-fit-content;
   height: -webkit-fit-content;
   height: fit-content;
@@ -667,7 +660,7 @@ input[type='checkbox']:checked + label:before {
   background-position: center;
   background-size: cover;
   margin: 30px 0;
-  border-radius: 20px;
+  border-radius: 50%;
   border: 3px solid #fd287c;
   min-height: 500px;
   width: 100%;
@@ -704,7 +697,7 @@ input[type='checkbox']:checked + label:before {
 
 .bio {
   overflow-x: hidden;
-  text-align: justify;
+  text-align: left;
   white-space: pre-line;
 }
 
@@ -991,8 +984,18 @@ footer {
     padding-left: 4%;
   }
 
+  .results {
+    width: 100%;
+    text-align: center;
+  }
+
   .result {
-    flex: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .result-img {
+    margin: 0 auto 5px;
   }
 
   .boxes {
@@ -1052,17 +1055,31 @@ footer {
   }
 
   #profile-wrapper {
-    display: flex;
+    width: 95%;
   }
 
-  #profile-flexbox {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    min-height: 350px;
+  .selfie-container {
+    flex: 50%;
+    background-color: black;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin: 30px 0;
+    border-radius: 25px;
+    border: 3px solid #fd287c;
+    min-height: 400px;
+    width: 100%;
+  }
+
+  #profile-btns {
+    gap: 0;
   }
 
   #profile-btns a {
+    flex: 100%;
+  }
+
+  .result {
     flex: 100%;
   }
 }
