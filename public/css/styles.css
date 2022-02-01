@@ -275,7 +275,8 @@ nav a {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  color: #fd287c;
+  gap: 10px;
 }
 
 .log-link {
