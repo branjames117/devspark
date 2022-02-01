@@ -400,9 +400,13 @@ usernameOptions.forEach((username) => {
     username,
     email: username + '@gmail.com',
     password: 'password',
+    first_name:
+      firstNameOptions[Math.floor(Math.random() * firstNameOptions.length)],
+    last_name:
+      lastNameOptions[Math.floor(Math.random() * lastNameOptions.length)],
     city: cityOptions[Math.floor(Math.random() * cityOptions.length)],
     state: stateOptions[Math.floor(Math.random() * stateOptions.length)],
-    birthday: '12/04/1995',
+    birthday: '1995-12-04',
     years_coding: Math.floor(Math.random() * 15),
     profile_image: `https://picsum.photos/500?random=${Math.floor(
       Math.random() * 100
