@@ -802,9 +802,6 @@ input[type='checkbox']:checked + label:before {
   display: flex;
   flex-direction: row;
   gap: 5px;
-  position: absolute;
-  right: 20px;
-  bottom: 12px;
 }
 
 .active-chat-btns button {
@@ -1017,6 +1014,12 @@ footer {
 }
 
 @media screen and (max-width: 767px) {
+  .active-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
   .blocked-user {
     flex: 50%;
     margin: 0 auto;
