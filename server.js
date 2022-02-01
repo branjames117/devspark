@@ -131,7 +131,7 @@ io.on('connection', (socket) => {
 
       // send a message to both users
       const msg = {};
-      msg.body = 'We Matched! Jinx! Jinx again!';
+      msg.body = 'We Matched!';
       msg.sender_id = id;
       msg.recipient_id = idToMatch;
       msg.read = false;
@@ -321,7 +321,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: false }).then(async () => {
+sequelize.sync({ force: true }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database
