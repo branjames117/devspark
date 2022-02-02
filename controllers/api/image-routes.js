@@ -6,8 +6,6 @@ const User = require('../../models/User');
 router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
   const id = req.session.user_id;
 
-  console.log('here we are');
-
   try {
     if (req.invalidFile) {
       return res.redirect('/profile/editor');

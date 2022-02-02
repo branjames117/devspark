@@ -47,8 +47,6 @@
   socket.on('update-list', data => {
     document.getElementById('no-chats-notification').textContent = '';
 
-    console.log(data);
-
     const chatElementToUpdate = document.getElementById('chat-' + data.sender_id);
 
     if (chatElementToUpdate) {
