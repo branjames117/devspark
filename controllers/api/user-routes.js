@@ -75,11 +75,6 @@ router.post('/block', withAuth, async (req, res) => {
   }
 });
 
-router.get('/messages', withAuth, async (req, res) => {
-  const messages = await Message.findAll();
-  res.json(messages);
-});
-
 // POST /api/users/unblock
 router.post('/unblock', withAuth, async (req, res) => {
   const id = req.session.user_id;
