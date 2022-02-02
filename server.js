@@ -195,7 +195,7 @@ io.on('connection', (socket) => {
       id < idToUnmatch ? `${id}x${idToUnmatch}` : `${idToUnmatch}x${id}`;
     await Message.destroy({
       where: {
-        [Op.and]: [{ room }, { body: 'We Matched! Jinx! Jinx again!' }],
+        [Op.and]: [{ room }, { body: 'We Matched!' }],
       },
     });
   });
@@ -219,8 +219,6 @@ io.on('connection', (socket) => {
     // now check that user2 exists before proceeding
     const receivingUser = await User.findByPk(receiver);
     if (!receivingUser) return;
-
-    console.log('joining room ', room);
 
     // join the unique private room
     socket.join(room);
@@ -323,7 +321,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: false }).then(async () => {
+sequelize.sync({ force: true }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database
