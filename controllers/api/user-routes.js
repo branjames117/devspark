@@ -61,7 +61,10 @@ router.post('/block', withAuth, async (req, res) => {
     );
 
     // mark all messages in their shared chatroom as read to clear out notifications
-    const room = id < idToBlock ? `${id}x${idToBlock}` : `${idToBlock}x${id}`;
+    const room =
+      parseInt(id) < parseInt(idToBlock)
+        ? `${id}x${idToBlock}`
+        : `${idToBlock}x${id}`;
     await Message.update({ read: true }, { where: { room, read: false } });
 
     res.redirect('/chat');
@@ -120,7 +123,10 @@ router.post('/delete-conversation', withAuth, async (req, res) => {
   const user1 = req.session.user_id;
   const user2 = req.body.deletedID;
 
-  const room = user1 < user2 ? `${user1}x${user2}` : `${user2}x${user1}`;
+  const room =
+    parseInt(user1) < parseInt(user2)
+      ? `${user1}x${user2}`
+      : `${user2}x${user1}`;
 
   try {
     await Message.destroy({ where: { room } });

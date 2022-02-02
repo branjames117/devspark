@@ -135,7 +135,10 @@ io.on('connection', (socket) => {
       msg.sender_id = id;
       msg.recipient_id = idToMatch;
       msg.read = false;
-      msg.room = id < idToMatch ? `${id}x${idToMatch}` : `${idToMatch}x${id}`;
+      msg.room =
+        parseInt(id) < parseInt(idToMatch)
+          ? `${id}x${idToMatch}`
+          : `${idToMatch}x${id}`;
       msg.user = {};
       msg.user.username = 'devSpark';
       msg.createdAt = new Date();
@@ -192,7 +195,9 @@ io.on('connection', (socket) => {
 
     // now delete any potential match messages that may have been sent out
     const room =
-      id < idToUnmatch ? `${id}x${idToUnmatch}` : `${idToUnmatch}x${id}`;
+      parseInt(id) < parseInt(idToUnmatch)
+        ? `${id}x${idToUnmatch}`
+        : `${idToUnmatch}x${id}`;
     await Message.destroy({
       where: {
         [Op.and]: [{ room }, { body: 'We Matched!' }],
@@ -209,7 +214,9 @@ io.on('connection', (socket) => {
 
     // format the room name based on which user ID is the lowest
     const room =
-      sender < receiver ? `${sender}x${receiver}` : `${receiver}x${sender}`;
+      parseInt(sender) < parseInt(receiver)
+        ? `${sender}x${receiver}`
+        : `${receiver}x${sender}`;
 
     // update list of "active" chat users with what room they're in
     users[sender] = room;
@@ -320,7 +327,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: false }).then(async () => {
+sequelize.sync({ force: true }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database
