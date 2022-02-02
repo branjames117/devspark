@@ -24,11 +24,11 @@
           </a>
           <div class="active-chat-btns">
             <form id='delete-conversation-form' name='delete-conversation-form' action='/api/users/delete-conversation' method='post'>
-              <input type="hidden" name="deletedID" id="deleted-id" value=${chat.sender} />
+              <input type="hidden" name="deletedID" id="deleted-id" value=${chat.sender || chat.sender_id} />
               <button class="btn" type="submit">Delete</button>
             </form>
             <form id='block-user-form' name='block-user-form' action='/api/users/block' method='post'>
-              <input type="hidden" name="blockedID" id="blocked-id" value=${chat.sender} />
+              <input type="hidden" name="blockedID" id="blocked-id" value=${chat.sender || chat.sender_id} />
               <button class="btn" type="submit">Block</button>
             </form>
           </div>
@@ -46,6 +46,8 @@
 
   socket.on('update-list', data => {
     document.getElementById('no-chats-notification').textContent = '';
+
+    console.log(data);
 
     const chatElementToUpdate = document.getElementById('chat-' + data.sender_id);
 

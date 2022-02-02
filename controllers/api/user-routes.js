@@ -37,6 +37,11 @@ router.get('/', withAuth, async (req, res) => {
   }
 });
 
+router.get('/messages', withAuth, async (req, res) => {
+  const messages = await Message.findAll({});
+  res.json(messages);
+});
+
 // POST /api/users/block
 router.post('/block', withAuth, async (req, res) => {
   const id = req.session.user_id;
@@ -119,8 +124,12 @@ router.post('/unblock', withAuth, async (req, res) => {
 router.post('/delete-conversation', withAuth, async (req, res) => {
   const user1 = req.session.user_id;
   const user2 = req.body.deletedID;
+  console.log(user1);
+  console.log(user2);
 
   const room = user1 < user2 ? `${user1}x${user2}` : `${user2}x${user1}`;
+  console.log('--------------');
+  console.log(room);
 
   try {
     await Message.destroy({ where: { room } });

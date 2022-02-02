@@ -204,13 +204,17 @@ io.on('connection', (socket) => {
   socket.on('joinroom', async (data) => {
     // get IDs of both users from the client
     const [sender, receiver] = data.room.split('x');
+    console.log('sender ', sender);
+    console.log('receiver ', receiver);
 
     // verify there's no trickery going on
     if (socket.request.session.user_id != sender || sender == receiver) return;
 
     // format the room name based on which user ID is the lowest
     const room =
-      sender > receiver ? `${sender}x${receiver}` : `${receiver}x${sender}`;
+      sender < receiver ? `${sender}x${receiver}` : `${receiver}x${sender}`;
+
+    console.log(room);
 
     // update list of "active" chat users with what room they're in
     users[sender] = room;
@@ -321,7 +325,7 @@ io.on('connection', (socket) => {
 // ---------------------- //
 
 // sync sequelize with db before telling server to listen
-sequelize.sync({ force: true }).then(async () => {
+sequelize.sync({ force: false }).then(async () => {
   // check if there are skills in the database
   const dbAlreadySeeded = await Skill.findByPk(1);
   // if not, seed the database
