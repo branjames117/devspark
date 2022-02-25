@@ -34,7 +34,7 @@ router.post('/upload', withAuth, upload.single('image'), async (req, res) => {
       }
     );
 
-    res.redirect(`/profile/${id}`);
+    // res.redirect(`/profile/${id}`);
   } catch (error) {
     console.log(error);
     console.log({
